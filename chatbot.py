@@ -83,6 +83,7 @@ def call_gemini(prompt, model="gemini-2.5-flash", temperature=0.7):
 
 def main():
     max_history_messages = 20
+    summary_batch_size = 2
     context_history = []
     context_summary = ""
     session_ended = False
@@ -101,9 +102,11 @@ def main():
         context_history.append({"role": "assistant", "content": content})
 
         if len(context_history) > max_history_messages:
-            older_history = context_history[:-max_history_messages]
-            context_summary = summarize_history(older_history, context_summary)
-            context_history = context_history[-max_history_messages:]
+            overflow = len(context_history) - max_history_messages
+            batch_size = max(summary_batch_size, overflow)
+            batch_to_summarize = context_history[:batch_size]
+            context_summary = summarize_history(batch_to_summarize, context_summary)
+            context_history = context_history[batch_size:]
 
         continue_session = input("Continue Session? (y/n) ").strip().lower()
         session_ended = continue_session not in {"y", "yes"}
