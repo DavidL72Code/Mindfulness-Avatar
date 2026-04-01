@@ -3,7 +3,7 @@ import os
 from threading import Lock
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
-from chatbot import build_chat_prompt, call_gemini, summarize_history
+from chatbot import build_chat_prompt, build_session_recap, call_gemini, summarize_history
 
 
 WEB_DIR = os.path.join(os.path.dirname(__file__), "web")
@@ -31,6 +31,11 @@ def get_session_snapshot(session_id):
         }
 
 
+def remove_session(session_id):
+    with SESSIONS_LOCK:
+        return SESSIONS.pop(session_id, None)
+
+
 def update_session_memory(session, user_message, assistant_message):
     with SESSIONS_LOCK:
         session["history"].append({"role": "user", "content": user_message})
@@ -49,10 +54,17 @@ class ChatHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=WEB_DIR, **kwargs)
 
     def do_POST(self):
-        if self.path != "/chat":
-            self.send_error(404)
+        if self.path == "/chat":
+            self.handle_chat()
             return
 
+        if self.path == "/session/end":
+            self.handle_end_session()
+            return
+
+        self.send_error(404)
+
+    def handle_chat(self):
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
@@ -96,6 +108,50 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 "has_summary": bool(updated_snapshot["summary"]),
             }
         ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(response)))
+        self.end_headers()
+        self.wfile.write(response)
+
+    def handle_end_session(self):
+        content_length = int(self.headers.get("Content-Length", "0"))
+        body = self.rfile.read(content_length)
+        try:
+            payload = json.loads(body.decode("utf-8"))
+            session_id = payload.get("session_id", "").strip()
+        except json.JSONDecodeError:
+            self.send_error(400, "Invalid JSON")
+            return
+
+        if not session_id:
+            self.send_error(400, "Missing session_id")
+            return
+
+        session_snapshot = get_session_snapshot(session_id)
+        if not session_snapshot["history"] and not session_snapshot["summary"]:
+            remove_session(session_id)
+            response = json.dumps(
+                {"summary": "This session ended before any messages were sent."}
+            ).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(response)))
+            self.end_headers()
+            self.wfile.write(response)
+            return
+
+        try:
+            recap = build_session_recap(
+                summary=session_snapshot["summary"],
+                history=session_snapshot["history"],
+            )
+        except Exception as exc:
+            self.send_error(500, f"Model error: {exc}")
+            return
+
+        remove_session(session_id)
+        response = json.dumps({"summary": recap}).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(response)))

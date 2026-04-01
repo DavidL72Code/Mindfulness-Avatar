@@ -1,5 +1,8 @@
 import os
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 if not GOOGLE_API_KEY:
@@ -49,7 +52,24 @@ def summarize_history(history, prior_summary="", model="gemini-2.5-flash"):
     result = call_gemini(prompt, model=model, temperature=0.3)
     return result["choices"][0]["message"]["content"]
 
-def call_gemini(prompt, model="gemini-2.5-flash", temperature=0.7):
+
+def build_session_recap(summary="", history=None, model="gemini-2.5-flash"):
+    history = history or []
+    transcript = "\n".join(
+        f"{item['role'].capitalize()}: {item['content']}" for item in history
+    ) or "No additional recent messages."
+    prompt = (
+        "Create a short, friendly recap of this mindfulness session. Focus on the main "
+        "themes discussed, the user's concerns or goals, and any calming practices or "
+        "next steps that came up. Keep it to 3 or 4 sentences.\n\n"
+        f"Stored session summary:\n{summary or 'None'}\n\n"
+        f"Recent messages:\n{transcript}\n\n"
+        "Session recap:"
+    )
+    result = call_gemini(prompt, model=model, temperature=0.3)
+    return result["choices"][0]["message"]["content"]
+
+def call_gemini(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
     model_obj = genai.GenerativeModel(model)
 
     generation_config = genai.types.GenerationConfig(

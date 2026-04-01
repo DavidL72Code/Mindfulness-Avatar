@@ -34,17 +34,24 @@ The project demonstrates how AI-guided digital assistants can support mental wel
 <section class="assistant">
 <div class="assistant-header">
 <h2>Mindfulness Assistant</h2>
-<div class="status" id="status">Ready</div>
+<div class="session-meta">
+<div class="status" id="status">Session not started</div>
+</div>
 </div>
 
 <div class="chat" id="chat"></div>
 
+<div class="session-controls">
+<button id="start-session" class="action primary">Start Session</button>
+<button id="end-session" class="action secondary" disabled>End Session</button>
+</div>
+
 <div class="composer">
 <div class="input-wrap">
-<textarea id="message" placeholder="Type your message..."></textarea>
+<textarea id="message" placeholder="Press Start Session to begin" disabled></textarea>
 <div class="hint">Enter to send, Shift+Enter for newline</div>
 </div>
-<button id="send" class="send">Send</button>
+<button id="send" class="send" disabled>Send</button>
 </div>
 </section>
 
@@ -174,6 +181,15 @@ Expanded analytics for evaluating engagement patterns.
 <footer>
 <p>University Team Project — Multilingual Virtual Assistant Mindfulness App</p>
 </footer>
+
+<div class="modal hidden" id="session-modal" aria-hidden="true">
+<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="session-modal-title">
+<h3 id="session-modal-title">Session Complete</h3>
+<p class="modal-duration" id="session-duration"></p>
+<p class="modal-summary" id="session-summary"></p>
+<button id="close-modal" class="action primary">Close</button>
+</div>
+</div>
 
 <script src="app.js"></script>
 </body>
