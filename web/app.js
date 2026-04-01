@@ -12,7 +12,6 @@ const closeModalBtn = document.getElementById("close-modal");
 let activeSessionId = null;
 let sessionActive = false;
 let sessionStartTime = null;
-let timerIntervalId = null;
 
 function createSessionId() {
   if (window.crypto && typeof window.crypto.randomUUID === "function") {
@@ -36,33 +35,6 @@ function formatDuration(totalSeconds) {
   return [minutes, seconds]
     .map((value) => String(value).padStart(2, "0"))
     .join(":");
-}
-
-function renderTimer() {
-  if (!sessionStartTime) {
-    return "00:00";
-  }
-
-  const elapsedSeconds = Math.max(
-    0,
-    Math.floor((Date.now() - sessionStartTime) / 1000)
-  );
-  return formatDuration(elapsedSeconds);
-}
-
-function startTimer() {
-  stopTimer();
-  renderTimer();
-  timerIntervalId = window.setInterval(() => {
-    renderTimer();
-  }, 1000);
-}
-
-function stopTimer() {
-  if (timerIntervalId) {
-    window.clearInterval(timerIntervalId);
-    timerIntervalId = null;
-  }
 }
 
 function setStatus(text, busy = false) {
@@ -115,7 +87,6 @@ function startSession() {
   addMessage("Type a message to start your session.", "assistant");
   messageEl.placeholder = "Type your message...";
   setStatus("Session active", false);
-  startTimer();
   messageEl.focus();
 }
 
@@ -161,7 +132,6 @@ async function endSession() {
   }
 
   setStatus("Ending session...", true);
-  stopTimer();
 
   const elapsedSeconds = Math.max(
     0,
