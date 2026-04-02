@@ -9,6 +9,7 @@ from chatbot import build_chat_prompt, build_session_recap, call_gemini, summari
 WEB_DIR = os.path.join(os.path.dirname(__file__), "web")
 MAX_HISTORY_MESSAGES = 20
 SUMMARY_BATCH_SIZE = 2
+ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
 SESSIONS = {}
 SESSIONS_LOCK = Lock()
 
@@ -52,6 +53,16 @@ def update_session_memory(session, user_message, assistant_message):
 class ChatHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=WEB_DIR, **kwargs)
+
+    def end_headers(self):
+        self.send_header("Access-Control-Allow-Origin", ALLOWED_ORIGIN)
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        super().end_headers()
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.end_headers()
 
     def do_POST(self):
         if self.path == "/chat":

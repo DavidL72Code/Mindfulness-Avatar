@@ -8,7 +8,7 @@ const modalEl = document.getElementById("session-modal");
 const sessionDurationEl = document.getElementById("session-duration");
 const sessionSummaryEl = document.getElementById("session-summary");
 const closeModalBtn = document.getElementById("close-modal");
-
+const API_BASE_URL = "https://multilingual-virtual-assistant.onrender.com";
 let activeSessionId = null;
 let sessionActive = false;
 let sessionStartTime = null;
@@ -103,7 +103,7 @@ async function sendMessage() {
   setStatus("Thinking...", true);
 
   try {
-    const resp = await fetch("/chat", {
+    const resp = await fetch(`${API_BASE_URL}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -140,7 +140,7 @@ async function endSession() {
   const durationText = formatDuration(elapsedSeconds);
 
   try {
-    const resp = await fetch("/session/end", {
+    const resp = await fetch(`${API_BASE_URL}/session/end`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ session_id: activeSessionId })
