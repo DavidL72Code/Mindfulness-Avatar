@@ -171,8 +171,8 @@ class ChatHandler(SimpleHTTPRequestHandler):
 
 
 def main():
-    host = "127.0.0.1"
-    port = 8000
+    host = "0.0.0.0"
+    port = int(os.getenv("PORT", "8000"))
     with ThreadingHTTPServer((host, port), ChatHandler) as httpd:
         print(f"Serving on http://{host}:{port}")
         httpd.serve_forever()
