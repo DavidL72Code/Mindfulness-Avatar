@@ -103,7 +103,7 @@ def call_gemini(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
 
 def main():
     max_history_messages = 20
-    summary_batch_size = 2
+    summary_batch_size = 10
     context_history = []
     context_summary = ""
     session_ended = False

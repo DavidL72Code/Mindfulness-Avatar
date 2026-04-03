@@ -8,7 +8,7 @@ from chatbot import build_chat_prompt, build_session_recap, call_gemini, summari
 
 WEB_DIR = os.path.join(os.path.dirname(__file__), "web")
 MAX_HISTORY_MESSAGES = 20
-SUMMARY_BATCH_SIZE = 2
+SUMMARY_BATCH_SIZE = 10
 ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
 SESSIONS = {}
 SESSIONS_LOCK = Lock()
