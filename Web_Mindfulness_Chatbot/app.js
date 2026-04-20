@@ -79,6 +79,15 @@ function closeModal() {
   modalEl.setAttribute("aria-hidden", "true");
 }
 
+function warmBackend() {
+  fetch(`${API_BASE_URL}/health`, {
+    method: "GET",
+    cache: "no-store"
+  }).catch(() => {
+    // Ignore warm-up failures and let the normal chat flow surface real errors.
+  });
+}
+
 function startSession() {
   activeSessionId = createSessionId();
   sessionActive = true;
@@ -181,4 +190,5 @@ messageEl.addEventListener("keydown", (event) => {
   }
 });
 
+warmBackend();
 showIdleState();

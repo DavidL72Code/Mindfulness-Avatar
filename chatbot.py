@@ -1,4 +1,5 @@
 import os
+import json
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -14,14 +15,49 @@ SYSTEM_PROMPT = (
     "Respond with calm, supportive, and practical guidance while keeping continuity "
     "with the conversation so far."
 )
+ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activities.json")
 
 
-def build_chat_prompt(user_message, history=None, summary=""):
+def load_mindfulness_activities():
+    with open(ACTIVITIES_PATH, "r", encoding="utf-8") as file_obj:
+        return json.load(file_obj)
+
+
+def find_activity(activity_id):
+    for activity in load_mindfulness_activities():
+        if activity["id"] == activity_id:
+            return activity
+    return None
+
+
+def build_activity_step_message(activity, step_index):
+    total_steps = len(activity["steps"])
+    current_step = activity["steps"][step_index]
+    return (
+        f"{activity['title']}\n"
+        f"{activity['description']}\n\n"
+        f"Step {step_index + 1} of {total_steps}: {current_step}\n\n"
+        "When you are ready, tap the check button so we can move to the next step."
+    )
+
+
+def build_chat_prompt(user_message, history=None, summary="", activity_context=None):
     history = history or []
     sections = [SYSTEM_PROMPT]
 
     if summary:
         sections.append(f"Conversation summary so far:\n{summary}")
+
+    if activity_context:
+        activity_details = (
+            f"Active mindfulness activity: {activity_context['title']}\n"
+            f"Description: {activity_context['description']}\n"
+            f"Current step ({activity_context['current_step_index'] + 1}/"
+            f"{len(activity_context['steps'])}): {activity_context['steps'][activity_context['current_step_index']]}\n"
+            "Stay aligned with this activity and help the user complete the current step calmly "
+            "before moving on."
+        )
+        sections.append(activity_details)
 
     if history:
         transcript = "\n".join(
