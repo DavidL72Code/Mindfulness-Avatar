@@ -16,7 +16,9 @@ import {
 } from "react-native";
 import AvatarStage from "./components/AvatarStage";
 
-const API_BASE_URL = "https://multilingual-virtual-assistant.onrender.com";
+const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_BASE_URL ||
+  "https://multilingual-virtual-assistant.onrender.com";
 const TOTAL_BREATHING_ROUNDS = 4;
 const BOX_TRACE_SIDES = ["top", "right", "bottom", "left"];
 
