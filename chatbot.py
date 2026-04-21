@@ -22,7 +22,7 @@ SYSTEM_PROMPT = (
 )
 ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activities.json")
 GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
-GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Sulafat")
+GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Iapetus")
 GEMINI_TTS_SAMPLE_RATE = 24000
 
 

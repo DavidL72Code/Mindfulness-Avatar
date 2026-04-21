@@ -15,7 +15,10 @@ from chatbot import (
 )
 
 
-WEB_DIR = os.path.join(os.path.dirname(__file__), "web")
+WEB_DIR = os.getenv(
+    "WEB_DIR",
+    os.path.join(os.path.dirname(__file__), "Web_Mindfulness_Chatbot"),
+)
 MAX_HISTORY_MESSAGES = 20
 SUMMARY_BATCH_SIZE = 10
 ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
