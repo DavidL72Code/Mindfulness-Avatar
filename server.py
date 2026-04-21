@@ -11,6 +11,7 @@ from chatbot import (
     find_activity,
     load_mindfulness_activities,
     summarize_history,
+    synthesize_gemini_speech,
 )
 
 
@@ -110,6 +111,14 @@ def send_json(handler, payload, status=200):
     handler.wfile.write(response)
 
 
+def send_bytes(handler, payload, content_type, status=200):
+    handler.send_response(status)
+    handler.send_header("Content-Type", content_type)
+    handler.send_header("Content-Length", str(len(payload)))
+    handler.end_headers()
+    handler.wfile.write(payload)
+
+
 class ChatHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=WEB_DIR, **kwargs)
@@ -138,6 +147,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/chat":
             self.handle_chat()
+            return
+
+        if self.path == "/tts":
+            self.handle_tts()
             return
 
         if self.path == "/session/end":
@@ -243,6 +256,33 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 "activities": serialize_activities(session),
                 "active_step": build_step_payload(session),
             },
+        )
+
+    def handle_tts(self):
+        content_length = int(self.headers.get("Content-Length", "0"))
+        body = self.rfile.read(content_length)
+        try:
+            payload = json.loads(body.decode("utf-8"))
+            text = payload.get("text", "").strip()
+            voice_name = payload.get("voice_name", "").strip() or None
+        except json.JSONDecodeError:
+            self.send_error(400, "Invalid JSON")
+            return
+
+        if not text:
+            self.send_error(400, "Missing text")
+            return
+
+        try:
+            result = synthesize_gemini_speech(text=text, voice_name=voice_name)
+        except Exception as exc:
+            self.send_error(500, f"TTS error: {exc}")
+            return
+
+        send_bytes(
+            self,
+            payload=result["audio_bytes"],
+            content_type=result["content_type"],
         )
 
     def handle_activity_select(self):

@@ -1,5 +1,10 @@
 import os
 import json
+import base64
+import io
+import wave
+import urllib.request
+import urllib.error
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -16,6 +21,80 @@ SYSTEM_PROMPT = (
     "with the conversation so far."
 )
 ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activities.json")
+GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
+GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Sulafat")
+GEMINI_TTS_SAMPLE_RATE = 24000
+
+
+def pcm_to_wav_bytes(pcm_bytes, channels=1, sample_rate=GEMINI_TTS_SAMPLE_RATE, sample_width=2):
+    output = io.BytesIO()
+    with wave.open(output, "wb") as wav_file:
+        wav_file.setnchannels(channels)
+        wav_file.setsampwidth(sample_width)
+        wav_file.setframerate(sample_rate)
+        wav_file.writeframes(pcm_bytes)
+    return output.getvalue()
+
+
+def synthesize_gemini_speech(text, voice_name=None, model=GEMINI_TTS_MODEL):
+    prompt_text = (text or "").strip()
+    if not prompt_text:
+        raise ValueError("Missing text for speech synthesis.")
+
+    payload = {
+        "contents": [{"parts": [{"text": prompt_text}]}],
+        "generationConfig": {
+            "responseModalities": ["AUDIO"],
+            "speechConfig": {
+                "voiceConfig": {
+                    "prebuiltVoiceConfig": {
+                        "voiceName": voice_name or GEMINI_TTS_VOICE
+                    }
+                }
+            },
+        },
+        "model": model,
+    }
+
+    request = urllib.request.Request(
+        url=f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": GOOGLE_API_KEY,
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            raw_body = response.read()
+    except urllib.error.HTTPError as exc:
+        details = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Gemini TTS HTTP {exc.code}: {details}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Gemini TTS request failed: {exc.reason}") from exc
+
+    response_json = json.loads(raw_body.decode("utf-8"))
+    candidates = response_json.get("candidates") or []
+    if not candidates:
+        raise RuntimeError("Gemini TTS returned no candidates.")
+
+    parts = (((candidates[0] or {}).get("content") or {}).get("parts")) or []
+    inline_data = (parts[0] or {}).get("inlineData") if parts else None
+    audio_b64 = (inline_data or {}).get("data")
+    if not audio_b64:
+        raise RuntimeError("Gemini TTS returned no audio data.")
+
+    pcm_bytes = base64.b64decode(audio_b64)
+    wav_bytes = pcm_to_wav_bytes(pcm_bytes)
+    return {
+        "audio_bytes": wav_bytes,
+        "content_type": "audio/wav",
+        "voice_name": voice_name or GEMINI_TTS_VOICE,
+        "model": model,
+        "sample_rate": GEMINI_TTS_SAMPLE_RATE,
+    }
 
 
 def load_mindfulness_activities():

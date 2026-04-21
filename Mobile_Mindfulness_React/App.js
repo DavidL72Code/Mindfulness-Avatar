@@ -14,6 +14,7 @@ import {
   useWindowDimensions,
   View
 } from "react-native";
+import AvatarStage from "./components/AvatarStage";
 
 const API_BASE_URL = "https://multilingual-virtual-assistant.onrender.com";
 const TOTAL_BREATHING_ROUNDS = 4;
@@ -165,6 +166,9 @@ const sessionCatalog = [
 
 const initialChatMessage =
   "Hi, I can answer general mindfulness questions and explain any session tile in the app. Open a session first if you want details about that specific practice.";
+
+const initialAvatarMessage =
+  "Hi, I am your avatar guide. Ask about mindfulness, the current session, or what to do next, and I will talk through it with you.";
 
 function createSessionId() {
   return `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -558,6 +562,7 @@ function BreathingTutorial({
 
 export default function App() {
   const chatScrollRef = useRef(null);
+  const avatarScrollRef = useRef(null);
   const roundTimeoutsRef = useRef([]);
   const boxTimeoutsRef = useRef([]);
   const breathScale = useRef(new Animated.Value(1)).current;
@@ -574,6 +579,17 @@ export default function App() {
   const [chatBusy, setChatBusy] = useState(false);
   const [chatStatus, setChatStatus] = useState("Ready");
   const [chatModalVisible, setChatModalVisible] = useState(false);
+
+  const [avatarSessionId] = useState(() => createSessionId());
+  const [avatarMessages, setAvatarMessages] = useState([
+    { id: "avatar-welcome", role: "assistant", content: initialAvatarMessage }
+  ]);
+  const [avatarDraft, setAvatarDraft] = useState("");
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarStatus, setAvatarStatus] = useState("Ready");
+  const [avatarModalVisible, setAvatarModalVisible] = useState(false);
+  const [avatarSpeechText, setAvatarSpeechText] = useState("");
+  const [avatarIntroPlayed, setAvatarIntroPlayed] = useState(false);
 
   const [sessionActive, setSessionActive] = useState(false);
   const [sessionStatus, setSessionStatus] = useState("Not started");
@@ -595,9 +611,13 @@ export default function App() {
   const selectedSession =
     sessionCatalog.find((session) => session.id === selectedSessionId) || sessionCatalog[0];
   const canSendChat = !chatBusy && chatDraft.trim().length > 0;
+  const canSendAvatar = !avatarBusy && avatarDraft.trim().length > 0;
   const chatSheetWidth = Math.min(windowWidth - 28, 430);
   const chatSheetHeight = Math.min(Math.max(windowHeight * 0.72, 470), 620);
   const isCompactChatLayout = windowHeight < 780;
+  const avatarSheetWidth = Math.min(windowWidth - 20, 760);
+  const avatarSheetHeight = Math.min(Math.max(windowHeight * 0.82, 620), 780);
+  const isCompactAvatarLayout = windowWidth < 470 || windowHeight < 760;
   const sessionContext =
     screen === "session" || sessionActive
       ? {
@@ -612,6 +632,17 @@ export default function App() {
   useEffect(() => {
     chatScrollRef.current?.scrollToEnd({ animated: true });
   }, [chatMessages, chatModalVisible]);
+
+  useEffect(() => {
+    avatarScrollRef.current?.scrollToEnd({ animated: true });
+  }, [avatarMessages, avatarModalVisible]);
+
+  useEffect(() => {
+    if (avatarModalVisible && !avatarIntroPlayed) {
+      setAvatarSpeechText(initialAvatarMessage);
+      setAvatarIntroPlayed(true);
+    }
+  }, [avatarIntroPlayed, avatarModalVisible]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/health`, {
@@ -833,6 +864,85 @@ export default function App() {
     }
   }
 
+  function handleAvatarStageStatus(status) {
+    if (status === "speaking") {
+      setAvatarStatus("Speaking...");
+      return;
+    }
+
+    if (status === "ready" || status === "idle") {
+      if (!avatarBusy) {
+        setAvatarStatus("Ready");
+      }
+      return;
+    }
+
+    if (status === "error") {
+      setAvatarStatus("Voice unavailable");
+    }
+  }
+
+  async function sendAvatarMessage() {
+    const trimmedMessage = avatarDraft.trim();
+    if (!trimmedMessage || avatarBusy) {
+      return;
+    }
+
+    const userMessage = {
+      id: `avatar-user-${Date.now()}`,
+      role: "user",
+      content: trimmedMessage
+    };
+
+    setAvatarMessages((current) => [...current, userMessage]);
+    setAvatarDraft("");
+    setAvatarBusy(true);
+    setAvatarStatus("Thinking...");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: buildChatPrompt(trimmedMessage, sessionContext),
+          session_id: avatarSessionId
+        })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "Request failed");
+      }
+
+      const data = await response.json();
+      const reply = data.reply || "(No response text returned.)";
+      setAvatarMessages((current) => [
+        ...current,
+        {
+          id: `avatar-assistant-${Date.now()}`,
+          role: "assistant",
+          content: reply
+        }
+      ]);
+      setAvatarSpeechText(reply);
+      setAvatarStatus("Reply ready");
+    } catch (error) {
+      const fallbackReply = buildLocalChatFallback(trimmedMessage, sessionContext);
+      setAvatarMessages((current) => [
+        ...current,
+        {
+          id: `avatar-fallback-${Date.now()}`,
+          role: "assistant",
+          content: fallbackReply
+        }
+      ]);
+      setAvatarSpeechText(fallbackReply);
+      setAvatarStatus(`Offline fallback (${error.message})`);
+    } finally {
+      setAvatarBusy(false);
+    }
+  }
+
   function startSelectedSession() {
     if (!selectedSession || sessionActive) {
       return;
@@ -942,7 +1052,8 @@ export default function App() {
               <Text style={styles.helperBody}>
                 The chatbot is no longer tied to Start Session. Use the floating button to ask
                 general questions, or open a session first so the chat can explain that specific
-                practice.
+                practice. The avatar button now opens an in-app speaking guide instead of sending
+                you to a website.
               </Text>
             </View>
           </ScrollView>
@@ -1068,22 +1179,150 @@ export default function App() {
               </Text>
               <Text style={styles.panelBody}>
                 {selectedSession.kind === "guided"
-                  ? "You can stop the breathing session at any time with End Session, and the popup chat can still answer questions about the current step."
+                  ? "You can stop the breathing session at any time with End Session, and both the popup chat and avatar guide can still answer questions about the current step."
                   : placeholderMessage || "Start Session if you want to test the empty placeholder flow for this tile."}
               </Text>
             </View>
           </ScrollView>
         )}
 
-        <Pressable
-          onPress={() => setChatModalVisible(true)}
-          style={({ pressed }) => [
-            styles.chatLauncher,
-            pressed ? styles.buttonPressed : null
-          ]}
+        <View style={styles.floatingActionStack}>
+          <Pressable
+            onPress={() => setAvatarModalVisible(true)}
+            style={({ pressed }) => [
+              styles.avatarLauncher,
+              pressed ? styles.buttonPressed : null
+            ]}
+          >
+            <Text style={styles.avatarLauncherLabel}>Open Avatar</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => setChatModalVisible(true)}
+            style={({ pressed }) => [
+              styles.chatLauncher,
+              pressed ? styles.buttonPressed : null
+            ]}
+          >
+            <Text style={styles.chatLauncherLabel}>Open Chat</Text>
+          </Pressable>
+        </View>
+
+        <Modal
+          visible={avatarModalVisible}
+          animationType="slide"
+          transparent
+          onRequestClose={() => setAvatarModalVisible(false)}
         >
-          <Text style={styles.chatLauncherLabel}>Open Chat</Text>
-        </Pressable>
+          <View style={styles.sheetBackdrop}>
+            <Pressable
+              style={styles.sheetDismissOverlay}
+              onPress={() => setAvatarModalVisible(false)}
+            />
+
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : undefined}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 12 : 0}
+              style={styles.sheetKeyboardFrame}
+            >
+              <View
+                style={[
+                  styles.avatarSheet,
+                  isCompactAvatarLayout ? styles.avatarSheetCompact : null,
+                  {
+                    width: avatarSheetWidth,
+                    maxHeight: avatarSheetHeight
+                  }
+                ]}
+              >
+                <View style={styles.chatSheetHeader}>
+                  <View style={styles.chatSheetHeaderCopy}>
+                    <Text style={styles.chatSheetTitle}>Mindfulness Avatar</Text>
+                    <Text style={styles.chatSheetSubtitle}>
+                      {screen === "session"
+                        ? `Current context: ${selectedSession.title}`
+                        : "Current context: general app help"}
+                    </Text>
+                  </View>
+
+                  <Pressable
+                    onPress={() => setAvatarModalVisible(false)}
+                    style={({ pressed }) => [
+                      styles.closeButton,
+                      pressed ? styles.buttonPressed : null
+                    ]}
+                  >
+                    <Text style={styles.closeButtonText}>Close</Text>
+                  </Pressable>
+                </View>
+
+                <View
+                  style={[
+                    styles.avatarFrame,
+                    isCompactAvatarLayout ? styles.avatarFrameCompact : null
+                  ]}
+                >
+                  <View style={styles.avatarStagePanel}>
+                    <AvatarStage
+                      speechText={avatarSpeechText}
+                      onStatusChange={handleAvatarStageStatus}
+                    />
+                  </View>
+
+                  <View style={styles.avatarConversation}>
+                    <View style={styles.chatStatusRow}>
+                      <Text style={styles.chatStatusText}>Avatar status: {avatarStatus}</Text>
+                    </View>
+
+                    <ScrollView
+                      ref={avatarScrollRef}
+                      style={styles.avatarTranscript}
+                      contentContainerStyle={styles.chatWindowContent}
+                      keyboardShouldPersistTaps="handled"
+                    >
+                      {avatarMessages.map((message) => (
+                        <MessageBubble
+                          key={message.id}
+                          role={message.role}
+                          content={message.content}
+                        />
+                      ))}
+                    </ScrollView>
+
+                    <View style={styles.composerCard}>
+                      <TextInput
+                        value={avatarDraft}
+                        onChangeText={setAvatarDraft}
+                        placeholder="Ask the avatar about mindfulness or this session..."
+                        placeholderTextColor="#6d7a80"
+                        editable={!avatarBusy}
+                        multiline
+                        style={[
+                          styles.chatInput,
+                          styles.avatarInput,
+                          isCompactAvatarLayout ? styles.chatInputCompact : null,
+                          avatarBusy ? styles.textInputDisabled : null
+                        ]}
+                      />
+
+                      <Pressable
+                        onPress={sendAvatarMessage}
+                        disabled={!canSendAvatar}
+                        style={({ pressed }) => [
+                          styles.sendButton,
+                          !canSendAvatar ? styles.disabledButton : null,
+                          pressed && canSendAvatar ? styles.buttonPressed : null
+                        ]}
+                      >
+                        <Text style={styles.sendButtonText}>Send</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </KeyboardAvoidingView>
+          </View>
+        </Modal>
 
         <Modal
           visible={chatModalVisible}
@@ -1978,10 +2217,34 @@ const styles = StyleSheet.create({
     color: "#53605b",
     flexShrink: 1
   },
-  chatLauncher: {
+  floatingActionStack: {
     position: "absolute",
     right: 18,
     bottom: 24,
+    gap: 10,
+    alignItems: "flex-end"
+  },
+  avatarLauncher: {
+    minHeight: 52,
+    borderRadius: 18,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(23, 59, 49, 0.14)",
+    shadowColor: "#10241e",
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 6
+  },
+  avatarLauncherLabel: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#173b31"
+  },
+  chatLauncher: {
     minHeight: 56,
     borderRadius: 18,
     backgroundColor: "#173b31",
@@ -2041,6 +2304,30 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     gap: 12
   },
+  avatarSheet: {
+    width: "100%",
+    maxWidth: 760,
+    alignSelf: "center",
+    backgroundColor: "#fbf7ef",
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: "#e4dbc9",
+    paddingTop: 24,
+    paddingHorizontal: 18,
+    paddingBottom: 18,
+    gap: 14,
+    overflow: "hidden",
+    shadowColor: "#10241e",
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    shadowOffset: { width: 3, height: 12 },
+    elevation: 10
+  },
+  avatarSheetCompact: {
+    paddingTop: 20,
+    paddingHorizontal: 14,
+    paddingBottom: 14
+  },
   chatSheetHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -2089,6 +2376,30 @@ const styles = StyleSheet.create({
     padding: 15,
     gap: 12
   },
+  avatarFrame: {
+    flex: 1,
+    borderWidth: 4,
+    borderColor: "#ddd2bd",
+    borderRadius: 24,
+    backgroundColor: "#f8f1e4",
+    padding: 15,
+    gap: 12,
+    flexDirection: "row",
+    alignItems: "stretch"
+  },
+  avatarFrameCompact: {
+    flexDirection: "column"
+  },
+  avatarStagePanel: {
+    flex: 1,
+    minHeight: 280,
+    borderRadius: 24,
+    overflow: "hidden"
+  },
+  avatarConversation: {
+    flex: 1.08,
+    gap: 12
+  },
   chatStatusRow: {
     borderRadius: 14,
     backgroundColor: "#ffffff",
@@ -2119,6 +2430,15 @@ const styles = StyleSheet.create({
   },
   chatWindowCompact: {
     minHeight: 180
+  },
+  avatarTranscript: {
+    flex: 1,
+    minHeight: 240,
+    borderRadius: 24,
+    backgroundColor: "#ffffff",
+    borderWidth: 5,
+    borderColor: "#eadfce",
+    overflow: "hidden"
   },
   chatWindowContent: {
     padding: 14,
@@ -2171,6 +2491,9 @@ const styles = StyleSheet.create({
   chatInputCompact: {
     minHeight: 64,
     maxHeight: 108
+  },
+  avatarInput: {
+    minHeight: 72
   },
   textInputDisabled: {
     backgroundColor: "#f2f0eb"
