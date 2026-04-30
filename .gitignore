@@ -1,5 +1,39 @@
 .env
-node_modules
-.expo
-Mobile_Mindfulness_React/node_modules
-Mobile_Mindfulness_React/.expo
+.env*.local
+
+# Dependencies
+node_modules/
+Mobile_Mindfulness_React/node_modules/
+
+# Expo
+.expo/
+Mobile_Mindfulness_React/.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+/ios
+/android
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# TypeScript
+*.tsbuildinfo
