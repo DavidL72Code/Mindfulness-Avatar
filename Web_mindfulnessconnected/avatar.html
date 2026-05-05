@@ -2734,45 +2734,13 @@ async function replyWithStream(prompt){
   speechToken++;
   const myToken=speechToken;
   audioState.stop();lipsync.stop();
-  await audioState.prime().catch(()=>{});
   let msgDiv=null,fullText='';
-  const ttsQ=[];
-  let playIdx=0,draining=false;
 
   function appendChunk(chunk){
     fullText+=(fullText?' ':'')+chunk;
     if(!msgDiv){msgDiv=document.createElement('div');msgDiv.className='msg assistant';msgsEl.appendChild(msgDiv);}
     msgDiv.textContent=fullText;
     msgsEl.scrollTop=msgsEl.scrollHeight;
-  }
-
-  async function drainQueue(){
-    if(draining)return;
-    draining=true;
-    while(playIdx<ttsQ.length){
-      if(speechToken!==myToken){draining=false;return;}
-      const item=await ttsQ[playIdx++];
-      if(speechToken!==myToken){draining=false;return;}
-      if(!item){setSt('idle','Voice unavailable');continue;}
-      setSt('speaking','Speaking…');
-      await new Promise(resolve=>{
-        audioState.playAudio(item.buf,{
-          onstart:dur=>{
-            if(speechToken!==myToken){audioState.stop();resolve();return;}
-            lipsync.play(item.text,dur);
-          },
-          onended:resolve,
-        }).catch(()=>resolve());
-      });
-    }
-    draining=false;
-    if(speechToken===myToken){lipsync.stop();setSt('idle','Listening…');}
-  }
-
-  function enqueueTts(text){
-    if(!ttschk.checked)return;
-    ttsQ.push(apiTts(text).then(buf=>({buf,text})).catch(()=>null));
-    drainQueue();
   }
 
   try{
@@ -2783,8 +2751,7 @@ async function replyWithStream(prompt){
         if(speechToken!==myToken)return;
         setTyp(false);
         appendChunk(chunk);
-        if(ttschk.checked)setSt('thinking','Generating voice…');
-        enqueueTts(chunk);
+        setSt('thinking','Typing…');
       }
     }catch(streamErr){
       if(gotChunk)throw streamErr;
@@ -2792,11 +2759,9 @@ async function replyWithStream(prompt){
       if(speechToken!==myToken)return;
       setTyp(false);
       appendChunk(r);
-      if(ttschk.checked)setSt('thinking','Generating voice…');
-      enqueueTts(r);
     }
     if(fullText){messageLog.push({role:'assistant',text:fullText});persistTranscript();}
-    if(!ttschk.checked&&speechToken===myToken){lipsync.stop();setSt('idle','Listening…');}
+    if(speechToken===myToken)await speak(fullText);
   }catch{
     setTyp(false);setSt('idle','Listening…');
     addMsg('system','Could not connect to the mindfulness server right now.');
