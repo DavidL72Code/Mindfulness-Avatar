@@ -26,6 +26,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { signOut } from 'firebase/auth';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
+import * as Speech from 'expo-speech';
 import { auth } from '../config/firebaseConfig';
 import { useLanguage } from '../context/LanguageContext';
 import { ThemeColor, ThemeRadius } from '../theme/appTheme';
@@ -218,7 +219,7 @@ function buildAvatarUri(baseUri, params) {
 // Always mounted — opacity:0 + pointerEvents:none when not visible so the
 // WebView keeps running and localStorage / chat state survives screen transitions.
 
-function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef, onLoad }) {
+function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef, onLoad, onMessage }) {
   const hiddenStyle = !visible && styles.floatingHidden;
 
   if (!expanded) {
@@ -261,6 +262,7 @@ function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef
           mediaPlaybackRequiresUserAction={false}
           injectedJavaScript={WEBVIEW_STATIC_JS}
           onLoad={onLoad}
+          onMessage={onMessage}
         />
       ) : (
         <View style={styles.avatarLoading}>
@@ -274,7 +276,7 @@ function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef
 
 // ─── Session Avatar Panel ─────────────────────────────────────────────────────
 
-function SessionAvatarPanel({ avatarUri, webViewRef, onLoad }) {
+function SessionAvatarPanel({ avatarUri, webViewRef, onLoad, onMessage }) {
   return (
     <View style={styles.sessionAvatarPanel}>
       {avatarUri ? (
@@ -295,6 +297,7 @@ function SessionAvatarPanel({ avatarUri, webViewRef, onLoad }) {
           mediaPlaybackRequiresUserAction={false}
           injectedJavaScript={WEBVIEW_STATIC_JS}
           onLoad={onLoad}
+          onMessage={onMessage}
         />
       ) : (
         <View style={styles.avatarLoading}>
@@ -586,6 +589,19 @@ export default function HomeScreen({ navigation }) {
         setAvatarHtmlBase(asset.localUri);
       } catch { /* avatar unavailable */ }
     })();
+  }, []);
+
+  // ── Handle messages sent from avatar.html via ReactNativeWebView.postMessage ──
+  const handleWebViewMessage = useCallback((event) => {
+    try {
+      const msg = JSON.parse(event.nativeEvent.data);
+      if (msg.type === 'native-speak') {
+        Speech.stop();
+        Speech.speak(msg.text, { rate: 0.9 });
+      } else if (msg.type === 'native-stop-speech') {
+        Speech.stop();
+      }
+    } catch {}
   }, []);
 
   // ── Inject a postMessage event into the session avatar WebView ──
@@ -948,6 +964,7 @@ export default function HomeScreen({ navigation }) {
             avatarUri={sessionAvatarUri}
             webViewRef={sessionWebViewRef}
             onLoad={handleSessionAvatarLoad}
+            onMessage={handleWebViewMessage}
           />
 
           {sessionActive && selectedSession.kind === 'guided' && (
@@ -1006,6 +1023,7 @@ export default function HomeScreen({ navigation }) {
         onToggle={() => setDockExpanded((v) => !v)}
         webViewRef={homeDockWebViewRef}
         onLoad={handleHomeDockLoad}
+        onMessage={handleWebViewMessage}
       />
 
       <SummaryModal

@@ -2607,6 +2607,7 @@ function stopSpeech(status='Listening…'){
   audioState.stop();
   lipsync.stop();
   if('speechSynthesis' in window)speechSynthesis.cancel();
+  if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(JSON.stringify({type:'native-stop-speech'}));
   setSt('idle',status);
 }
 async function speak(text){
@@ -2637,7 +2638,13 @@ async function speak(text){
     if(token!==speechToken)return;
     audioState.stop();
     lipsync.stop();
-    if('speechSynthesis' in window){
+    if(window.ReactNativeWebView){
+      const est=Math.max(2,trimmed.length*0.065);
+      lipsync.play(trimmed,est);
+      setSt('speaking','Speaking…');
+      window.ReactNativeWebView.postMessage(JSON.stringify({type:'native-speak',text:trimmed}));
+      setTimeout(()=>{if(token===speechToken){lipsync.stop();setSt('idle','Listening…');}},est*1000+500);
+    }else if('speechSynthesis' in window){
       setSt('speaking','Speaking…');
       const est=Math.max(2,trimmed.length*0.065);
       lipsync.play(trimmed,est);
