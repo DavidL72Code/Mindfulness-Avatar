@@ -596,10 +596,25 @@ export default function HomeScreen({ navigation }) {
     try {
       const msg = JSON.parse(event.nativeEvent.data);
       if (msg.type === 'native-speak') {
-        Speech.stop();
-        Speech.speak(msg.text, { rate: 0.9 });
+        // Suspend the WebView AudioContext so iOS doesn't block AVSpeechSynthesizer
+        const suspendJs = `(function(){try{if(typeof audioState!=='undefined'&&audioState.ctx&&audioState.ctx.state==='running')audioState.ctx.suspend();}catch(e){}})();true;`;
+        sessionWebViewRef.current?.injectJavaScript(suspendJs);
+        homeDockWebViewRef.current?.injectJavaScript(suspendJs);
+        const resumeJs = `(function(){try{if(typeof audioState!=='undefined'&&audioState.ctx&&audioState.ctx.state==='suspended')audioState.ctx.resume();}catch(e){}})();true;`;
+        const resumeCtx = () => {
+          sessionWebViewRef.current?.injectJavaScript(resumeJs);
+          homeDockWebViewRef.current?.injectJavaScript(resumeJs);
+        };
+        // Small delay so AudioContext fully releases the audio session before TTS starts
+        setTimeout(() => {
+          Speech.stop();
+          Speech.speak(msg.text, { rate: 0.9, onDone: resumeCtx, onStopped: resumeCtx, onError: resumeCtx });
+        }, 120);
       } else if (msg.type === 'native-stop-speech') {
         Speech.stop();
+        const resumeJs = `(function(){try{if(typeof audioState!=='undefined'&&audioState.ctx&&audioState.ctx.state==='suspended')audioState.ctx.resume();}catch(e){}})();true;`;
+        sessionWebViewRef.current?.injectJavaScript(resumeJs);
+        homeDockWebViewRef.current?.injectJavaScript(resumeJs);
       }
     } catch {}
   }, []);
