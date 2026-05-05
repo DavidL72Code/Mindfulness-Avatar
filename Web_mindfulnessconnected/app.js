@@ -177,7 +177,14 @@ const translations = {
     card4Text: "Customize your interface and accessibility options here.",
     supportBtn: "Support Ticket",
     language: "Language",
-    start: "Start"
+    start: "Start",
+    firstName: "First Name",
+    lastName: "Last Name",
+    dateOfBirth: "Date of Birth",
+    confirmPassword: "Confirm Password",
+    signUpHeader: "Create Account",
+    signUpSubmit: "Create Account",
+    backToSignIn: "Already have an account? Sign in",
   },
   ko: {
     signInWelcome: "다시 오신 것을 환영합니다",
@@ -198,7 +205,14 @@ const translations = {
     card4Text: "여기에서 인터페이스와 접근성 설정을 사용자 정의하십시오.",
     supportBtn: "지원 티켓",
     language: "Language",
-    start: "Start"
+    start: "Start",
+    firstName: "이름",
+    lastName: "성",
+    dateOfBirth: "생년월일",
+    confirmPassword: "비밀번호 확인",
+    signUpHeader: "계정 만들기",
+    signUpSubmit: "계정 만들기",
+    backToSignIn: "이미 계정이 있으신가요? 로그인",
   }
 };
 
@@ -212,6 +226,15 @@ const state = {
   signInEmail: "",
   signInPassword: "",
   signInError: "",
+  authScreen: "signin",
+  signUpFirstName: "",
+  signUpLastName: "",
+  signUpDob: "",
+  signUpEmail: "",
+  signUpPassword: "",
+  signUpConfirmPassword: "",
+  signUpError: "",
+  currentUser: null,
   languageModalVisible: true,
   screen: "home",
   selectedSessionId: sessionCatalog[0].id,
@@ -1006,22 +1029,89 @@ function endSelectedSession() {
   render();
 }
 
-function handleWebSignIn() {
-  if (!state.signInEmail.trim() || !state.signInPassword.trim()) {
+async function handleWebSignIn() {
+  const email = state.signInEmail.trim();
+  const password = state.signInPassword.trim();
+  if (!email || !password) {
     state.signInError = "Please enter both email and password.";
     render();
     return;
   }
-
-  state.authenticated = true;
-  state.screen = "home";
-  state.signInError = "";
+  state.signInError = "Signing in…";
   render();
+  try {
+    if (!window._fb) throw new Error("not-ready");
+    await window._fb.signIn(email, password);
+  } catch (err) {
+    const code = err.code || "";
+    state.signInError =
+      code === "auth/invalid-credential" || code === "auth/wrong-password"
+        ? "Incorrect email or password."
+        : code === "auth/user-not-found"
+        ? "No account found with this email."
+        : code === "not-ready"
+        ? "Still connecting — please try again in a moment."
+        : "Sign in failed. Please try again.";
+    render();
+  }
 }
 
-function handleLogout() {
+async function handleWebSignUp() {
+  const firstName = state.signUpFirstName.trim();
+  const lastName  = state.signUpLastName.trim();
+  const email     = state.signUpEmail.trim();
+  const password  = state.signUpPassword;
+  const confirm   = state.signUpConfirmPassword;
+  if (!firstName || !lastName || !email || !password || !confirm) {
+    state.signUpError = "Please fill in all required fields.";
+    render();
+    return;
+  }
+  if (password !== confirm) {
+    state.signUpError = "Passwords do not match.";
+    render();
+    return;
+  }
+  if (password.length < 8) {
+    state.signUpError = "Password must be at least 8 characters.";
+    render();
+    return;
+  }
+  state.signUpError = "Creating account…";
+  render();
+  try {
+    if (!window._fb) throw new Error("not-ready");
+    const credential = await window._fb.signUp(email, password);
+    await window._fb.saveUserProfile(credential.user.uid, {
+      firstName,
+      lastName,
+      fullName: `${firstName} ${lastName}`,
+      email,
+      dateOfBirth: state.signUpDob || "",
+      languagePreference: state.locale,
+      createdAt: new Date(),
+      totalSessionTime: 0,
+    });
+  } catch (err) {
+    const code = err.code || "";
+    state.signUpError =
+      code === "auth/email-already-in-use"
+        ? "An account with this email already exists."
+        : code === "not-ready"
+        ? "Still connecting — please try again in a moment."
+        : "Account creation failed. Please try again.";
+    render();
+  }
+}
+
+async function handleLogout() {
   clearExerciseState();
+  if (window._fb) {
+    try { await window._fb.signOut(); } catch {}
+  }
   state.authenticated = false;
+  state.currentUser = null;
+  state.authScreen = "signin";
   state.screen = "home";
   state.languageModalVisible = true;
   state.avatarDockVisible = true;
@@ -1216,6 +1306,100 @@ function renderSignInScreen() {
 
         <button class="signin-link" data-action="sign-up-placeholder" type="button">
           + ${escapeHtml(t("signUpPrompt"))}
+        </button>
+      </section>
+
+      <p class="signin-footer">${escapeHtml(t("signInFooter"))}</p>
+    </main>
+  `;
+}
+
+function renderSignUpScreen() {
+  const cornerLabel = state.locale === "en" ? "한국어" : "English";
+  return `
+    <main class="signin-screen">
+      <div class="signin-lang-corner">
+        <button class="signin-lang-btn" data-action="toggle-language" type="button">
+          ${escapeHtml(cornerLabel)}
+        </button>
+      </div>
+
+      <section class="signin-card signup-card" aria-label="Create account">
+        <h1 class="signin-title">${escapeHtml(t("signUpHeader"))}</h1>
+
+        <div class="signup-name-row">
+          <label class="signin-field signup-half">
+            <input
+              id="signup-firstname"
+              type="text"
+              autocomplete="given-name"
+              placeholder="${escapeHtml(t("firstName"))}"
+              value="${escapeHtml(state.signUpFirstName)}"
+            >
+          </label>
+          <label class="signin-field signup-half">
+            <input
+              id="signup-lastname"
+              type="text"
+              autocomplete="family-name"
+              placeholder="${escapeHtml(t("lastName"))}"
+              value="${escapeHtml(state.signUpLastName)}"
+            >
+          </label>
+        </div>
+
+        <label class="signin-field">
+          <input
+            id="signup-dob"
+            type="date"
+            autocomplete="bday"
+            placeholder="${escapeHtml(t("dateOfBirth"))}"
+            value="${escapeHtml(state.signUpDob)}"
+          >
+        </label>
+
+        <label class="signin-field">
+          <span class="signin-icon" aria-hidden="true">✉</span>
+          <input
+            id="signup-email"
+            type="email"
+            autocomplete="email"
+            placeholder="${escapeHtml(t("email"))}"
+            value="${escapeHtml(state.signUpEmail)}"
+          >
+        </label>
+
+        <label class="signin-field">
+          <span class="signin-icon" aria-hidden="true">●</span>
+          <input
+            id="signup-password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="${escapeHtml(t("password"))}"
+            value="${escapeHtml(state.signUpPassword)}"
+          >
+        </label>
+
+        <label class="signin-field">
+          <span class="signin-icon" aria-hidden="true">●</span>
+          <input
+            id="signup-confirm"
+            type="password"
+            autocomplete="new-password"
+            placeholder="${escapeHtml(t("confirmPassword"))}"
+            value="${escapeHtml(state.signUpConfirmPassword)}"
+          >
+        </label>
+
+        ${state.signUpError ? `<p class="signin-error">${escapeHtml(state.signUpError)}</p>` : ""}
+
+        <button class="signin-submit" data-action="sign-up" type="button">
+          <span>${escapeHtml(t("signUpSubmit"))}</span>
+          <span aria-hidden="true">›</span>
+        </button>
+
+        <button class="signin-link" data-action="go-sign-in" type="button">
+          ${escapeHtml(t("backToSignIn"))}
         </button>
       </section>
 
@@ -1468,7 +1652,7 @@ function renderSummaryModal() {
 
 function render() {
   if (!state.authenticated) {
-    appEl.innerHTML = renderSignInScreen();
+    appEl.innerHTML = state.authScreen === "signup" ? renderSignUpScreen() : renderSignInScreen();
     attachInputHandlers();
     if (avatarDockEl) {
       avatarDockEl.classList.add("hidden");
@@ -1534,6 +1718,17 @@ function attachInputHandlers() {
     });
   }
 
+  const bindSignup = (id, key) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", (e) => { state[key] = e.target.value; state.signUpError = ""; });
+  };
+  bindSignup("signup-firstname", "signUpFirstName");
+  bindSignup("signup-lastname",  "signUpLastName");
+  bindSignup("signup-dob",       "signUpDob");
+  bindSignup("signup-email",     "signUpEmail");
+  bindSignup("signup-password",  "signUpPassword");
+  bindSignup("signup-confirm",   "signUpConfirmPassword");
+
   const chatInput = document.getElementById("chat-input");
   if (chatInput) {
     chatInput.addEventListener("input", (event) => {
@@ -1590,8 +1785,18 @@ appEl.addEventListener("click", (event) => {
       handleWebSignIn();
       break;
     case "sign-up-placeholder":
-      state.signInError = "Account creation can be connected next. For now, enter any email and password to preview the web app.";
+    case "go-sign-up":
+      state.authScreen = "signup";
+      state.signUpError = "";
       render();
+      break;
+    case "go-sign-in":
+      state.authScreen = "signin";
+      state.signInError = "";
+      render();
+      break;
+    case "sign-up":
+      handleWebSignUp();
       break;
     case "logout":
       handleLogout();
@@ -1702,4 +1907,33 @@ fetch(`${API_BASE_URL}/health`, {
   // Keep the interface usable even if the Render instance is still waking up.
 });
 
-render();
+window._fb = null;
+
+(async function initApp() {
+  let fbReady = false;
+  try {
+    const res = await fetch("/firebase-config");
+    const { firebaseConfig } = await res.json();
+    if (firebaseConfig && firebaseConfig.apiKey) {
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      window._fb = {
+        signIn:           (email, pw) => auth.signInWithEmailAndPassword(email, pw),
+        signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
+        signOut:          ()          => auth.signOut(),
+        saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
+      };
+      fbReady = true;
+      auth.onAuthStateChanged((user) => {
+        state.authenticated = !!user;
+        state.currentUser = user || null;
+        if (user) state.authScreen = "signin";
+        render();
+      });
+    }
+  } catch (_) {
+    // Firebase unavailable — fall through to plain render
+  }
+  if (!fbReady) render();
+})();

@@ -162,11 +162,27 @@ class ChatHandler(SimpleHTTPRequestHandler):
             send_json(self, {"status": "ok"})
             return
 
+        if self.path == "/firebase-config":
+            self.handle_firebase_config()
+            return
+
         if self.path.startswith("/activities"):
             self.handle_activities()
             return
 
         super().do_GET()
+
+    def handle_firebase_config(self):
+        config = {
+            "apiKey": os.getenv("EXPO_PUBLIC_FIREBASE_API_KEY", ""),
+            "authDomain": os.getenv("EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN", ""),
+            "projectId": os.getenv("EXPO_PUBLIC_FIREBASE_PROJECT_ID", ""),
+            "storageBucket": os.getenv("EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET", ""),
+            "messagingSenderId": os.getenv("EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID", ""),
+            "appId": os.getenv("EXPO_PUBLIC_FIREBASE_APP_ID", ""),
+            "measurementId": os.getenv("EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID", ""),
+        }
+        send_json(self, {"firebaseConfig": config})
 
     def do_POST(self):
         if self.path == "/chat":

@@ -1860,3 +1860,8 @@ body.avatar-dragging {
     padding: 22px;
   }
 }
+
+/* ── Sign-up additions ── */
+.signup-card { max-height: 90vh; overflow-y: auto; }
+.signup-name-row { display: flex; gap: 10px; }
+.signup-half { flex: 1; min-width: 0; }
