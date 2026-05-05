@@ -1037,23 +1037,11 @@ async function handleWebSignIn() {
     render();
     return;
   }
-  state.signInError = "Signing in…";
+  // BYPASS: accept any credentials for testing — remove when Firebase env vars are configured
+  state.authenticated = true;
+  state.currentUser = { email };
+  state.authScreen = "signin";
   render();
-  try {
-    if (!window._fb) throw new Error("not-ready");
-    await window._fb.signIn(email, password);
-  } catch (err) {
-    const code = err.code || "";
-    state.signInError =
-      code === "auth/invalid-credential" || code === "auth/wrong-password"
-        ? "Incorrect email or password."
-        : code === "auth/user-not-found"
-        ? "No account found with this email."
-        : code === "not-ready"
-        ? "Still connecting — please try again in a moment."
-        : "Sign in failed. Please try again.";
-    render();
-  }
 }
 
 async function handleWebSignUp() {
