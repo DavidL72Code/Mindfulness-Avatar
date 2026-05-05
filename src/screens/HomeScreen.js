@@ -544,6 +544,7 @@ export default function HomeScreen({ navigation }) {
   const sessionWebViewRef                         = useRef(null);
   const homeDockWebViewRef                        = useRef(null);
   const homeDockLoadCount                         = useRef(0);
+  const avatarVoiceId                             = useRef(null);
 
   // ── Session state ──
   const [sessionActive, setSessionActive]         = useState(false);
@@ -591,6 +592,20 @@ export default function HomeScreen({ navigation }) {
     })();
   }, []);
 
+  // ── Pick a male English voice for native TTS ──
+  useEffect(() => {
+    const MALE_NAMES = ['alex', 'daniel', 'tom', 'evan', 'gordon', 'fred', 'rishi', 'aaron', 'lee', 'arthur'];
+    Speech.getAvailableVoicesAsync()
+      .then((voices) => {
+        const en = voices.filter((v) => v.language?.startsWith('en'));
+        const male = en.find((v) =>
+          MALE_NAMES.some((n) => v.identifier?.toLowerCase().includes(n) || v.name?.toLowerCase().includes(n))
+        );
+        if (male) avatarVoiceId.current = male.identifier;
+      })
+      .catch(() => {});
+  }, []);
+
   // ── Handle messages sent from avatar.html via ReactNativeWebView.postMessage ──
   const handleWebViewMessage = useCallback((event) => {
     try {
@@ -608,7 +623,13 @@ export default function HomeScreen({ navigation }) {
         // Small delay so AudioContext fully releases the audio session before TTS starts
         setTimeout(() => {
           Speech.stop();
-          Speech.speak(msg.text, { rate: 0.9, onDone: resumeCtx, onStopped: resumeCtx, onError: resumeCtx });
+          Speech.speak(msg.text, {
+            rate: 0.9,
+            voice: avatarVoiceId.current ?? undefined,
+            onDone: resumeCtx,
+            onStopped: resumeCtx,
+            onError: resumeCtx,
+          });
         }, 120);
       } else if (msg.type === 'native-stop-speech') {
         Speech.stop();

@@ -2311,9 +2311,9 @@ const idle={
 const ALL_V=['sil','PP','FF','TH','DD','kk','CH','SS','nn','RR','aa','E','I','O','U'];
 const L2V={a:'aa',b:'PP',c:'kk',d:'DD',e:'E',f:'FF',g:'kk',h:'nn',i:'I',j:'CH',k:'kk',l:'nn',m:'PP',n:'nn',o:'O',p:'PP',q:'kk',r:'RR',s:'SS',t:'DD',u:'U',v:'FF',w:'U',x:'kk',y:'I',z:'SS'};
 const V_OPEN={sil:.00,PP:.00,FF:.05,TH:.10,DD:.25,kk:.28,CH:.18,SS:.06,nn:.20,RR:.24,aa:.65,E:.38,I:.22,O:.55,U:.15};
-const VISEME_STRENGTH=.6;
-const MOUTH_SCALE=.42;
-const JAW_SCALE=.16;
+const VISEME_STRENGTH=.85;
+const MOUTH_SCALE=.72;
+const JAW_SCALE=.28;
 function charDur(ch){
   if('aeiou'.includes(ch))return .082;
   if('y'.includes(ch))return .074;
@@ -2415,8 +2415,8 @@ const lipsync={active:false,tl:[],t0:0,energy:0,brightness:0,
     this.energy+=(targetEnergy-this.energy)*Math.min(1,10*dt);
     this.brightness+=(targetBrightness-this.brightness)*Math.min(1,8*dt);
     const articulation=Math.max(0,this.energy-.03);
-    const visemeAmount=this.active?VISEME_STRENGTH*(.18+articulation*.82):0;
-    const open=this.active?(V_OPEN[cur]??0)*MOUTH_SCALE*(.12+articulation*1.18):0;
+    const visemeAmount=this.active?VISEME_STRENGTH*(.6+articulation*.4):0;
+    const open=this.active?(V_OPEN[cur]??0)*MOUTH_SCALE*(.62+articulation*.38):0;
     const sp=14*dt;
     for(const k of ALL_V)lerpMorph('viseme_'+k,this.active&&k===cur?visemeAmount:0,sp);
     lerpMorph('mouthOpen',open,sp);
