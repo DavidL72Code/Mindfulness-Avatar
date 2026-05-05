@@ -2738,7 +2738,7 @@ async function replyWithStream(prompt){
             lipsync.play(item.text,dur);
           },
           onended:resolve,
-        });
+        }).catch(()=>resolve());
       });
     }
     draining=false;
