@@ -2425,7 +2425,23 @@ const lipsync={active:false,tl:[],t0:0,energy:0,brightness:0,
     lerpMorph('mouthSmileRight',this.active?this.brightness*.05:0,sp);
   }
 };
-window.addEventListener('pointerdown',()=>{audioState.prime().catch(()=>{});},{once:true});
+function unlockCtx(){
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return;
+  if(!audioState.ctx){
+    try{
+      audioState.ctx=new Ctx();
+      audioState.analyser=audioState.ctx.createAnalyser();
+      audioState.analyser.fftSize=1024;
+      audioState.analyser.smoothingTimeConstant=.72;
+      audioState.data=new Uint8Array(audioState.analyser.frequencyBinCount);
+      audioState.analyser.connect(audioState.ctx.destination);
+    }catch{return;}
+  }
+  if(audioState.ctx.state!=='running')audioState.ctx.resume().catch(()=>{});
+}
+window.addEventListener('pointerdown',unlockCtx);
+window.addEventListener('touchstart',unlockCtx,{passive:true});
 
 /* =========================================================
    RENDER LOOP
@@ -2729,7 +2745,8 @@ async function replyWithStream(prompt){
     while(playIdx<ttsQ.length){
       if(speechToken!==myToken){draining=false;return;}
       const item=await ttsQ[playIdx++];
-      if(!item||speechToken!==myToken)continue;
+      if(speechToken!==myToken){draining=false;return;}
+      if(!item){setSt('idle','Voice unavailable');continue;}
       setSt('speaking','Speaking…');
       await new Promise(resolve=>{
         audioState.playAudio(item.buf,{
@@ -2880,9 +2897,9 @@ window._nativeHostCommand=function(cmd){
   if(cmd.type==='host-pause-session'){hostPauseSession();}
 };
 
-bsend.addEventListener('click',handleSend);
-inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
-ttschk.addEventListener('change',()=>{if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech('Listening…');});
+bsend.addEventListener('click',()=>{unlockCtx();handleSend();});
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();unlockCtx();handleSend();}});
+ttschk.addEventListener('change',()=>{unlockCtx();if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech('Listening…');});
 const hasStoredTranscript=restoreTranscript();
 if(hasStoredTranscript){
   setUi(true);
