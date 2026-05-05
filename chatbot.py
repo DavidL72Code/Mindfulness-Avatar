@@ -3,8 +3,10 @@ import json
 import base64
 import io
 import wave
+import asyncio
 import urllib.request
 import urllib.error
+import edge_tts
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -24,6 +26,28 @@ ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activitie
 GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
 GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Iapetus")
 GEMINI_TTS_SAMPLE_RATE = 24000
+EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-GuyNeural")
+
+
+async def _edge_tts_async(text, voice):
+    communicate = edge_tts.Communicate(text, voice)
+    chunks = []
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            chunks.append(chunk["data"])
+    return b"".join(chunks)
+
+
+def synthesize_edge_tts(text, voice=None):
+    prompt_text = (text or "").strip()
+    if not prompt_text:
+        raise ValueError("Missing text for speech synthesis.")
+    audio_bytes = asyncio.run(_edge_tts_async(prompt_text, voice or EDGE_TTS_VOICE))
+    return {
+        "audio_bytes": audio_bytes,
+        "content_type": "audio/mpeg",
+        "voice_name": voice or EDGE_TTS_VOICE,
+    }
 
 
 def pcm_to_wav_bytes(pcm_bytes, channels=1, sample_rate=GEMINI_TTS_SAMPLE_RATE, sample_width=2):

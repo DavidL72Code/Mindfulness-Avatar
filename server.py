@@ -13,6 +13,7 @@ from chatbot import (
     find_activity,
     load_mindfulness_activities,
     summarize_history,
+    synthesize_edge_tts,
     synthesize_gemini_speech,
 )
 
@@ -301,10 +302,13 @@ class ChatHandler(SimpleHTTPRequestHandler):
             return
 
         try:
-            result = synthesize_gemini_speech(text=text, voice_name=voice_name)
-        except Exception as exc:
-            self.send_error(500, f"TTS error: {exc}")
-            return
+            result = synthesize_edge_tts(text=text)
+        except Exception:
+            try:
+                result = synthesize_gemini_speech(text=text, voice_name=voice_name)
+            except Exception as exc:
+                self.send_error(500, f"TTS error: {exc}")
+                return
 
         send_bytes(
             self,
