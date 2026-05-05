@@ -2439,6 +2439,12 @@ function unlockCtx(){
     }catch{return;}
   }
   if(audioState.ctx.state!=='running')audioState.ctx.resume().catch(()=>{});
+  try{
+    const s=audioState.ctx.createBufferSource();
+    s.buffer=audioState.ctx.createBuffer(1,1,22050);
+    s.connect(audioState.ctx.destination);
+    s.start(0);
+  }catch{}
 }
 window.addEventListener('pointerdown',unlockCtx);
 window.addEventListener('touchstart',unlockCtx,{passive:true});
@@ -2734,6 +2740,7 @@ async function replyWithStream(prompt){
   speechToken++;
   const myToken=speechToken;
   audioState.stop();lipsync.stop();
+  await audioState.prime().catch(()=>{});
   let msgDiv=null,fullText='';
 
   function appendChunk(chunk){
