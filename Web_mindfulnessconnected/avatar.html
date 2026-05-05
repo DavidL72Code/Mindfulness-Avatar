@@ -2425,7 +2425,23 @@ const lipsync={active:false,tl:[],t0:0,energy:0,brightness:0,
     lerpMorph('mouthSmileRight',this.active?this.brightness*.05:0,sp);
   }
 };
-window.addEventListener('pointerdown',()=>{audioState.prime().catch(()=>{});},{once:true});
+function unlockCtx(){
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return;
+  if(!audioState.ctx){
+    try{
+      audioState.ctx=new Ctx();
+      audioState.analyser=audioState.ctx.createAnalyser();
+      audioState.analyser.fftSize=1024;
+      audioState.analyser.smoothingTimeConstant=.72;
+      audioState.data=new Uint8Array(audioState.analyser.frequencyBinCount);
+      audioState.analyser.connect(audioState.ctx.destination);
+    }catch{return;}
+  }
+  if(audioState.ctx.state!=='running')audioState.ctx.resume().catch(()=>{});
+}
+window.addEventListener('pointerdown',unlockCtx);
+window.addEventListener('touchstart',unlockCtx,{passive:true});
 
 /* =========================================================
    RENDER LOOP
@@ -2690,6 +2706,103 @@ function restoreTranscript(){
 async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:sid})});return(await r.json()).reply;}
 async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
 
+async function* streamChat(prompt){
+  const res=await fetchFromCandidates('/chat/stream',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:prompt,session_id:sid}),
+  });
+  const reader=res.body.getReader();
+  const dec=new TextDecoder();
+  let buf='';
+  while(true){
+    const{value,done}=await reader.read();
+    if(done)break;
+    buf+=dec.decode(value,{stream:true});
+    const parts=buf.split('\n\n');
+    buf=parts.pop();
+    for(const part of parts){
+      if(!part.startsWith('data: '))continue;
+      const evt=JSON.parse(part.slice(6));
+      if(evt.error)throw new Error(evt.error);
+      if(evt.done)return;
+      if(evt.chunk)yield evt.chunk;
+    }
+  }
+}
+
+async function replyWithStream(prompt){
+  speechToken++;
+  const myToken=speechToken;
+  audioState.stop();lipsync.stop();
+  await audioState.prime().catch(()=>{});
+  let msgDiv=null,fullText='';
+  const ttsQ=[];
+  let playIdx=0,draining=false;
+
+  function appendChunk(chunk){
+    fullText+=(fullText?' ':'')+chunk;
+    if(!msgDiv){msgDiv=document.createElement('div');msgDiv.className='msg assistant';msgsEl.appendChild(msgDiv);}
+    msgDiv.textContent=fullText;
+    msgsEl.scrollTop=msgsEl.scrollHeight;
+  }
+
+  async function drainQueue(){
+    if(draining)return;
+    draining=true;
+    while(playIdx<ttsQ.length){
+      if(speechToken!==myToken){draining=false;return;}
+      const item=await ttsQ[playIdx++];
+      if(speechToken!==myToken){draining=false;return;}
+      if(!item){setSt('idle','Voice unavailable');continue;}
+      setSt('speaking','Speaking…');
+      await new Promise(resolve=>{
+        audioState.playAudio(item.buf,{
+          onstart:dur=>{
+            if(speechToken!==myToken){audioState.stop();resolve();return;}
+            lipsync.play(item.text,dur);
+          },
+          onended:resolve,
+        }).catch(()=>resolve());
+      });
+    }
+    draining=false;
+    if(speechToken===myToken){lipsync.stop();setSt('idle','Listening…');}
+  }
+
+  function enqueueTts(text){
+    if(!ttschk.checked)return;
+    ttsQ.push(apiTts(text).then(buf=>({buf,text})).catch(()=>null));
+    drainQueue();
+  }
+
+  try{
+    let gotChunk=false;
+    try{
+      for await(const chunk of streamChat(prompt)){
+        gotChunk=true;
+        if(speechToken!==myToken)return;
+        setTyp(false);
+        appendChunk(chunk);
+        if(ttschk.checked)setSt('thinking','Generating voice…');
+        enqueueTts(chunk);
+      }
+    }catch(streamErr){
+      if(gotChunk)throw streamErr;
+      const r=await apiChat(prompt);
+      if(speechToken!==myToken)return;
+      setTyp(false);
+      appendChunk(r);
+      if(ttschk.checked)setSt('thinking','Generating voice…');
+      enqueueTts(r);
+    }
+    if(fullText){messageLog.push({role:'assistant',text:fullText});persistTranscript();}
+    if(!ttschk.checked&&speechToken===myToken){lipsync.stop();setSt('idle','Listening…');}
+  }catch{
+    setTyp(false);setSt('idle','Listening…');
+    addMsg('system','Could not connect to the mindfulness server right now.');
+  }
+}
+
 /* =========================================================
    UI
 ========================================================= */
@@ -2707,13 +2820,8 @@ async function startAvatarSession(options={}){
   setUi(true);
   if(!hasTranscript&&announce)addMsg('system',`${SESSION_NAME} session started. Your mindfulness guide is here.`);
   setSt('thinking',HOST_KEY==='home-dock'?'Preparing welcome…':'Thinking…');inp.focus();setTyp(true);
-  try{
-    const prompt=promptOverride||getInitialWelcomePrompt();
-    await audioState.prime().catch(()=>{});
-    const r=await apiChat(prompt);
-    setTyp(false);addMsg('assistant',r);await speak(r);setSt('idle','Listening…');
-  }
-  catch{setTyp(false);setSt('idle','Listening…');addMsg('system','Could not connect to the mindfulness server right now.');}
+  const prompt=promptOverride||getInitialWelcomePrompt();
+  await replyWithStream(prompt);
 }
 bstart.addEventListener('click',startAvatarSession);
 bend.addEventListener('click',async()=>{
@@ -2724,8 +2832,8 @@ bend.addEventListener('click',async()=>{
 async function handleSend(){
   const text=inp.value.trim();if(!text||!sid)return;
   inp.value='';addMsg('user',text);inp.disabled=true;bsend.disabled=true;setTyp(true);setSt('thinking','Thinking…');
-  try{await audioState.prime().catch(()=>{});const r=await apiChat(text);setTyp(false);inp.disabled=false;bsend.disabled=false;inp.focus();addMsg('assistant',r);await speak(r);}
-  catch{setTyp(false);inp.disabled=false;bsend.disabled=false;setSt('idle','Listening…');addMsg('system','Connection error — please try again.');}
+  await replyWithStream(text);
+  inp.disabled=false;bsend.disabled=false;inp.focus();
 }
 
 async function hostEndSession(){
@@ -2778,9 +2886,9 @@ window.addEventListener('message',event=>{
   }
 });
 
-bsend.addEventListener('click',handleSend);
-inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
-ttschk.addEventListener('change',()=>{if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech('Listening…');});
+bsend.addEventListener('click',()=>{unlockCtx();handleSend();});
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();unlockCtx();handleSend();}});
+ttschk.addEventListener('change',()=>{unlockCtx();if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech('Listening…');});
 const hasStoredTranscript=restoreTranscript();
 if(hasStoredTranscript){
   setUi(true);

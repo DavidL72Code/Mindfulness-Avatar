@@ -79,8 +79,17 @@ def update_session_memory(session, user_message, assistant_message):
             overflow = len(session["history"]) - MAX_HISTORY_MESSAGES
             batch_size = max(SUMMARY_BATCH_SIZE, overflow)
             batch_to_summarize = session["history"][:batch_size]
-            session["summary"] = summarize_history(batch_to_summarize, session["summary"])
+            prior_summary = session["summary"]
             session["history"] = session["history"][batch_size:]
+        else:
+            batch_to_summarize = None
+            prior_summary = None
+
+    # Run summarization outside the lock so other requests aren't blocked
+    if batch_to_summarize:
+        new_summary = summarize_history(batch_to_summarize, prior_summary)
+        with SESSIONS_LOCK:
+            session["summary"] = new_summary
 
 
 def serialize_activities(session):

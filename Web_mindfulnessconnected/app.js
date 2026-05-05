@@ -873,36 +873,78 @@ async function sendChatMessage() {
   state.chatStatus = "Thinking...";
   render();
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: buildChatPrompt(trimmedMessage, getSessionContext()),
-        session_id: state.chatSessionId
-      })
-    });
+  const msgId = `assistant-${Date.now()}`;
+  const body = JSON.stringify({
+    message: buildChatPrompt(trimmedMessage, getSessionContext()),
+    session_id: state.chatSessionId
+  });
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || "Request failed");
+  try {
+    // Try streaming first so text appears as it generates
+    let gotChunk = false;
+    try {
+      const res = await fetch(`${API_BASE_URL}/chat/stream`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      let fullText = "";
+
+      state.chatMessages = [...state.chatMessages, { id: msgId, role: "assistant", content: "" }];
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const parts = buf.split("\n\n");
+        buf = parts.pop();
+        for (const part of parts) {
+          if (!part.startsWith("data: ")) continue;
+          const evt = JSON.parse(part.slice(6));
+          if (evt.error) throw new Error(evt.error);
+          if (evt.done) break;
+          if (evt.chunk) {
+            gotChunk = true;
+            fullText += (fullText ? " " : "") + evt.chunk;
+            state.chatMessages = state.chatMessages.map(m =>
+              m.id === msgId ? { ...m, content: fullText } : m
+            );
+            state.chatStatus = "Typing...";
+            render();
+          }
+        }
+      }
+    } catch (streamErr) {
+      if (gotChunk) throw streamErr;
+      // Stream unavailable — fall back to full response
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "Request failed");
+      }
+      const data = await response.json();
+      const content = data.reply || "(No response text returned.)";
+      state.chatMessages = [
+        ...state.chatMessages,
+        { id: msgId, role: "assistant", content }
+      ];
     }
 
-    const data = await response.json();
-    state.chatMessages = [
-      ...state.chatMessages,
-      {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        content: data.reply || "(No response text returned.)"
-      }
-    ];
     state.chatStatus = "Ready";
   } catch (error) {
     state.chatMessages = [
-      ...state.chatMessages,
+      ...state.chatMessages.filter(m => m.id !== msgId),
       {
-        id: `assistant-fallback-${Date.now()}`,
+        id: msgId,
         role: "assistant",
         content: buildLocalChatFallback(trimmedMessage, getSessionContext())
       }
