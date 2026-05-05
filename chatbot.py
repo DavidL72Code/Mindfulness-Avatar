@@ -97,9 +97,14 @@ def synthesize_gemini_speech(text, voice_name=None, model=GEMINI_TTS_MODEL):
     }
 
 
+_ACTIVITIES_CACHE = None
+
 def load_mindfulness_activities():
-    with open(ACTIVITIES_PATH, "r", encoding="utf-8") as file_obj:
-        return json.load(file_obj)
+    global _ACTIVITIES_CACHE
+    if _ACTIVITIES_CACHE is None:
+        with open(ACTIVITIES_PATH, "r", encoding="utf-8") as file_obj:
+            _ACTIVITIES_CACHE = json.load(file_obj)
+    return _ACTIVITIES_CACHE
 
 
 def find_activity(activity_id):
@@ -184,8 +189,34 @@ def build_session_recap(summary="", history=None, model="gemini-2.5-flash"):
     result = call_gemini(prompt, model=model, temperature=0.3)
     return result["choices"][0]["message"]["content"]
 
+_MODEL_CACHE = {}
+
+
+def call_gemini_stream(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
+    """Yield text fragments as Gemini streams its response."""
+    if model not in _MODEL_CACHE:
+        _MODEL_CACHE[model] = genai.GenerativeModel(model)
+    model_obj = _MODEL_CACHE[model]
+    generation_config = genai.types.GenerationConfig(
+        temperature=temperature,
+        top_p=0.95,
+        top_k=40,
+        max_output_tokens=8192,
+    )
+    response = model_obj.generate_content(
+        prompt,
+        generation_config=generation_config,
+        stream=True,
+    )
+    for chunk in response:
+        if chunk.text:
+            yield chunk.text
+
+
 def call_gemini(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
-    model_obj = genai.GenerativeModel(model)
+    if model not in _MODEL_CACHE:
+        _MODEL_CACHE[model] = genai.GenerativeModel(model)
+    model_obj = _MODEL_CACHE[model]
 
     generation_config = genai.types.GenerationConfig(
         temperature=temperature,

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from threading import Lock
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
@@ -8,6 +9,7 @@ from chatbot import (
     build_chat_prompt,
     build_session_recap,
     call_gemini,
+    call_gemini_stream,
     find_activity,
     load_mindfulness_activities,
     summarize_history,
@@ -25,6 +27,15 @@ ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
 MINDFULNESS_ACTIVITIES = load_mindfulness_activities()
 SESSIONS = {}
 SESSIONS_LOCK = Lock()
+
+_SENTENCE_SPLIT = re.compile(r'(?<=[.!?:;])\s+')
+
+
+def extract_speakable_chunks(buf):
+    """Split buf on sentence boundaries; return (complete_chunks, remainder)."""
+    parts = _SENTENCE_SPLIT.split(buf)
+    complete = [p.strip() for p in parts[:-1] if p.strip()]
+    return complete, parts[-1]
 
 
 def get_or_create_session(session_id):
@@ -166,6 +177,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
 
         if self.path == "/activities/step/complete":
             self.handle_complete_step()
+            return
+
+        if self.path == "/chat/stream":
+            self.handle_chat_stream()
             return
 
         self.send_error(404)
@@ -394,6 +409,73 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 "activity_completed": True,
             },
         )
+
+    def _write_sse(self, data_dict):
+        line = "data: " + json.dumps(data_dict) + "\n\n"
+        self.wfile.write(line.encode("utf-8"))
+        self.wfile.flush()
+
+    def handle_chat_stream(self):
+        content_length = int(self.headers.get("Content-Length", "0"))
+        body = self.rfile.read(content_length)
+        try:
+            payload = json.loads(body.decode("utf-8"))
+            user_message = payload.get("message", "").strip()
+            session_id = payload.get("session_id", "").strip()
+        except json.JSONDecodeError:
+            self.send_error(400, "Invalid JSON")
+            return
+
+        if not user_message:
+            self.send_error(400, "Missing message")
+            return
+        if not session_id:
+            self.send_error(400, "Missing session_id")
+            return
+
+        session = get_or_create_session(session_id)
+        session_snapshot = get_session_snapshot(session_id)
+        activity_context = None
+        if session_snapshot["active_activity_id"] and session_snapshot["current_step_index"] is not None:
+            activity_context = find_activity(session_snapshot["active_activity_id"])
+        prompt = build_chat_prompt(
+            user_message=user_message,
+            history=session_snapshot["history"],
+            summary=session_snapshot["summary"],
+            activity_context=(
+                {
+                    **activity_context,
+                    "current_step_index": session_snapshot["current_step_index"],
+                }
+                if activity_context
+                else None
+            ),
+        )
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream")
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("X-Accel-Buffering", "no")
+        self.close_connection = True
+        self.end_headers()
+
+        full_chunks = []
+        buf = ""
+        try:
+            for fragment in call_gemini_stream(prompt):
+                buf += fragment
+                chunks, buf = extract_speakable_chunks(buf)
+                for chunk in chunks:
+                    full_chunks.append(chunk)
+                    self._write_sse({"chunk": chunk})
+            if buf.strip():
+                full_chunks.append(buf.strip())
+                self._write_sse({"chunk": buf.strip()})
+            complete_text = " ".join(full_chunks)
+            update_session_memory(session, user_message, complete_text)
+            self._write_sse({"done": True, "session_id": session_id})
+        except Exception as exc:
+            self._write_sse({"error": str(exc)})
 
     def handle_end_session(self):
         content_length = int(self.headers.get("Content-Length", "0"))
