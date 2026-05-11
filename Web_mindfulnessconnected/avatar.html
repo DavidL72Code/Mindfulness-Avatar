@@ -2165,6 +2165,7 @@ const SHOULD_AUTOSTART = queryParams.get('autostart') === '1';
 const SESSION_KEY = queryParams.get('session') || '';
 const HOST_KEY = queryParams.get('host') || 'standalone';
 const SHARED_CHAT_ID = queryParams.get('chat_id') || '';
+const TTS_BASE_URL = queryParams.get('tts_base') || '';
 
 function formatSessionName(value){
   return value
@@ -2592,7 +2593,7 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
    TTS
 ========================================================= */
 const ttschk=document.getElementById('ttschk');
-const TTS_VOICE='Iapetus';
+const TTS_VOICE='en-US-AndrewMultilingualNeural';
 let speechToken=0;
 async function apiTts(text){
   const r=await fetchFromCandidates('/tts',{
@@ -2637,19 +2638,7 @@ async function speak(text){
     if(token!==speechToken)return;
     audioState.stop();
     lipsync.stop();
-    if('speechSynthesis' in window){
-      setSt('speaking','Speaking…');
-      const est=Math.max(2,trimmed.length*0.065);
-      lipsync.play(trimmed,est);
-      const utt=new SpeechSynthesisUtterance(trimmed);
-      utt.rate=0.92;
-      utt.onend=()=>{if(token===speechToken){lipsync.stop();setSt('idle','Listening…');}};
-      utt.onerror=()=>{if(token===speechToken){lipsync.stop();setSt('idle','Listening…');}};
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utt);
-    }else{
-      setSt('idle','Listening…');
-    }
+    setSt('idle','Voice unavailable. Try again.');
   }
 }
 
@@ -2665,7 +2654,7 @@ function getCurrentOriginServer(){
   return '';
 }
 const SERVER_CANDIDATES=[getCurrentOriginServer(),LOCAL_SERVER,REMOTE_SERVER].filter(Boolean);
-const TTS_SERVER_CANDIDATES=[LOCAL_SERVER,getCurrentOriginServer(),REMOTE_SERVER].filter(Boolean);
+const TTS_SERVER_CANDIDATES=[TTS_BASE_URL,LOCAL_SERVER,getCurrentOriginServer(),REMOTE_SERVER].filter(Boolean);
 async function fetchFromCandidates(path, options={}, preferredBases=SERVER_CANDIDATES){
   let lastError=null;
   for(const base of [...new Set(preferredBases)]){
@@ -2807,6 +2796,17 @@ async function startAvatarSession(options={}){
   const prompt=promptOverride||getInitialWelcomePrompt();
   await replyWithStream(prompt);
 }
+
+// Speak a preloaded script line straight through TTS — no LLM round-trip.
+async function speakScriptLine(text){
+  const trimmed=(text||'').trim();
+  if(!trimmed)return;
+  if(!sid)sid=SHARED_CHAT_ID||createSessionId();
+  setUi(true);
+  setTyp(false);
+  addMsg('assistant',trimmed);
+  await speak(trimmed);
+}
 bstart.addEventListener('click',startAvatarSession);
 bend.addEventListener('click',async()=>{
   stopSpeech('Session ended');setTyp(true);
@@ -2857,6 +2857,11 @@ window.addEventListener('message',event=>{
     }
     inp.value=data.text||'';
     handleSend();
+    return;
+  }
+
+  if(data.type==='host-speak-script'){
+    speakScriptLine(data.text||'');
     return;
   }
 

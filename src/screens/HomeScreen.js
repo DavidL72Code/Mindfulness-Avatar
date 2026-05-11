@@ -8,7 +8,6 @@ import {
 } from 'react';
 import {
   Alert,
-  Animated,
   BackHandler,
   Dimensions,
   KeyboardAvoidingView,
@@ -23,18 +22,19 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import * as Speech from 'expo-speech';
-import { auth } from '../config/firebaseConfig';
+import { auth, db } from '../config/firebaseConfig';
 import { useLanguage } from '../context/LanguageContext';
 import { ThemeColor, ThemeRadius } from '../theme/appTheme';
+import { recordCompletedSession } from '../utils/sessionTracking';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const API_BASE_URL     = 'https://multilingual-virtual-assistant.onrender.com';
-const TOTAL_BREATHING_ROUNDS = 4;
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DOCK_WIDTH           = Math.min(SCREEN_WIDTH - 32, 320);
 const DOCK_HEIGHT          = 480;
@@ -43,10 +43,10 @@ const SESSION_AVATAR_HEIGHT = Math.max(320, Math.round(SCREEN_HEIGHT * 0.62));
 // ─── Session catalog ──────────────────────────────────────────────────────────
 
 const sessionCatalog = [
-  { id: 'box-breathing',      title: 'Box Breathing',            description: '',                                                            kind: 'guided',      duration: '5 slides'   },
+  { id: 'caregiver-fatigue',  title: 'Caregiver Fatigue',         description: 'A compassion meditation to recharge when caring for others.', kind: 'scripted',    duration: '~4 min · 6 segments' },
   { id: 'body-scan',          title: 'Body Scan',                 description: 'A guided check-in from head to toe.',                        kind: 'placeholder', duration: 'Coming soon' },
   { id: 'five-senses',        title: 'Five Senses Grounding',     description: 'A grounding exercise to reconnect with the present moment.',  kind: 'placeholder', duration: 'Coming soon' },
-  { id: 'gratitude-pause',    title: 'Gratitude Pause',           description: 'A moment to gently shift attention toward what is good.',    kind: 'placeholder', duration: 'Coming soon' },
+  { id: 'mindful-breathing',  title: 'Mindful Breathing',         description: 'A foundational breath awareness practice you can use anywhere.', kind: 'scripted', duration: '~5 min · 5 segments' },
   { id: 'loving-kindness',    title: 'Loving Kindness',           description: 'A compassion-focused mindfulness practice.',                 kind: 'placeholder', duration: 'Coming soon' },
   { id: 'mindful-walking',    title: 'Mindful Walking',           description: 'A light movement practice with full attention on each step.', kind: 'placeholder', duration: 'Coming soon' },
   { id: 'seated-stretch',     title: 'Seated Stretch Reset',      description: 'Gentle seated stretches to release tension.',                kind: 'placeholder', duration: 'Coming soon' },
@@ -57,23 +57,56 @@ const sessionCatalog = [
   { id: 'sleep-wind-down',    title: 'Sleep Wind Down',           description: 'A quiet practice to prepare your body for rest.',            kind: 'placeholder', duration: 'Coming soon' },
 ].map((s, i) => ({ ...s, number: String(i + 1).padStart(2, '0') }));
 
-// ─── Breathing data ───────────────────────────────────────────────────────────
+// ─── Scripted session content ─────────────────────────────────────────────────
 
-const breathingSlides = [
-  { key: 'intro',   stepLabel: 'Introduction', titlePlain: 'Breathe better, feel calmer',  body: 'A simple guide to conscious breathing. Works anytime at your desk, before a test, or when you feel overwhelmed.' },
-  { key: 'comfort', stepLabel: 'Step 1 of 4',  titlePlain: 'Get comfortable',              body: 'Before you start, set yourself up for success.', tips: ['Sit upright in a chair or on the floor', 'Rest your hands loosely on your thighs', 'Close your eyes or soften your gaze', 'Relax your jaw and drop your shoulders'], note: 'You do not need a special place. A quiet corner works just fine.' },
-  { key: 'rounds',  stepLabel: 'Step 2 of 4',  titlePlain: 'Breathe',                      body: 'Complete 4 rounds of box breathing. Press Start Round to begin each round.', note: 'Follow the circle and keep the breath steady and gentle.' },
-  { key: 'pattern', stepLabel: 'Step 3 of 4',  titlePlain: 'The 4-4-4-4 pattern',          body: 'Inhale, hold, exhale, hold. Each side lasts 4 counts, and each round follows the same square path.' },
-  { key: 'return',  stepLabel: 'Step 4 of 4',  titlePlain: 'Return slowly',                body: 'After your rounds, let your breath return to normal and notice how you feel.', note: 'Practice once a day. Even 2 minutes can build a steady habit before stressful moments.' },
-];
-
-// What the avatar should say when the user advances to each slide
-const SLIDE_AVATAR_PROMPTS = {
-  intro:   'Introduce Box Breathing warmly in 2-3 sentences. Explain what it is and when it helps. Invite the user to press Next when ready.',
-  comfort: 'Guide the user to get comfortable: sit upright, relax hands on thighs, close or soften the gaze, relax the jaw and drop the shoulders. Keep it calm and brief, then invite them to press Next.',
-  rounds:  'Tell the user they are about to do 4 rounds of box breathing. Ask them to follow the circle on screen and press "Start Round" when they are ready to begin each round.',
-  pattern: 'Explain the 4-4-4-4 pattern clearly: inhale for 4 counts, hold for 4, exhale for 4, then hold for 4. Reassure them it becomes natural quickly.',
-  return:  'Congratulate the user on completing Box Breathing. Ask them to let their breath return to normal and take a quiet moment to notice how they feel.',
+const SESSION_SCRIPTS = {
+  'caregiver-fatigue': [
+    { key: 'cf1',  text: "Thanks for joining me for this short meditation." },
+    { key: 'cf2',  text: "In this brief practice, we'll explore some simple steps to recharge when we're feeling burnt out or overwhelmed by our efforts to help others." },
+    { key: 'cf3',  text: "Go ahead and get comfortable. You can close your eyes if you like, or keep them gently open with a soft, relaxed gaze." },
+    { key: 'cf4',  text: "As you settle in, take a few slow, calming breaths. And notice how it feels to breathe." },
+    { key: 'cf5',  text: "Now let your breath return to its normal pace. Give yourself a few moments to rest and recharge as you bring yourself fully into the here and now." },
+    { key: 'cf6',  text: "Great. Now we'll shift gears and tap into our ability to hold the suffering of others in a healthy way." },
+    { key: 'cf7',  text: "Empathy can be a bridge to care and compassion, but it can also lead us into a state of overwhelm — what scientists call empathic distress." },
+    { key: 'cf8',  text: "One simple way to avoid this overwhelm is to ground yourself in a caring motivation. Let's give this a try." },
+    { key: 'cf9',  text: "Start by bringing to mind someone you care about. It could be your care recipient or anyone you care about." },
+    { key: 'cf10', text: "Take a moment to imagine that they're actually here with you, and see if you can sense the deep connection you share with them." },
+    { key: 'cf11', text: "As you tap into this sense of connection, see if you could notice your impulse to care for this individual, or perhaps your natural wish for them to be happy and free from suffering." },
+    { key: 'cf12', text: "If it helps, you can give voice to this in your mind. You may think to yourself: May you be free from suffering and hardship. May you have all the happiness in the world." },
+    { key: 'cf13', text: "Feel free to make up your own compassionate phrases and imagine sharing them with this person that you care about." },
+    { key: 'cf14', text: "Now bring others to mind — or perhaps groups of people, or even the Earth itself." },
+    { key: 'cf15', text: "Acknowledge their pain and suffering, and also the tremendous resilience that we all have." },
+    { key: 'cf16', text: "Imagine a world where they are free from suffering and free from adversity. See if you can picture them happy, at ease, healthy, and balanced." },
+    { key: 'cf17', text: "Let your mind roam here and continue to send kind, caring thoughts and phrases out into the world." },
+    { key: 'cf18', text: "Next, include yourself in this circle of compassion." },
+    { key: 'cf19', text: "Imagine the people in your life who care for you, or even strangers who are sending love and compassion out into the world, just like you are." },
+    { key: 'cf20', text: "Imagine that all this caring energy is flowing into you, and see if you can be open to receiving it." },
+    { key: 'cf21', text: "For these last few moments, notice how you feel right now without any judgment." },
+    { key: 'cf22', text: "Bring a sense of openness, curiosity, and care to your own thoughts and feelings, whatever they may be." },
+    { key: 'cf23', text: "When we feel the suffering of others and the suffering of the world in a very direct way, our own feelings and reactions can easily overwhelm us." },
+    { key: 'cf24', text: "Here we practice the skill of grounding ourselves in a caring motivation. With this motivation, we get a little more space to be with our feelings and reactions without getting swept away by them." },
+    { key: 'cf25', text: "Hopefully you found this helpful. If you did, see if you can keep practicing for short moments over the next day or two. Take care and good luck with your practice." },
+  ],
+  'mindful-breathing': [
+    { key: 'mb1',  text: "Hello and welcome back. Today we are going to focus on a fundamental practice: mindful breathing." },
+    { key: 'mb2',  text: "This is a tool you can use anywhere, at any time, to ground yourself and find a moment of calm." },
+    { key: 'mb3',  text: "Start by finding a comfortable seat. Allow your back to be straight but not stiff." },
+    { key: 'mb4',  text: "Let your hands rest gently in your lap or on your knees. If it feels okay, go ahead and close your eyes, or simply lower your gaze and let it soften." },
+    { key: 'mb5',  text: "Now, take a deep breath in through your nose, feeling your lungs expand. And exhale slowly through your mouth." },
+    { key: 'mb6',  text: "Do that one more time — deep breath in... and a long breath out." },
+    { key: 'mb7',  text: "Now, let your breath settle into its natural rhythm. You don't need to change it or control it. Just observe it." },
+    { key: 'mb8',  text: "Notice where you feel the breath most clearly. It might be the cool air at the tip of your nose, the rise and fall of your chest, or the expansion and contraction of your belly." },
+    { key: 'mb9',  text: "As you sit here, you may notice your mind starting to wander. This is perfectly normal. That's just what minds do." },
+    { key: 'mb10', text: "When you realize your thoughts have drifted to the past, the future, or a to-do list, simply acknowledge the thought without judgment." },
+    { key: 'mb11', text: "Think of it like a cloud passing through the sky. Then, gently and kindly, escort your attention back to the physical sensation of your breath." },
+    { key: 'mb12', text: "Back to the inhale... and the exhale." },
+    { key: 'mb13', text: "Let's stay with this for a few moments in silence. Following each breath from the beginning of the inhalation, through the brief pause, to the end of the exhalation." },
+    { key: 'mb14', text: "If you get distracted ten times, just bring yourself back ten times. Every time you return to the breath, you are strengthening your mindfulness muscle." },
+    { key: 'mb15', text: "As we bring this practice to a close, take a moment to notice how you feel. Is there a sense of stillness? A bit more space in your mind?" },
+    { key: 'mb16', text: "Know that this breath is always available to you as an anchor." },
+    { key: 'mb17', text: "When you're ready, gently wiggle your fingers and toes, and slowly open your eyes." },
+    { key: 'mb18', text: "Thank you for practicing with me today. Take this sense of presence with you as you move into the rest of your day." },
+  ],
 };
 
 // Applied as the injectedJavaScript PROP on every WebView (runs after DOM is ready,
@@ -101,13 +134,6 @@ const WEBVIEW_STATIC_JS = `(function(){try{
 // Keep the old name as an alias so existing injectJavaScript() call-sites still compile
 const HIDE_CONTROLS_JS = WEBVIEW_STATIC_JS;
 
-const breathingPhases = [
-  { badge: 'Inhale', duration: 4000 },
-  { badge: 'Hold',   duration: 4000 },
-  { badge: 'Exhale', duration: 4000 },
-  { badge: 'Hold',   duration: 4000 },
-];
-
 const INITIAL_CHAT_MESSAGE = {
   id: 'assistant-welcome',
   role: 'assistant',
@@ -128,47 +154,20 @@ function formatDuration(totalSeconds) {
   return parts.map((v) => String(v).padStart(2, '0')).join(':');
 }
 
-function buildGuidedSessionSummary(slideIndex, roundsDone) {
-  const slide = breathingSlides[slideIndex] || breathingSlides[0];
-  if (roundsDone >= TOTAL_BREATHING_ROUNDS && slideIndex === breathingSlides.length - 1) {
-    return 'You completed the full box breathing tutorial, including all 4 rounds and the return-to-rest step.';
-  }
-  if (roundsDone >= TOTAL_BREATHING_ROUNDS) {
-    return `You completed all 4 breathing rounds and ended on the "${slide.titlePlain}" screen.`;
-  }
-  if (roundsDone > 0) {
-    return `You ended the breathing tutorial after ${roundsDone} of ${TOTAL_BREATHING_ROUNDS} rounds.`;
-  }
-  return `You ended the breathing tutorial during "${slide.titlePlain}" before the breathing rounds were completed.`;
-}
-
 // Build the session avatar start prompt — used on fresh start and on resume
-function buildSessionStartPrompt(session, slideIndex, roundsDone, isResume) {
-  if (session.kind !== 'guided') {
-    return [
-      `You are opening the ${session.title} mindfulness session.`,
-      'Reply with a short, warm welcome only.',
-      'Say you are the user\'s mindfulness assistant and you are here to help.',
-      'Ask how they are doing today.',
-    ].join(' ');
-  }
-
-  if (isResume) {
-    const slide = breathingSlides[slideIndex] || breathingSlides[0];
-    return [
-      `We are resuming the Box Breathing session.`,
-      `The user is currently on slide ${slideIndex + 1} of ${breathingSlides.length}: "${slide.titlePlain}".`,
-      roundsDone > 0 ? `They have completed ${roundsDone} of ${TOTAL_BREATHING_ROUNDS} breathing rounds.` : '',
-      'Continue guiding from this step without re-introducing yourself.',
-      SLIDE_AVATAR_PROMPTS[slide.key] || 'Continue from where we left off.',
-    ].filter(Boolean).join(' ');
+function buildSessionStartPrompt(session, scriptSlideIndex = 0) {
+  if (session.kind === 'scripted') {
+    const segments = SESSION_SCRIPTS[session.id] || [];
+    const segment  = segments[scriptSlideIndex] || segments[0];
+    if (!segment) return `Welcome to the ${session.title} session.`;
+    return segment.text;
   }
 
   return [
-    'We are starting the Box Breathing mindfulness session. You are the guide.',
-    'You will guide the user through 5 steps in order: Introduction, Get comfortable, Breathe, The 4-4-4-4 pattern, and Return slowly.',
-    'Start now with the Introduction step.',
-    SLIDE_AVATAR_PROMPTS['intro'],
+    `You are opening the ${session.title} mindfulness session.`,
+    'Reply with a short, warm welcome only.',
+    'Say you are the user\'s mindfulness assistant and you are here to help.',
+    'Ask how they are doing today.',
   ].join(' ');
 }
 
@@ -176,7 +175,8 @@ function buildChatPrompt(message, sessionContext) {
   if (!sessionContext?.selectedSession) {
     return [
       'App context: The mobile mindfulness app has 12 selectable session tiles.',
-      'Only Box Breathing currently includes a full breathing tutorial.',
+      'Sessions 1 and 4 have scripted content.',
+      'The other 10 session pages are placeholders for future guided content.',
       `User message: ${message}`,
     ].join('\n');
   }
@@ -185,23 +185,23 @@ function buildChatPrompt(message, sessionContext) {
     `Current session title: ${sessionContext.selectedSession.title}`,
     `Session status: ${sessionContext.sessionActive ? 'active' : 'not started'}`,
   ];
-  if (sessionContext.selectedSession.id === 'box-breathing') {
-    const slide = breathingSlides[sessionContext.slideIndex] || breathingSlides[0];
-    lines.push(`Breathing progress: slide ${sessionContext.slideIndex + 1} of ${breathingSlides.length}, rounds completed ${sessionContext.roundsDone} of ${TOTAL_BREATHING_ROUNDS}.`);
-    lines.push(`Current slide: ${slide.titlePlain}`);
+  if (sessionContext.selectedSession.kind === 'scripted') {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    lines.push(`This is a scripted session with ${segments.length} passages. Current passage: ${(sessionContext.scriptSlideIndex || 0) + 1}.`);
   }
   lines.push(`User message: ${message}`);
   return lines.join('\n');
 }
 
 function buildLocalChatFallback(_message, sessionContext) {
-  if (sessionContext?.selectedSession?.id === 'box-breathing') {
-    return 'Box Breathing walks through 5 slides: introduction, setup, breathing rounds, pattern explanation, and return slowly.';
+  if (sessionContext?.selectedSession?.kind === 'scripted') {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    return `${sessionContext.selectedSession.title} is a scripted session with ${segments.length} passages.`;
   }
   if (sessionContext?.selectedSession) {
     return `${sessionContext.selectedSession.title} is currently a placeholder session.`;
   }
-  return 'This app has 12 session tiles. Box Breathing is the current live tutorial.';
+  return 'This app has 12 session tiles. Sessions 1 and 4 have scripted content; the other 10 session pages are placeholders for future exercises.';
 }
 
 // ─── Avatar URI builder ───────────────────────────────────────────────────────
@@ -212,14 +212,31 @@ function buildAvatarUri(baseUri, params) {
     .filter(([, v]) => v != null && v !== '')
     .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
     .join('&');
-  return qs ? `${baseUri}?${qs}` : baseUri;
+  if (!qs) return baseUri;
+  return `${baseUri}${baseUri.includes('?') ? '&' : '?'}${qs}`;
+}
+
+function buildLocalBackendUri(baseUri) {
+  try {
+    const url = new URL(baseUri);
+    if (!url.hostname || url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+      return '';
+    }
+    url.port = '8000';
+    url.pathname = '';
+    url.search = '';
+    url.hash = '';
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return '';
+  }
 }
 
 // ─── Floating Avatar Dock ─────────────────────────────────────────────────────
 // Always mounted — opacity:0 + pointerEvents:none when not visible so the
 // WebView keeps running and localStorage / chat state survives screen transitions.
 
-function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef, onLoad, onMessage }) {
+function FloatingAvatarDock({ avatarUri, avatarError, expanded, visible, onToggle, webViewRef, onLoad, onMessage, onError }) {
   const hiddenStyle = !visible && styles.floatingHidden;
 
   if (!expanded) {
@@ -262,12 +279,19 @@ function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef
           mediaPlaybackRequiresUserAction={false}
           injectedJavaScript={WEBVIEW_STATIC_JS}
           onLoad={onLoad}
+          onError={onError}
+          onHttpError={onError}
           onMessage={onMessage}
         />
       ) : (
         <View style={styles.avatarLoading}>
           <View style={styles.loadingOrb} />
-          <Text style={styles.loadingText}>Loading avatar…</Text>
+          <Text style={styles.loadingText}>{avatarError || 'Loading avatar...'}</Text>
+          {!!avatarError && !!avatarUri && (
+            <Text style={styles.loadingDetailText} numberOfLines={3}>
+              uri: {String(avatarUri).slice(0, 200)}
+            </Text>
+          )}
         </View>
       )}
     </View>
@@ -276,7 +300,7 @@ function FloatingAvatarDock({ avatarUri, expanded, visible, onToggle, webViewRef
 
 // ─── Session Avatar Panel ─────────────────────────────────────────────────────
 
-function SessionAvatarPanel({ avatarUri, webViewRef, onLoad, onMessage }) {
+function SessionAvatarPanel({ avatarUri, avatarError, webViewRef, onLoad, onMessage, onError }) {
   return (
     <View style={styles.sessionAvatarPanel}>
       {avatarUri ? (
@@ -297,103 +321,19 @@ function SessionAvatarPanel({ avatarUri, webViewRef, onLoad, onMessage }) {
           mediaPlaybackRequiresUserAction={false}
           injectedJavaScript={WEBVIEW_STATIC_JS}
           onLoad={onLoad}
+          onError={onError}
+          onHttpError={onError}
           onMessage={onMessage}
         />
       ) : (
         <View style={styles.avatarLoading}>
           <View style={styles.loadingOrb} />
-          <Text style={styles.loadingText}>Loading avatar…</Text>
-        </View>
-      )}
-    </View>
-  );
-}
-
-// ─── Breathing Orb ────────────────────────────────────────────────────────────
-
-function BreathingOrb({ badge }) {
-  const scale = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.spring(scale, {
-      toValue: badge === 'Inhale' || badge === 'Hold' ? 1.5 : 1,
-      useNativeDriver: true,
-      tension: 40,
-      friction: 8,
-    }).start();
-  }, [badge, scale]);
-  return (
-    <View style={styles.orbContainer}>
-      <Animated.View style={[styles.orb, { transform: [{ scale }] }]}>
-        <Text style={styles.orbBadge}>{badge}</Text>
-      </Animated.View>
-    </View>
-  );
-}
-
-// ─── Tutorial Card ────────────────────────────────────────────────────────────
-
-function TutorialCard({ slide, roundsDone, roundRunning, phaseBadge, phaseSubtext, onStartRound }) {
-  const roundBtnLabel =
-    roundsDone >= TOTAL_BREATHING_ROUNDS ? 'All rounds complete'
-    : roundRunning ? 'Breathing…'
-    : `Start Round ${roundsDone + 1}`;
-
-  return (
-    <View style={styles.tutorialCard}>
-      <Text style={styles.slideLabel}>{slide.stepLabel}</Text>
-      <Text style={styles.slideTitle}>{slide.titlePlain}</Text>
-      <Text style={styles.slideBody}>{slide.body}</Text>
-
-      {slide.key === 'comfort' && (
-        <>
-          {slide.tips.map((tip) => (
-            <View key={tip} style={styles.tipRow}>
-              <View style={styles.tipDot} />
-              <Text style={styles.tipText}>{tip}</Text>
-            </View>
-          ))}
-          <View style={styles.tipCard}>
-            <Text style={styles.tipCardLabel}>Tip</Text>
-            <Text style={styles.tipCardBody}>{slide.note}</Text>
-          </View>
-        </>
-      )}
-
-      {slide.key === 'rounds' && (
-        <>
-          <BreathingOrb badge={phaseBadge} />
-          <Text style={styles.phaseSubtext}>{phaseSubtext}</Text>
-          <View style={styles.roundPips}>
-            {Array.from({ length: TOTAL_BREATHING_ROUNDS }).map((_, i) => (
-              <View key={i} style={[styles.roundPip, i < roundsDone && styles.roundPipFilled]} />
-            ))}
-          </View>
-          <Text style={styles.roundLabel}>Round {roundsDone} of {TOTAL_BREATHING_ROUNDS}</Text>
-          <Pressable
-            style={({ pressed }) => [
-              styles.roundBtn,
-              (roundRunning || roundsDone >= TOTAL_BREATHING_ROUNDS) && styles.btnDisabled,
-              pressed && styles.btnPressed,
-            ]}
-            onPress={onStartRound}
-            disabled={roundRunning || roundsDone >= TOTAL_BREATHING_ROUNDS}
-          >
-            <Text style={styles.roundBtnText}>{roundBtnLabel}</Text>
-          </Pressable>
-        </>
-      )}
-
-      {slide.key === 'pattern' && (
-        <View style={styles.tipCard}>
-          <Text style={styles.tipCardLabel}>Pattern</Text>
-          <Text style={styles.tipCardBody}>Inhale for 4, hold for 4, exhale for 4, then hold for 4.</Text>
-        </View>
-      )}
-
-      {slide.key === 'return' && (
-        <View style={styles.tipCard}>
-          <Text style={styles.tipCardLabel}>You did it</Text>
-          <Text style={styles.tipCardBody}>{slide.note}</Text>
+          <Text style={styles.loadingText}>{avatarError || 'Loading avatar...'}</Text>
+          {!!avatarError && !!avatarUri && (
+            <Text style={styles.loadingDetailText} numberOfLines={3}>
+              uri: {String(avatarUri).slice(0, 200)}
+            </Text>
+          )}
         </View>
       )}
     </View>
@@ -540,6 +480,7 @@ export default function HomeScreen({ navigation }) {
   // ── Avatar ──
   const avatarConversationId                      = useRef(createSessionId()).current;
   const [avatarHtmlBase, setAvatarHtmlBase]       = useState(null);
+  const [avatarLoadError, setAvatarLoadError]     = useState('');
   const [dockExpanded, setDockExpanded]           = useState(true);
   const sessionWebViewRef                         = useRef(null);
   const homeDockWebViewRef                        = useRef(null);
@@ -552,44 +493,100 @@ export default function HomeScreen({ navigation }) {
   const [sessionStartTime, setSessionStartTime]   = useState(null);
   const [placeholderMessage, setPlaceholderMessage] = useState('');
 
-  // ── Breathing state ──
-  const [slideIndex, setSlideIndex]     = useState(0);
-  const [roundsDone, setRoundsDone]     = useState(0);
-  const [roundRunning, setRoundRunning] = useState(false);
-  const [phaseBadge, setPhaseBadge]     = useState('Ready');
-  const [phaseSubtext, setPhaseSubtext] = useState('Follow the circle and keep the breath easy.');
-  const roundTimers                     = useRef([]);
+  // ── Script state (scripted sessions) ──
+  const [scriptSlideIndex, setScriptSlideIndex] = useState(0);
 
   // ── Modals ──
   const [summaryVisible, setSummaryVisible]   = useState(false);
   const [sessionSummary, setSessionSummary]   = useState('');
   const [sessionDuration, setSessionDuration] = useState('');
-  const [chatVisible, setChatVisible]         = useState(false);
+
+  // ── Completed-session tracking (Firestore) ──
+  const [completedSessionIds, setCompletedSessionIds] = useState(() => new Set());
+
+  useEffect(() => {
+    let unsubUser = null;
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      if (unsubUser) {
+        unsubUser();
+        unsubUser = null;
+      }
+      if (!user) {
+        setCompletedSessionIds(new Set());
+        return;
+      }
+      const userRef = doc(db, 'users', user.uid);
+      unsubUser = onSnapshot(
+        userRef,
+        (snap) => {
+          const ids = snap.exists() ? snap.data()?.completedSessionIds : null;
+          setCompletedSessionIds(new Set(Array.isArray(ids) ? ids : []));
+        },
+        () => setCompletedSessionIds(new Set()),
+      );
+    });
+    return () => {
+      if (unsubUser) unsubUser();
+      unsubAuth();
+    };
+  }, []);
 
   const selectedSession = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
-  const slide           = breathingSlides[slideIndex] || breathingSlides[0];
   const sessionContext  = screen === 'session' || sessionActive
-    ? { selectedSession, sessionActive, slideIndex, roundsDone, phaseBadge }
+    ? { selectedSession, sessionActive, scriptSlideIndex }
     : null;
+  const avatarBackendUri = useMemo(() => buildLocalBackendUri(avatarHtmlBase), [avatarHtmlBase]);
 
   // ── Avatar URIs — same chat_id for shared server-side conversation thread ──
   const homeDockUri = useMemo(() => buildAvatarUri(avatarHtmlBase, {
-    compact: '1', host: 'home-dock', chat_id: avatarConversationId,
-  }), [avatarHtmlBase, avatarConversationId]);
+    compact: '1', host: 'home-dock', chat_id: avatarConversationId, tts_base: avatarBackendUri,
+  }), [avatarHtmlBase, avatarConversationId, avatarBackendUri]);
 
   const sessionAvatarUri = useMemo(() => buildAvatarUri(avatarHtmlBase, {
-    compact: '1', host: 'session-panel', session: selectedSessionId, chat_id: avatarConversationId,
-  }), [avatarHtmlBase, selectedSessionId, avatarConversationId]);
+    compact: '1', host: 'session-panel', session: selectedSessionId, chat_id: avatarConversationId, tts_base: avatarBackendUri,
+  }), [avatarHtmlBase, selectedSessionId, avatarConversationId, avatarBackendUri]);
 
   // ── Load avatar.html asset ──
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       try {
         const asset = Asset.fromModule(require('../../assets/avatar.html'));
+        setAvatarLoadError('');
+        if (asset.localUri || asset.uri) {
+          setAvatarHtmlBase(asset.localUri || asset.uri);
+        }
         await asset.downloadAsync();
-        setAvatarHtmlBase(asset.localUri);
-      } catch { /* avatar unavailable */ }
+        const uri = asset.localUri || asset.uri;
+        if (!cancelled) {
+          if (uri) {
+            setAvatarHtmlBase(uri);
+          } else {
+            setAvatarLoadError(
+              'Avatar asset resolved to no URI. Check metro.config.js has assetExts.push("html") and run `npx expo start --clear`.',
+            );
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          const detail = err && (err.message || String(err));
+          setAvatarLoadError(
+            `Avatar asset failed: ${detail || 'unknown error'}`,
+          );
+        }
+      }
     })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleAvatarWebViewError = useCallback((event) => {
+    const native = event?.nativeEvent;
+    const detail =
+      (native && (native.description || native.statusCode || native.url)) ||
+      'unknown WebView error';
+    setAvatarLoadError(`WebView load failed: ${detail}`);
   }, []);
 
   // ── Pick a male English voice for native TTS ──
@@ -659,12 +656,19 @@ export default function HomeScreen({ navigation }) {
     if (sessionActive) {
       setTimeout(() => {
         const session  = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
-        const isResume = slideIndex > 0;
-        const prompt   = buildSessionStartPrompt(session, slideIndex, roundsDone, isResume);
+        if (session.kind === 'scripted') {
+          const segments = SESSION_SCRIPTS[session.id] || [];
+          const segment  = segments[scriptSlideIndex] || segments[0];
+          if (segment) {
+            injectAvatarCommand({ type: 'host-speak-script', text: segment.text });
+            return;
+          }
+        }
+        const prompt = buildSessionStartPrompt(session, scriptSlideIndex);
         injectAvatarCommand({ type: 'host-start-session', prompt, announce: false });
       }, 700);
     }
-  }, [selectedSessionId, sessionActive, slideIndex, roundsDone, injectAvatarCommand]);
+  }, [selectedSessionId, sessionActive, scriptSlideIndex, injectAvatarCommand]);
 
   const handleHomeDockLoad = useCallback(() => {
     setTimeout(() => {
@@ -704,8 +708,7 @@ export default function HomeScreen({ navigation }) {
   // ── Auth ──
   const handleLogout = useCallback(async () => {
     try { await signOut(auth); } catch { /* ignore */ }
-    navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
-  }, [navigation]);
+  }, []);
 
   const toggleLanguage = useCallback(() => {
     void setLocale(locale === 'en' ? 'ko' : 'en');
@@ -714,49 +717,6 @@ export default function HomeScreen({ navigation }) {
   const handleSettings = useCallback(() => {
     Alert.alert(t('cardSettingsTitle'), 'Coming soon.');
   }, [t]);
-
-  // ── Breathing logic ──
-  const clearRoundTimers = useCallback(() => {
-    roundTimers.current.forEach(clearTimeout);
-    roundTimers.current = [];
-  }, []);
-
-  const resetBreathing = useCallback(() => {
-    clearRoundTimers();
-    setSlideIndex(0);
-    setRoundsDone(0);
-    setRoundRunning(false);
-    setPhaseBadge('Ready');
-    setPhaseSubtext('Follow the circle and keep the breath easy.');
-  }, [clearRoundTimers]);
-
-  const startRound = useCallback(() => {
-    if (roundRunning || roundsDone >= TOTAL_BREATHING_ROUNDS) return;
-    clearRoundTimers();
-    setRoundRunning(true);
-    setPhaseSubtext('Follow the circle and keep the breath easy.');
-    let elapsed = 0;
-    breathingPhases.forEach((phase) => {
-      roundTimers.current.push(setTimeout(() => setPhaseBadge(phase.badge), elapsed));
-      elapsed += phase.duration;
-    });
-    const nextCount = roundsDone + 1;
-    roundTimers.current.push(
-      setTimeout(() => {
-        setRoundRunning(false);
-        setRoundsDone(nextCount);
-        if (nextCount < TOTAL_BREATHING_ROUNDS) {
-          setPhaseBadge('Rest');
-          setPhaseSubtext(`Great. Take a natural breath, then start round ${nextCount + 1}.`);
-        } else {
-          setPhaseBadge('Complete');
-          setPhaseSubtext('You finished all 4 rounds. Continue to the next step.');
-        }
-      }, elapsed + 100)
-    );
-  }, [roundRunning, roundsDone, clearRoundTimers]);
-
-  useEffect(() => () => clearRoundTimers(), [clearRoundTimers]);
 
   // ── Session logic ──
   const openSession = useCallback((id) => {
@@ -768,10 +728,10 @@ export default function HomeScreen({ navigation }) {
       setSessionStatus('Not started');
       setSessionStartTime(null);
       setPlaceholderMessage('');
-      resetBreathing();
+      setScriptSlideIndex(0);
       injectAvatarCommand({ type: 'host-end-session' });
     }
-  }, [sessionActive, selectedSessionId, resetBreathing, injectAvatarCommand]);
+  }, [sessionActive, selectedSessionId, injectAvatarCommand]);
 
   // Called when the user explicitly presses Start Session
   const startSession = useCallback(() => {
@@ -780,57 +740,74 @@ export default function HomeScreen({ navigation }) {
     setSessionStartTime(Date.now());
     setSessionActive(true);
     setSessionStatus('Session active');
-    if (session.kind === 'guided') {
-      resetBreathing();
+    if (session.kind === 'scripted') {
+      setScriptSlideIndex(0);
     } else {
       setPlaceholderMessage(`${session.title} is intentionally empty right now.`);
     }
     setTimeout(() => {
-      const prompt = buildSessionStartPrompt(session, 0, 0, false);
+      if (session.kind === 'scripted') {
+        const segments = SESSION_SCRIPTS[session.id] || [];
+        const segment  = segments[0];
+        if (segment) {
+          injectAvatarCommand({ type: 'host-speak-script', text: segment.text });
+          return;
+        }
+      }
+      const prompt = buildSessionStartPrompt(session, 0);
       injectAvatarCommand({ type: 'host-start-session', prompt, announce: false });
     }, 200);
-  }, [selectedSessionId, resetBreathing, injectAvatarCommand]);
+  }, [selectedSessionId, injectAvatarCommand]);
 
   const endSession = useCallback(() => {
     if (!sessionActive) return;
     const elapsed = Math.max(0, Math.floor((Date.now() - (sessionStartTime || Date.now())) / 1000));
     setSessionDuration(formatDuration(elapsed));
     const session = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
+    const segments = SESSION_SCRIPTS[session.id] || [];
+    const completed =
+      session.kind !== 'scripted' ||
+      (segments.length > 0 && scriptSlideIndex >= segments.length - 1);
     setSessionSummary(
-      session.kind === 'guided'
-        ? buildGuidedSessionSummary(slideIndex, roundsDone)
+      session.kind === 'scripted'
+        ? completed
+          ? `You completed the full ${session.title} session.`
+          : `You ended ${session.title} after passage ${scriptSlideIndex + 1} of ${segments.length}.`
         : `${session.title} ended.`
     );
+    void recordCompletedSession({
+      sessionId: session.id,
+      sessionTitle: session.title,
+      durationSeconds: elapsed,
+      completed,
+      metadata: {
+        kind: session.kind,
+        scriptSlideIndex,
+        scriptSegments: segments.length,
+      },
+    }).catch((error) => {
+      console.warn('Failed to record session tracking data', error);
+    });
     setSummaryVisible(true);
     setSessionActive(false);
     setSessionStatus('Not started');
     setSessionStartTime(null);
     setPlaceholderMessage('');
-    resetBreathing();
+    setScriptSlideIndex(0);
     // Tell avatar the session ended — it posts a closing message in chat
     injectAvatarCommand({ type: 'host-end-session' });
-  }, [sessionActive, sessionStartTime, selectedSessionId, slideIndex, roundsDone, resetBreathing, injectAvatarCommand]);
+  }, [sessionActive, sessionStartTime, selectedSessionId, scriptSlideIndex, injectAvatarCommand]);
 
-  // "Next" advances the slide AND tells the avatar to narrate the next step
-  const goToNextSlide = useCallback(() => {
-    if (slideIndex === breathingSlides.length - 1) {
+  const goToNextScriptSegment = useCallback(() => {
+    const segments = SESSION_SCRIPTS[selectedSessionId] || [];
+    if (scriptSlideIndex >= segments.length - 1) {
       endSession();
       return;
     }
-    const nextIndex = Math.min(breathingSlides.length - 1, slideIndex + 1);
-    setSlideIndex(nextIndex);
-    // Send step prompt via host-start-session so it goes to the AI behind the scenes
-    // without appearing as a user message in the avatar chat UI
-    const nextKey    = breathingSlides[nextIndex]?.key;
-    const stepPrompt = SLIDE_AVATAR_PROMPTS[nextKey] || 'Continue guiding the user through the next step.';
-    injectAvatarCommand({ type: 'host-start-session', prompt: stepPrompt, announce: false });
-  }, [slideIndex, endSession, injectAvatarCommand]);
-
-  const goToPrevSlide = useCallback(() => {
-    setSlideIndex((i) => Math.max(0, i - 1));
-  }, []);
-
-  const nextStepDisabled = roundRunning || (slide.key === 'rounds' && roundsDone < TOTAL_BREATHING_ROUNDS);
+    const nextIndex = scriptSlideIndex + 1;
+    setScriptSlideIndex(nextIndex);
+    injectAvatarCommand({ type: 'host-speak-script', text: segments[nextIndex].text });
+  }, [scriptSlideIndex, selectedSessionId, endSession, injectAvatarCommand]);
 
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -871,8 +848,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.heroEyebrow}>Mindfulness Sessions</Text>
             <Text style={styles.heroTitle}>Mindfulness,{'\n'}guided with calm.</Text>
             <Text style={styles.heroBody}>
-              Explore a softer session space where your avatar guide greets you,
-              then supports each mindfulness exercise when you are ready to begin.
+              Choose a practice and let the guide lead the pace.
             </Text>
             <View style={styles.heroActions}>
               {!dockExpanded ? (
@@ -880,8 +856,8 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.heroBtnPrimaryText}>Open Guide</Text>
                 </Pressable>
               ) : (
-                <Pressable style={({ pressed }) => [styles.heroBtnPrimary, pressed && styles.btnPressed]} onPress={() => openSession('box-breathing')}>
-                  <Text style={styles.heroBtnPrimaryText}>Start With Box Breathing</Text>
+                <Pressable style={({ pressed }) => [styles.heroBtnPrimary, pressed && styles.btnPressed]} onPress={() => openSession(sessionCatalog[0].id)}>
+                  <Text style={styles.heroBtnPrimaryText}>Start With Caregiver Fatigue</Text>
                 </Pressable>
               )}
               <Pressable style={({ pressed }) => [styles.heroBtnSecondary, pressed && styles.btnPressed]} onPress={() => openSession(selectedSessionId)}>
@@ -905,15 +881,17 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Session Selection</Text>
           <View style={styles.sessionGrid}>
             {sessionCatalog.map((s) => {
-              const isGuided = s.kind === 'guided';
-              const selected = selectedSessionId === s.id;
-              const disabled = sessionActive && selectedSessionId !== s.id;
+              const isReady   = s.kind !== 'placeholder';
+              const selected  = selectedSessionId === s.id;
+              const disabled  = sessionActive && selectedSessionId !== s.id;
+              const completed = completedSessionIds.has(s.id);
               return (
                 <Pressable
                   key={s.id}
                   style={({ pressed }) => [
                     styles.sessionTile,
-                    isGuided ? styles.sessionTileGuided : styles.sessionTilePlaceholder,
+                    isReady ? styles.sessionTileGuided : styles.sessionTilePlaceholder,
+                    completed && styles.sessionTileCompleted,
                     selected && styles.sessionTileSelected,
                     disabled && styles.btnDisabled,
                     pressed && !disabled && styles.btnPressed,
@@ -923,9 +901,27 @@ export default function HomeScreen({ navigation }) {
                 >
                   <View style={styles.sessionTileTop}>
                     <Text style={styles.sessionNumber}>{s.number}</Text>
-                    <View style={[styles.pill, isGuided ? styles.pillGuided : styles.pillEmpty]}>
-                      <Text style={[styles.pillText, isGuided ? styles.pillTextGuided : styles.pillTextEmpty]}>
-                        {isGuided ? 'Ready' : 'Empty'}
+                    <View
+                      style={[
+                        styles.pill,
+                        completed
+                          ? styles.pillCompleted
+                          : isReady
+                            ? styles.pillGuided
+                            : styles.pillEmpty,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.pillText,
+                          completed
+                            ? styles.pillTextCompleted
+                            : isReady
+                              ? styles.pillTextGuided
+                              : styles.pillTextEmpty,
+                        ]}
+                      >
+                        {completed ? 'Completed' : isReady ? 'Ready' : 'Empty'}
                       </Text>
                     </View>
                   </View>
@@ -977,9 +973,9 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.detailHero}>
             <View style={styles.detailTopRow}>
               <Text style={styles.detailNumber}>{selectedSession.number}</Text>
-              <View style={[styles.pill, selectedSession.kind === 'guided' ? styles.pillGuided : styles.pillEmpty]}>
-                <Text style={[styles.pillText, selectedSession.kind === 'guided' ? styles.pillTextGuided : styles.pillTextEmpty]}>
-                  {selectedSession.kind === 'guided' ? 'Guided session' : 'Empty session'}
+              <View style={[styles.pill, selectedSession.kind !== 'placeholder' ? styles.pillGuided : styles.pillEmpty]}>
+                <Text style={[styles.pillText, selectedSession.kind !== 'placeholder' ? styles.pillTextGuided : styles.pillTextEmpty]}>
+                  {selectedSession.kind === 'scripted' ? 'Scripted session' : 'Empty session'}
                 </Text>
               </View>
               <Text style={styles.detailTitle}>{selectedSession.title}</Text>
@@ -998,67 +994,53 @@ export default function HomeScreen({ navigation }) {
 
           <SessionAvatarPanel
             avatarUri={sessionAvatarUri}
+            avatarError={avatarLoadError}
             webViewRef={sessionWebViewRef}
             onLoad={handleSessionAvatarLoad}
+            onError={handleAvatarWebViewError}
             onMessage={handleWebViewMessage}
           />
 
-          {sessionActive && selectedSession.kind === 'guided' && (
-            <View style={styles.slideNav}>
-              <Pressable
-                style={({ pressed }) => [styles.navBtn, styles.navBtnSecondary, slideIndex === 0 && styles.btnDisabled, pressed && slideIndex > 0 && styles.btnPressed]}
-                onPress={goToPrevSlide}
-                disabled={slideIndex === 0}
-              >
-                <Text style={styles.navBtnSecondaryText}>← Prev</Text>
-              </Pressable>
-              <Text style={styles.slideProgress}>{slideIndex + 1} / {breathingSlides.length}</Text>
-              <Pressable
-                style={({ pressed }) => [styles.navBtn, styles.navBtnPrimary, nextStepDisabled && styles.btnDisabled, pressed && !nextStepDisabled && styles.btnPressed]}
-                onPress={goToNextSlide}
-                disabled={nextStepDisabled}
-              >
-                <Text style={styles.navBtnPrimaryText}>
-                  {slideIndex === breathingSlides.length - 1 ? 'Finish →' : 'Next →'}
-                </Text>
-              </Pressable>
-            </View>
-          )}
+          {selectedSession.kind === 'scripted' && sessionActive && (() => {
+            const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+            const seg      = segments[scriptSlideIndex];
+            const isLast   = scriptSlideIndex >= segments.length - 1;
+            return (
+              <View style={styles.placeholderCard}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <Text style={styles.placeholderTitle}>{seg?.timeLabel ?? ''}</Text>
+                  <Text style={styles.placeholderTitle}>{scriptSlideIndex + 1} / {segments.length}</Text>
+                </View>
+                <Text style={styles.placeholderBody}>{seg?.text ?? ''}</Text>
+                <Pressable
+                  style={({ pressed }) => [styles.startBtn, { marginTop: 16 }, pressed && styles.btnPressed]}
+                  onPress={goToNextScriptSegment}
+                >
+                  <Text style={styles.startBtnText}>{isLast ? 'Finish' : 'Next →'}</Text>
+                </Pressable>
+              </View>
+            );
+          })()}
 
-          {selectedSession.kind === 'guided' && sessionActive && (
-            <TutorialCard
-              slide={slide}
-              roundsDone={roundsDone}
-              roundRunning={roundRunning}
-              phaseBadge={phaseBadge}
-              phaseSubtext={phaseSubtext}
-              onStartRound={startRound}
-            />
-          )}
-
-          {selectedSession.kind !== 'guided' && !!placeholderMessage && (
+          {selectedSession.kind !== 'scripted' && !!placeholderMessage && (
             <View style={styles.placeholderCard}>
               <Text style={styles.placeholderTitle}>Template Reserved</Text>
               <Text style={styles.placeholderBody}>{placeholderMessage}</Text>
             </View>
           )}
-
-          <View style={styles.chatFabArea}>
-            <Pressable style={({ pressed }) => [styles.chatFab, pressed && styles.btnPressed]} onPress={() => setChatVisible(true)}>
-              <Text style={styles.chatFabText}>Chat</Text>
-            </Pressable>
-          </View>
         </ScrollView>
       )}
 
       {/* ── Floating avatar dock — always mounted, hidden on session screen ── */}
       <FloatingAvatarDock
         avatarUri={homeDockUri}
+        avatarError={avatarLoadError}
         expanded={dockExpanded}
         visible={screen === 'home'}
         onToggle={() => setDockExpanded((v) => !v)}
         webViewRef={homeDockWebViewRef}
         onLoad={handleHomeDockLoad}
+        onError={handleAvatarWebViewError}
         onMessage={handleWebViewMessage}
       />
 
@@ -1069,11 +1051,6 @@ export default function HomeScreen({ navigation }) {
         onClose={() => { setSummaryVisible(false); setScreen('home'); }}
       />
 
-      <ChatModal
-        visible={chatVisible}
-        onClose={() => setChatVisible(false)}
-        sessionContext={sessionContext}
-      />
     </SafeAreaView>
   );
 }
@@ -1144,16 +1121,17 @@ const styles = StyleSheet.create({
   floatingDockKicker:  { color: 'rgba(255,255,255,0.5)', fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8 },
   floatingDockTitle:   { color: ThemeColor.WHITE, fontSize: 14, fontWeight: '700', marginTop: 2 },
   floatingDockHideText:{ color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: '600' },
-  dockWebView:         { flex: 1 },
+  dockWebView:         { flex: 1, backgroundColor: '#0d1b36' },
 
   // Avatar loading state
-  avatarLoading: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, backgroundColor: '#0d1b36' },
-  loadingOrb:    { width: 48, height: 48, borderRadius: 24, backgroundColor: ThemeColor.BRAND, opacity: 0.5 },
-  loadingText:   { color: 'rgba(255,255,255,0.5)', fontSize: 13 },
+  avatarLoading:     { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, backgroundColor: '#0d1b36', paddingHorizontal: 16 },
+  loadingOrb:        { width: 48, height: 48, borderRadius: 24, backgroundColor: ThemeColor.BRAND, opacity: 0.5 },
+  loadingText:       { color: 'rgba(255,255,255,0.85)', fontSize: 13, textAlign: 'center' },
+  loadingDetailText: { color: 'rgba(255,255,255,0.5)', fontSize: 10, textAlign: 'center' },
 
   // ── Session avatar (inline) ──
   sessionAvatarPanel: { height: SESSION_AVATAR_HEIGHT, borderRadius: 18, overflow: 'hidden', marginBottom: 16, backgroundColor: '#0d1b36', ...cardShadow },
-  sessionWebView:     { flex: 1 },
+  sessionWebView:     { flex: 1, backgroundColor: '#0d1b36' },
 
   // Session grid
   sectionTitle:           { fontSize: 20, fontWeight: '800', color: ThemeColor.TEXT_PRIMARY, marginBottom: 12, marginTop: 4 },
@@ -1161,6 +1139,7 @@ const styles = StyleSheet.create({
   sessionTile:            { width: (SCREEN_WIDTH - 42) / 2, borderRadius: 14, padding: 14, gap: 6, borderWidth: 1.5, minHeight: 140 },
   sessionTileGuided:      { backgroundColor: '#e8edf7', borderColor: 'rgba(31,60,136,0.2)' },
   sessionTilePlaceholder: { backgroundColor: ThemeColor.WHITE, borderColor: 'rgba(31,60,136,0.1)' },
+  sessionTileCompleted:   { backgroundColor: '#dcfce7', borderColor: '#16a34a' },
   sessionTileSelected:    { borderColor: ThemeColor.BRAND, borderWidth: 2 },
   sessionTileTop:         { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sessionNumber:          { fontSize: 20, fontWeight: '900', color: ThemeColor.BRAND },
@@ -1169,12 +1148,14 @@ const styles = StyleSheet.create({
   sessionTileMeta:        { fontSize: 11, color: ThemeColor.HOME_SUBTITLE, fontWeight: '600' },
 
   // Pills
-  pill:           { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
-  pillGuided:     { backgroundColor: ThemeColor.BRAND },
-  pillEmpty:      { backgroundColor: '#e8edf7' },
-  pillText:       { fontSize: 10, fontWeight: '800' },
-  pillTextGuided: { color: ThemeColor.WHITE },
-  pillTextEmpty:  { color: ThemeColor.HOME_SUBTITLE },
+  pill:              { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
+  pillGuided:        { backgroundColor: ThemeColor.BRAND },
+  pillEmpty:         { backgroundColor: '#e8edf7' },
+  pillCompleted:     { backgroundColor: '#16a34a' },
+  pillText:          { fontSize: 10, fontWeight: '800' },
+  pillTextGuided:    { color: ThemeColor.WHITE },
+  pillTextEmpty:     { color: ThemeColor.HOME_SUBTITLE },
+  pillTextCompleted: { color: ThemeColor.WHITE },
 
   // Info cards
   card:          { backgroundColor: ThemeColor.WHITE, padding: 20, borderRadius: 8, borderTopWidth: 4, borderTopColor: ThemeColor.BRAND, marginBottom: 14, ...cardShadow },
@@ -1184,9 +1165,6 @@ const styles = StyleSheet.create({
   supportBtnText:{ color: ThemeColor.WHITE, fontWeight: '700', fontSize: 16 },
 
   // Chat FAB
-  chatFabArea: { alignItems: 'flex-end', marginTop: 12 },
-  chatFab:     { backgroundColor: ThemeColor.BRAND, borderRadius: 24, paddingVertical: 12, paddingHorizontal: 24 },
-  chatFabText: { color: ThemeColor.WHITE, fontWeight: '800', fontSize: 15 },
 
   // Session screen — single scrollable column, nothing gets compressed
   sessionLayout:       { flex: 1, backgroundColor: ThemeColor.SCREEN_BG },
@@ -1207,36 +1185,6 @@ const styles = StyleSheet.create({
   detailTitle:      { flex: 1, fontSize: 16, fontWeight: '800', color: ThemeColor.TEXT_PRIMARY },
   detailDescription:{ fontSize: 14, color: ThemeColor.HOME_CARD_TEXT, lineHeight: 21 },
 
-  // Slide nav
-  slideNav:            { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 },
-  slideProgress:       { flex: 1, textAlign: 'center', color: ThemeColor.HOME_CARD_TEXT, fontWeight: '700', fontSize: 13 },
-  navBtn:              { flex: 1, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
-  navBtnPrimary:       { backgroundColor: ThemeColor.BRAND },
-  navBtnPrimaryText:   { color: ThemeColor.WHITE, fontWeight: '800', fontSize: 14 },
-  navBtnSecondary:     { backgroundColor: ThemeColor.WHITE, borderWidth: 1.5, borderColor: ThemeColor.BRAND },
-  navBtnSecondaryText: { color: ThemeColor.BRAND, fontWeight: '800', fontSize: 14 },
-
-  // Tutorial card
-  tutorialCard:  { backgroundColor: ThemeColor.WHITE, borderRadius: 16, padding: 20, gap: 12, marginBottom: 16, ...cardShadow },
-  slideLabel:    { fontSize: 12, fontWeight: '800', color: ThemeColor.HOME_SUBTITLE, letterSpacing: 0.8, textTransform: 'uppercase' },
-  slideTitle:    { fontSize: 22, fontWeight: '800', color: ThemeColor.TEXT_PRIMARY },
-  slideBody:     { fontSize: 15, color: ThemeColor.HOME_CARD_TEXT, lineHeight: 22 },
-  tipRow:        { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  tipDot:        { width: 7, height: 7, borderRadius: 4, backgroundColor: ThemeColor.BRAND, marginTop: 7 },
-  tipText:       { flex: 1, fontSize: 14, color: ThemeColor.TEXT_PRIMARY, lineHeight: 21 },
-  tipCard:       { backgroundColor: '#e8edf7', borderRadius: 12, padding: 14, gap: 4 },
-  tipCardLabel:  { fontSize: 11, fontWeight: '800', color: ThemeColor.BRAND, letterSpacing: 0.6, textTransform: 'uppercase' },
-  tipCardBody:   { fontSize: 14, color: ThemeColor.TEXT_PRIMARY, lineHeight: 21 },
-  orbContainer:  { alignItems: 'center', paddingVertical: 14 },
-  orb:           { width: 90, height: 90, borderRadius: 45, backgroundColor: ThemeColor.BRAND, alignItems: 'center', justifyContent: 'center' },
-  orbBadge:      { color: ThemeColor.WHITE, fontWeight: '800', fontSize: 16 },
-  phaseSubtext:  { fontSize: 14, color: ThemeColor.HOME_CARD_TEXT, textAlign: 'center', lineHeight: 21 },
-  roundPips:     { flexDirection: 'row', gap: 8, justifyContent: 'center' },
-  roundPip:      { width: 12, height: 12, borderRadius: 6, backgroundColor: '#d9e2f1' },
-  roundPipFilled:{ backgroundColor: ThemeColor.BRAND },
-  roundLabel:    { textAlign: 'center', fontSize: 13, color: ThemeColor.HOME_CARD_TEXT, fontWeight: '600' },
-  roundBtn:      { backgroundColor: ThemeColor.BRAND, borderRadius: 10, paddingVertical: 13, alignItems: 'center' },
-  roundBtnText:  { color: ThemeColor.WHITE, fontWeight: '800', fontSize: 15 },
   placeholderCard:  { backgroundColor: ThemeColor.WHITE, borderRadius: 16, padding: 18, gap: 8, marginBottom: 16, ...cardShadow },
   placeholderTitle: { fontSize: 17, fontWeight: '800', color: ThemeColor.TEXT_PRIMARY },
   placeholderBody:  { fontSize: 14, color: ThemeColor.HOME_CARD_TEXT, lineHeight: 21 },

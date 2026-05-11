@@ -8,8 +8,8 @@ const FLUSH_MS = 30000;
 const TICK_MS = 1000;
 
 /**
- * Counts active time while the app is foregrounded and the user is signed in,
- * and merges seconds into users/{uid}.totalSessionTime.
+ * Counts active time while the app is foregrounded and the user is signed in.
+ * Completed mindfulness session duration is tracked separately on session end.
  */
 export default function SessionTracker() {
   const pendingRef = useRef(0);
@@ -25,7 +25,7 @@ export default function SessionTracker() {
       try {
         await setDoc(
           doc(db, 'users', uid),
-          { totalSessionTime: increment(pending) },
+          { activeAppTimeSeconds: increment(pending) },
           { merge: true },
         );
       } catch {

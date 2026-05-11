@@ -2469,7 +2469,7 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
    TTS
 ========================================================= */
 const ttschk=document.getElementById('ttschk');
-const TTS_VOICE='Iapetus';
+const TTS_VOICE='en-US-AndrewMultilingualNeural';
 let speechToken=0;
 async function apiTts(text){
   const r=await fetchFromCandidates('/tts',{

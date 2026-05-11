@@ -26,7 +26,7 @@ ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activitie
 GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
 GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Iapetus")
 GEMINI_TTS_SAMPLE_RATE = 24000
-EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-GuyNeural")
+EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-AndrewMultilingualNeural")
 
 
 async def _edge_tts_async(text, voice):

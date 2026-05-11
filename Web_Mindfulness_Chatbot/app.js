@@ -64,13 +64,35 @@ const breathingSlides = [
   }
 ];
 
+const SESSION_SCRIPTS = {
+  "caregiver-fatigue": [
+    { key: "s1", timeLabel: "0:00 – 0:45", text: "Thanks for joining me for this short meditation. In this brief practice, we'll explore some simple steps to recharge when we're feeling burnt out or overwhelmed by our efforts to help others. Go ahead and get comfortable. You can close your eyes if you like, or keep them gently open with a soft, relaxed gaze. As you settle in, take a few slow, calming breaths. And notice how it feels to breathe. Now let your breath return to its normal pace. Give yourself a few moments to rest and recharge as you bring yourself fully into the here and now." },
+    { key: "s2", timeLabel: "0:45 – 1:28", text: "Great, now we'll shift gears and tap into our ability to hold the suffering of others in a healthy way. Empathy can be a bridge to care and compassion, but it can also lead us into a state of overwhelm — what scientists call 'empathic distress.' One simple way to avoid this overwhelm is to ground yourself in a caring motivation. Let's give this a try." },
+    { key: "s3", timeLabel: "1:28 – 2:38", text: "Start by bringing to mind someone you care about. It could be your care recipient or anyone you care about. Take a moment to imagine that they're actually here with you, and see if you can sense the deep connection you share with them. As you tap into this sense of connection, see if you could notice your impulse to care for this individual, or perhaps your natural wish for them to be happy and free from suffering. If it helps, you can give voice to this in your mind. You may think to yourself: 'May you be free from suffering and hardship. May you have all the happiness in the world.' Feel free to make up your own compassionate phrases and imagine sharing them with this person that you care about." },
+    { key: "s4", timeLabel: "2:38 – 3:30", text: "Now bring others to mind — or perhaps groups of people, or even the Earth itself. Acknowledge their pain and suffering, and also the tremendous resilience that we all have. Imagine a world where they are free from suffering and free from adversity. See if you can picture them happy, at ease, healthy, and balanced. Let your mind roam here and continue to send kind, caring thoughts and phrases out into the world." },
+    { key: "s5", timeLabel: "3:30 – 4:10", text: "Next, include yourself in this circle of compassion. Imagine the people in your life who care for you, or even strangers who are sending love and compassion out into the world, just like you are. Imagine that all this caring energy is flowing into you, and see if you can be open to receiving it." },
+    { key: "s6", timeLabel: "4:10 – End",  text: "For these last few moments, notice how you feel right now without any judgment. Bring a sense of openness, curiosity, and care to your own thoughts and feelings, whatever they may be. When we feel the suffering of others and the suffering of the world in a very direct way, our own feelings and reactions can easily overwhelm us. Here we practice the skill of grounding ourselves in a caring motivation. With this motivation, we get a little more space to be with our feelings and reactions without getting swept away by them. Hopefully you found this helpful. If you did, see if you can keep practicing for short moments over the next day or two. Take care and good luck with your practice." }
+  ],
+  "mindful-breathing": [
+    { key: "s1", timeLabel: "0:00 – 1:00", text: "Hello and welcome back. Today we are going to focus on a fundamental practice: mindful breathing. This is a tool you can use anywhere, at any time, to ground yourself and find a moment of calm. Start by finding a comfortable seat. Allow your back to be straight but not stiff. Let your hands rest gently in your lap or on your knees. If it feels okay, go ahead and close your eyes, or simply lower your gaze and let it soften." },
+    { key: "s2", timeLabel: "1:00 – 2:30", text: "Now, take a deep breath in through your nose, feeling your lungs expand. And exhale slowly through your mouth. Do that one more time — deep breath in... and a long breath out. Now, let your breath settle into its natural rhythm. You don't need to change it or control it. Just observe it. Notice where you feel the breath most clearly. It might be the cool air at the tip of your nose, the rise and fall of your chest, or the expansion and contraction of your belly." },
+    { key: "s3", timeLabel: "2:30 – 4:00", text: "As you sit here, you may notice your mind starting to wander. This is perfectly normal. That's just what minds do. When you realize your thoughts have drifted to the past, the future, or a to-do list, simply acknowledge the thought without judgment. Think of it like a cloud passing through the sky. Then, gently and kindly, escort your attention back to the physical sensation of your breath. Back to the inhale... and the exhale." },
+    { key: "s4", timeLabel: "4:00 – 5:30", text: "Let's stay with this for a few moments in silence. Following each breath from the beginning of the inhalation, through the brief pause, to the end of the exhalation. If you get distracted ten times, just bring yourself back ten times. Every time you return to the breath, you are strengthening your mindfulness muscle." },
+    { key: "s5", timeLabel: "5:30 – End",  text: "As we bring this practice to a close, take a moment to notice how you feel. Is there a sense of stillness? A bit more space in your mind? Know that this breath is always available to you as an anchor. When you're ready, gently wiggle your fingers and toes, and slowly open your eyes. Thank you for practicing with me today. Take this sense of presence with you as you move into the rest of your day." }
+  ]
+};
+
+function buildScriptSegmentPrompt(segment) {
+  return `Read the following meditation script passage aloud, word for word. Do not add, omit, or change anything:\n\n${segment.text}`;
+}
+
 const sessionCatalog = [
   {
-    id: "box-breathing",
-    title: "Box Breathing",
-    description: "A guided 5-slide breathing tutorial with a 4-round practice.",
-    kind: "guided",
-    duration: "5 slides"
+    id: "caregiver-fatigue",
+    title: "Caregiver Fatigue",
+    description: "A compassion meditation to recharge when caring for others.",
+    kind: "scripted",
+    duration: "~4 min · 6 segments"
   },
   {
     id: "body-scan",
@@ -87,11 +109,11 @@ const sessionCatalog = [
     duration: "Coming soon"
   },
   {
-    id: "gratitude-pause",
-    title: "Gratitude Pause",
-    description: "A moment to gently shift attention toward what is good.",
-    kind: "placeholder",
-    duration: "Coming soon"
+    id: "mindful-breathing",
+    title: "Mindful Breathing",
+    description: "A foundational breath awareness practice you can use anywhere.",
+    kind: "scripted",
+    duration: "~5 min · 5 segments"
   },
   {
     id: "loving-kindness",
@@ -179,6 +201,7 @@ const state = {
   summaryModalVisible: false,
   sessionSummary: "",
   sessionDuration: "",
+  scriptSlideIndex: 0,
   slideIndex: 0,
   roundsDone: 0,
   roundRunning: false,
@@ -254,15 +277,10 @@ function buildChatPrompt(message, sessionContext) {
     `Session language: ${sessionContext.sessionlanguage}`
   ];
 
-  if (sessionContext.selectedSession.id === "box-breathing") {
-    const slide = breathingSlides[sessionContext.slideIndex] || breathingSlides[0];
-    lines.push(
-      "Box Breathing tutorial structure: Introduction, Get comfortable, Breathe, The 4-4-4-4 pattern, Return slowly."
-    );
-    lines.push(
-      `Breathing progress: slide ${sessionContext.slideIndex + 1} of ${breathingSlides.length}, rounds completed ${sessionContext.roundsDone} of ${TOTAL_BREATHING_ROUNDS}, current phase ${sessionContext.phaseBadge}.`
-    );
-    lines.push(`Current slide title: ${slide.titlePlain}`);
+  if (sessionContext.selectedSession.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    lines.push(`This is a scripted session with ${segments.length} passages.`);
+    lines.push(`Current passage: ${sessionContext.scriptSlideIndex + 1} of ${segments.length}.`);
   } else {
     lines.push("This session page is currently a placeholder with no guided content yet.");
   }
@@ -271,22 +289,17 @@ function buildChatPrompt(message, sessionContext) {
   return lines.join("\n");
 }
 
-function buildLocalChatFallback(message, sessionContext) {
-  const lower = message.toLowerCase();
-
-  if (sessionContext?.selectedSession?.id === "box-breathing") {
-    if (lower.includes("round") || lower.includes("breath") || lower.includes("pattern")) {
-      return `Box Breathing uses 4 rounds of a 4-4-4-4 pattern: inhale for 4, hold for 4, exhale for 4, then hold for 4. You are currently on slide ${sessionContext.slideIndex + 1} of ${breathingSlides.length} and have completed ${sessionContext.roundsDone} of ${TOTAL_BREATHING_ROUNDS} rounds.`;
-    }
-
-    return "Box Breathing is the live tutorial in this app. It walks through 5 slides: introduction, setup, breathing rounds, pattern explanation, and return slowly.";
+function buildLocalChatFallback(_message, sessionContext) {
+  if (sessionContext?.selectedSession?.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    return `${sessionContext.selectedSession.title} is a scripted session with ${segments.length} passages. You are on passage ${(sessionContext.scriptSlideIndex || 0) + 1}.`;
   }
 
   if (sessionContext?.selectedSession) {
     return `${sessionContext.selectedSession.title} is currently an empty placeholder session. The tile and session page are ready, but the guided exercise itself has not been filled in yet.`;
   }
 
-  return "This app has 12 session tiles. Box Breathing is the current live tutorial, and the other 11 session pages are placeholders for future mindfulness exercises.";
+  return "This app has 12 session tiles. Sessions 1 and 4 have scripted content; the other 10 are placeholders for future exercises.";
 }
 
 function buildGuidedSessionSummary(slideIndex, roundsDone) {
@@ -345,6 +358,7 @@ function clearExerciseState() {
   state.sessionStatus = "Not started";
   state.sessionStartTime = null;
   state.placeholderMessage = "";
+  state.scriptSlideIndex = 0;
   resetBreathingTutorial();
 }
 
@@ -382,6 +396,16 @@ function goToNextSlide() {
   }
 
   state.slideIndex = Math.min(breathingSlides.length - 1, state.slideIndex + 1);
+  render();
+}
+
+function goToNextScriptSegment() {
+  const segments = SESSION_SCRIPTS[state.selectedSessionId] || [];
+  if (state.scriptSlideIndex >= segments.length - 1) {
+    endSelectedSession();
+    return;
+  }
+  state.scriptSlideIndex += 1;
   render();
 }
 
@@ -525,6 +549,9 @@ function startSelectedSession() {
   if (selectedSession.kind === "guided") {
     state.placeholderMessage = "";
     resetBreathingTutorial();
+  } else if (selectedSession.kind === "scripted") {
+    state.scriptSlideIndex = 0;
+    state.placeholderMessage = "";
   } else {
     state.placeholderMessage = `${selectedSession.title} is intentionally empty right now. This page is reserved for the guided content you want to add later.`;
   }
@@ -547,6 +574,11 @@ function endSelectedSession() {
 
   if (selectedSession.kind === "guided") {
     state.sessionSummary = buildGuidedSessionSummary(state.slideIndex, state.roundsDone);
+  } else if (selectedSession.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+    state.sessionSummary = segments.length > 0 && state.scriptSlideIndex >= segments.length - 1
+      ? `You completed the full ${selectedSession.title} session.`
+      : `You ended ${selectedSession.title} after segment ${state.scriptSlideIndex + 1} of ${segments.length}.`;
   } else {
     state.sessionSummary = `${selectedSession.title} ended. This session page is still empty for now, but the layout is ready for future guided content.`;
   }
@@ -569,8 +601,8 @@ function renderSessionTile(session) {
     >
       <div class="session-tile-top">
         <span class="session-number">${session.number}</span>
-        <span class="pill ${session.kind === "guided" ? "pill-guided" : "pill-placeholder"}">
-          ${session.kind === "guided" ? "Ready" : "Empty"}
+        <span class="pill ${session.kind !== "placeholder" ? "pill-guided" : "pill-placeholder"}">
+          ${session.kind !== "placeholder" ? "Ready" : "Empty"}
         </span>
       </div>
       <div>
@@ -598,6 +630,31 @@ function renderRoundPips(total, filled) {
         `<span class="round-pip ${index < filled ? "round-pip-filled" : ""}"></span>`
     )
     .join("");
+}
+
+function renderScriptCard() {
+  const segments = SESSION_SCRIPTS[state.selectedSessionId] || [];
+  const seg      = segments[state.scriptSlideIndex] || segments[0];
+  const isLast   = state.scriptSlideIndex >= segments.length - 1;
+
+  return `
+    <section class="tutorial-card">
+      <div class="tutorial-slide">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span class="slide-label">${escapeHtml(seg.timeLabel)}</span>
+          <span class="slide-label">${state.scriptSlideIndex + 1} / ${segments.length}</span>
+        </div>
+        <p class="slide-body">${escapeHtml(seg.text)}</p>
+      </div>
+      <div class="tutorial-nav">
+        <span></span>
+        <div class="progress-dots">${renderProgressDots(segments.length, state.scriptSlideIndex)}</div>
+        <button class="nav-button nav-button-primary" data-action="next-script-segment">
+          ${isLast ? "Finish" : "Next"}
+        </button>
+      </div>
+    </section>
+  `;
 }
 
 function renderTutorialCard() {
@@ -798,8 +855,8 @@ function renderSessionScreen() {
     <section class="detail-hero">
       <div class="detail-hero-top">
         <span class="detail-number">${selectedSession.number}</span>
-        <span class="detail-pill ${selectedSession.kind === "guided" ? "detail-pill-guided" : "detail-pill-placeholder"}">
-          ${selectedSession.kind === "guided" ? "Guided session" : "Empty session"}
+        <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
+          ${selectedSession.kind === "guided" ? "Guided session" : selectedSession.kind === "scripted" ? "Scripted session" : "Empty session"}
         </span>
       </div>
       <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
@@ -842,27 +899,50 @@ function renderSessionScreen() {
                 </div>
               </section>
             `
-        : `
-            <section class="placeholder-card">
-              <p class="placeholder-title">Template Reserved</p>
-              <p class="placeholder-body">
-                This screen is intentionally empty for now. When you are ready, this is where the guided content,
-                timer, and visuals for ${escapeHtml(selectedSession.title)} can be added.
-              </p>
-            </section>
-          `
+        : selectedSession.kind === "scripted"
+          ? state.sessionActive
+            ? renderScriptCard()
+            : `
+                <section class="preview-card">
+                  <p class="preview-title">Session Preview</p>
+                  <p class="preview-body">${escapeHtml(selectedSession.description)}</p>
+                  <div class="preview-list">
+                    ${(SESSION_SCRIPTS[selectedSession.id] || [])
+                      .map(
+                        (seg, index) => `
+                          <div class="preview-list-row">
+                            <span class="preview-list-number">${index + 1}</span>
+                            <p class="preview-list-text">${escapeHtml(seg.timeLabel)}</p>
+                          </div>
+                        `
+                      )
+                      .join("")}
+                  </div>
+                </section>
+              `
+          : `
+              <section class="placeholder-card">
+                <p class="placeholder-title">Template Reserved</p>
+                <p class="placeholder-body">
+                  This screen is intentionally empty for now. When you are ready, this is where the guided content,
+                  timer, and visuals for ${escapeHtml(selectedSession.title)} can be added.
+                </p>
+              </section>
+            `
     }
 
     <section class="panel-card">
-      <p class="panel-title">${selectedSession.kind === "guided" ? "Session Support" : "Placeholder Notes"}</p>
+      <p class="panel-title">${selectedSession.kind !== "placeholder" ? "Session Support" : "Placeholder Notes"}</p>
       <p class="panel-body">
         ${
           selectedSession.kind === "guided"
             ? "You can stop the breathing session at any time with End Session, and the popup chat can still answer questions about the current step."
-            : escapeHtml(
-                state.placeholderMessage ||
-                  "Start Session if you want to test the empty placeholder flow for this tile."
-              )
+            : selectedSession.kind === "scripted"
+              ? "Press Next after the avatar finishes each passage to advance to the next segment. End Session stops at any time."
+              : escapeHtml(
+                  state.placeholderMessage ||
+                    "Start Session if you want to test the empty placeholder flow for this tile."
+                )
         }
       </p>
     </section>
@@ -1024,6 +1104,9 @@ appEl.addEventListener("click", (event) => {
       break;
     case "next-slide":
       goToNextSlide();
+      break;
+    case "next-script-segment":
+      goToNextScriptSegment();
       break;
     case "start-round":
       if (state.slideIndex === 3) {

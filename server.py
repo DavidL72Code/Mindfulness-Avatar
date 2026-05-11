@@ -14,9 +14,25 @@ from chatbot import (
     load_mindfulness_activities,
     summarize_history,
     synthesize_edge_tts,
-    synthesize_gemini_speech,
 )
 
+
+def load_env_file(path):
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as env_file:
+        for raw_line in env_file:
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key:
+                os.environ.setdefault(key, value)
+
+
+load_env_file(os.path.join(os.path.dirname(__file__), ".env"))
 
 WEB_DIR = os.getenv(
     "WEB_DIR",
@@ -30,6 +46,10 @@ SESSIONS = {}
 SESSIONS_LOCK = Lock()
 
 _SENTENCE_SPLIT = re.compile(r'(?<=[.!?:;])\s+')
+
+
+class _ClientDisconnected(Exception):
+    pass
 
 
 def extract_speakable_chunks(buf):
@@ -318,13 +338,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
             return
 
         try:
-            result = synthesize_edge_tts(text=text)
-        except Exception:
-            try:
-                result = synthesize_gemini_speech(text=text, voice_name=voice_name)
-            except Exception as exc:
-                self.send_error(500, f"TTS error: {exc}")
-                return
+            result = synthesize_edge_tts(text=text, voice=voice_name)
+        except Exception as exc:
+            self.send_error(500, f"TTS error: {exc}")
+            return
 
         send_bytes(
             self,
@@ -441,8 +458,11 @@ class ChatHandler(SimpleHTTPRequestHandler):
 
     def _write_sse(self, data_dict):
         line = "data: " + json.dumps(data_dict) + "\n\n"
-        self.wfile.write(line.encode("utf-8"))
-        self.wfile.flush()
+        try:
+            self.wfile.write(line.encode("utf-8"))
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            raise _ClientDisconnected()
 
     def handle_chat_stream(self):
         content_length = int(self.headers.get("Content-Length", "0"))
@@ -503,6 +523,8 @@ class ChatHandler(SimpleHTTPRequestHandler):
             complete_text = " ".join(full_chunks)
             update_session_memory(session, user_message, complete_text)
             self._write_sse({"done": True, "session_id": session_id})
+        except _ClientDisconnected:
+            pass
         except Exception as exc:
             self._write_sse({"error": str(exc)})
 

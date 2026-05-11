@@ -48,7 +48,6 @@ export default function SignInScreen({ navigation }) {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('Home');
     } catch (error) {
       Alert.alert(t('signInFailedTitle'), t('signInFailedBody'));
     }

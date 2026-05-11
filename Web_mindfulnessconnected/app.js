@@ -64,13 +64,67 @@ const breathingSlides = [
   }
 ];
 
+const SESSION_SCRIPTS = {
+  "caregiver-fatigue": [
+    { key: "cf1",  text: "Thanks for joining me for this short meditation." },
+    { key: "cf2",  text: "In this brief practice, we'll explore some simple steps to recharge when we're feeling burnt out or overwhelmed by our efforts to help others." },
+    { key: "cf3",  text: "Go ahead and get comfortable. You can close your eyes if you like, or keep them gently open with a soft, relaxed gaze." },
+    { key: "cf4",  text: "As you settle in, take a few slow, calming breaths. And notice how it feels to breathe." },
+    { key: "cf5",  text: "Now let your breath return to its normal pace. Give yourself a few moments to rest and recharge as you bring yourself fully into the here and now." },
+    { key: "cf6",  text: "Great. Now we'll shift gears and tap into our ability to hold the suffering of others in a healthy way." },
+    { key: "cf7",  text: "Empathy can be a bridge to care and compassion, but it can also lead us into a state of overwhelm — what scientists call empathic distress." },
+    { key: "cf8",  text: "One simple way to avoid this overwhelm is to ground yourself in a caring motivation. Let's give this a try." },
+    { key: "cf9",  text: "Start by bringing to mind someone you care about. It could be your care recipient or anyone you care about." },
+    { key: "cf10", text: "Take a moment to imagine that they're actually here with you, and see if you can sense the deep connection you share with them." },
+    { key: "cf11", text: "As you tap into this sense of connection, see if you could notice your impulse to care for this individual, or perhaps your natural wish for them to be happy and free from suffering." },
+    { key: "cf12", text: "If it helps, you can give voice to this in your mind. You may think to yourself: May you be free from suffering and hardship. May you have all the happiness in the world." },
+    { key: "cf13", text: "Feel free to make up your own compassionate phrases and imagine sharing them with this person that you care about." },
+    { key: "cf14", text: "Now bring others to mind — or perhaps groups of people, or even the Earth itself." },
+    { key: "cf15", text: "Acknowledge their pain and suffering, and also the tremendous resilience that we all have." },
+    { key: "cf16", text: "Imagine a world where they are free from suffering and free from adversity. See if you can picture them happy, at ease, healthy, and balanced." },
+    { key: "cf17", text: "Let your mind roam here and continue to send kind, caring thoughts and phrases out into the world." },
+    { key: "cf18", text: "Next, include yourself in this circle of compassion." },
+    { key: "cf19", text: "Imagine the people in your life who care for you, or even strangers who are sending love and compassion out into the world, just like you are." },
+    { key: "cf20", text: "Imagine that all this caring energy is flowing into you, and see if you can be open to receiving it." },
+    { key: "cf21", text: "For these last few moments, notice how you feel right now without any judgment." },
+    { key: "cf22", text: "Bring a sense of openness, curiosity, and care to your own thoughts and feelings, whatever they may be." },
+    { key: "cf23", text: "When we feel the suffering of others and the suffering of the world in a very direct way, our own feelings and reactions can easily overwhelm us." },
+    { key: "cf24", text: "Here we practice the skill of grounding ourselves in a caring motivation. With this motivation, we get a little more space to be with our feelings and reactions without getting swept away by them." },
+    { key: "cf25", text: "Hopefully you found this helpful. If you did, see if you can keep practicing for short moments over the next day or two. Take care and good luck with your practice." }
+  ],
+  "mindful-breathing": [
+    { key: "mb1",  text: "Hello and welcome back. Today we are going to focus on a fundamental practice: mindful breathing." },
+    { key: "mb2",  text: "This is a tool you can use anywhere, at any time, to ground yourself and find a moment of calm." },
+    { key: "mb3",  text: "Start by finding a comfortable seat. Allow your back to be straight but not stiff." },
+    { key: "mb4",  text: "Let your hands rest gently in your lap or on your knees. If it feels okay, go ahead and close your eyes, or simply lower your gaze and let it soften." },
+    { key: "mb5",  text: "Now, take a deep breath in through your nose, feeling your lungs expand. And exhale slowly through your mouth." },
+    { key: "mb6",  text: "Do that one more time — deep breath in... and a long breath out." },
+    { key: "mb7",  text: "Now, let your breath settle into its natural rhythm. You don't need to change it or control it. Just observe it." },
+    { key: "mb8",  text: "Notice where you feel the breath most clearly. It might be the cool air at the tip of your nose, the rise and fall of your chest, or the expansion and contraction of your belly." },
+    { key: "mb9",  text: "As you sit here, you may notice your mind starting to wander. This is perfectly normal. That's just what minds do." },
+    { key: "mb10", text: "When you realize your thoughts have drifted to the past, the future, or a to-do list, simply acknowledge the thought without judgment." },
+    { key: "mb11", text: "Think of it like a cloud passing through the sky. Then, gently and kindly, escort your attention back to the physical sensation of your breath." },
+    { key: "mb12", text: "Back to the inhale... and the exhale." },
+    { key: "mb13", text: "Let's stay with this for a few moments in silence. Following each breath from the beginning of the inhalation, through the brief pause, to the end of the exhalation." },
+    { key: "mb14", text: "If you get distracted ten times, just bring yourself back ten times. Every time you return to the breath, you are strengthening your mindfulness muscle." },
+    { key: "mb15", text: "As we bring this practice to a close, take a moment to notice how you feel. Is there a sense of stillness? A bit more space in your mind?" },
+    { key: "mb16", text: "Know that this breath is always available to you as an anchor." },
+    { key: "mb17", text: "When you're ready, gently wiggle your fingers and toes, and slowly open your eyes." },
+    { key: "mb18", text: "Thank you for practicing with me today. Take this sense of presence with you as you move into the rest of your day." }
+  ]
+};
+
+function buildScriptSegmentPrompt(segment) {
+  return `Read the following meditation script passage aloud, word for word. Do not add, omit, or change anything:\n\n${segment.text}`;
+}
+
 const sessionCatalog = [
   {
-    id: "box-breathing",
-    title: "Box Breathing",
-    description: "",
-    kind: "guided",
-    duration: "5 slides"
+    id: "caregiver-fatigue",
+    title: "Caregiver Fatigue",
+    description: "A compassion meditation to recharge when caring for others.",
+    kind: "scripted",
+    duration: "~4 min · 6 segments"
   },
   {
     id: "body-scan",
@@ -87,11 +141,11 @@ const sessionCatalog = [
     duration: "Coming soon"
   },
   {
-    id: "gratitude-pause",
-    title: "Gratitude Pause",
-    description: "A moment to gently shift attention toward what is good.",
-    kind: "placeholder",
-    duration: "Coming soon"
+    id: "mindful-breathing",
+    title: "Mindful Breathing",
+    description: "A foundational breath awareness practice you can use anywhere.",
+    kind: "scripted",
+    duration: "~5 min · 5 segments"
   },
   {
     id: "loving-kindness",
@@ -166,7 +220,7 @@ const translations = {
     signInButton: "Sign In",
     signUpPrompt: "Create an account",
     signInFooter: "Multilingual mindfulness support for calmer daily routines.",
-    headerTitle: "Mindfulness Assistant",
+    headerTitle: "Mindfulness Sessions",
     logoutBtn: "Logout",
     chatHeader: "Mindfulness Virtual Assistant",
     card1Title: "About the Assistant",
@@ -178,6 +232,11 @@ const translations = {
     supportBtn: "Support Ticket",
     language: "Language",
     start: "Start",
+    profileTitle: "Profile",
+    personalInformation: "Personal Information",
+    settings: "Settings",
+    support: "Support",
+    logOut: "Log Out",
     firstName: "First Name",
     lastName: "Last Name",
     dateOfBirth: "Date of Birth",
@@ -194,7 +253,7 @@ const translations = {
     signInButton: "로그인",
     signUpPrompt: "계정 만들기",
     signInFooter: "차분한 일상을 위한 다국어 명상 지원.",
-    headerTitle: "명상 보조 도구",
+    headerTitle: "마음챙김 세션",
     logoutBtn: "로그아웃",
     chatHeader: "명상 가상 비서",
     card1Title: "비서 정보",
@@ -206,6 +265,11 @@ const translations = {
     supportBtn: "지원 티켓",
     language: "Language",
     start: "Start",
+    profileTitle: "프로필",
+    personalInformation: "개인 정보",
+    settings: "설정",
+    support: "지원",
+    logOut: "로그아웃",
     firstName: "이름",
     lastName: "성",
     dateOfBirth: "생년월일",
@@ -255,6 +319,7 @@ const state = {
   sessionDuration: "",
   avatarConversationId: createSessionId(),
   homeAvatarAutostarted: false,
+  scriptSlideIndex: 0,
   slideIndex: 0,
   roundsDone: 0,
   roundRunning: false,
@@ -282,6 +347,44 @@ function formatDuration(totalSeconds) {
   const seconds = totalSeconds % 60;
   const values = hours > 0 ? [hours, minutes, seconds] : [minutes, seconds];
   return values.map((value) => String(value).padStart(2, "0")).join(":");
+}
+
+const TRACKING_DAY_MS = 24 * 60 * 60 * 1000;
+
+function getLocalDateKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getDayDifference(previousDateKey, currentDateKey) {
+  if (!previousDateKey) return null;
+  const previous = new Date(`${previousDateKey}T00:00:00`);
+  const current = new Date(`${currentDateKey}T00:00:00`);
+  if (Number.isNaN(previous.getTime()) || Number.isNaN(current.getTime())) {
+    return null;
+  }
+  return Math.round((current.getTime() - previous.getTime()) / TRACKING_DAY_MS);
+}
+
+function roundSessionMinutes(seconds) {
+  return Math.round((seconds / 60) * 100) / 100;
+}
+
+async function recordSessionCompletion({ selectedSession, elapsedSeconds, completed, metadata = {} }) {
+  if (!window._fb || !selectedSession || elapsedSeconds <= 0) return;
+  try {
+    await window._fb.recordCompletedSession({
+      sessionId: selectedSession.id,
+      sessionTitle: selectedSession.title,
+      durationSeconds: elapsedSeconds,
+      completed,
+      metadata,
+    });
+  } catch (error) {
+    console.warn("Failed to record session tracking data", error);
+  }
 }
 
 function escapeHtml(value) {
@@ -315,6 +418,7 @@ function getSessionContext() {
     slideIndex: state.slideIndex,
     roundsDone: state.roundsDone,
     phaseBadge: state.phaseBadge,
+    scriptSlideIndex: state.scriptSlideIndex,
     sessionlanguage: "English"
   };
 }
@@ -337,15 +441,10 @@ function buildChatPrompt(message, sessionContext) {
     `Session language: ${sessionContext.sessionlanguage}`
   ];
 
-  if (sessionContext.selectedSession.id === "box-breathing") {
-    const slide = breathingSlides[sessionContext.slideIndex] || breathingSlides[0];
-    lines.push(
-      "Box Breathing tutorial structure: Introduction, Get comfortable, Breathe, The 4-4-4-4 pattern, Return slowly."
-    );
-    lines.push(
-      `Breathing progress: slide ${sessionContext.slideIndex + 1} of ${breathingSlides.length}, rounds completed ${sessionContext.roundsDone} of ${TOTAL_BREATHING_ROUNDS}, current phase ${sessionContext.phaseBadge}.`
-    );
-    lines.push(`Current slide title: ${slide.titlePlain}`);
+  if (sessionContext.selectedSession.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    lines.push(`This is a scripted session with ${segments.length} passages.`);
+    lines.push(`Current passage: ${sessionContext.scriptSlideIndex + 1} of ${segments.length}.`);
   } else {
     lines.push("This session page is currently a placeholder with no guided content yet.");
   }
@@ -354,22 +453,17 @@ function buildChatPrompt(message, sessionContext) {
   return lines.join("\n");
 }
 
-function buildLocalChatFallback(message, sessionContext) {
-  const lower = message.toLowerCase();
-
-  if (sessionContext?.selectedSession?.id === "box-breathing") {
-    if (lower.includes("round") || lower.includes("breath") || lower.includes("pattern")) {
-      return `Box Breathing uses 4 rounds of a 4-4-4-4 pattern: inhale for 4, hold for 4, exhale for 4, then hold for 4. You are currently on slide ${sessionContext.slideIndex + 1} of ${breathingSlides.length} and have completed ${sessionContext.roundsDone} of ${TOTAL_BREATHING_ROUNDS} rounds.`;
-    }
-
-    return "Box Breathing is the live tutorial in this app. It walks through 5 slides: introduction, setup, breathing rounds, pattern explanation, and return slowly.";
+function buildLocalChatFallback(_message, sessionContext) {
+  if (sessionContext?.selectedSession?.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    return `${sessionContext.selectedSession.title} is a scripted session with ${segments.length} passages. You are on passage ${(sessionContext.scriptSlideIndex || 0) + 1}.`;
   }
 
   if (sessionContext?.selectedSession) {
     return `${sessionContext.selectedSession.title} is currently an empty placeholder session. The tile and session page are ready, but the guided exercise itself has not been filled in yet.`;
   }
 
-  return "This app has 12 session tiles. Box Breathing is the current live tutorial, and the other 11 session pages are placeholders for future mindfulness exercises.";
+  return "This app has 12 session tiles. Sessions 1 and 4 have scripted content; the other 10 are placeholders for future exercises.";
 }
 
 function buildGuidedSessionSummary(slideIndex, roundsDone) {
@@ -428,6 +522,7 @@ function clearExerciseState() {
   state.sessionStatus = "Not started";
   state.sessionStartTime = null;
   state.placeholderMessage = "";
+  state.scriptSlideIndex = 0;
   resetBreathingTutorial();
 }
 
@@ -530,10 +625,21 @@ function startAvatarGuidance() {
     return;
   }
 
-  const prompt =
-    selectedSession.kind === "guided"
-      ? buildGuidedAvatarStartPrompt(selectedSession.title)
-      : buildSessionAvatarWelcomePrompt(selectedSession.title);
+  if (selectedSession.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+    const segment  = segments[state.scriptSlideIndex] || segments[0];
+    if (segment) {
+      queueAvatarCommand(AVATAR_HOST_SESSION, {
+        type: "host-speak-script",
+        text: segment.text
+      });
+      return;
+    }
+  }
+
+  const prompt = selectedSession.kind === "guided"
+    ? buildGuidedAvatarStartPrompt(selectedSession.title)
+    : buildSessionAvatarWelcomePrompt(selectedSession.title);
 
   queueAvatarCommand(AVATAR_HOST_SESSION, {
     type: "host-start-session",
@@ -700,7 +806,7 @@ function syncAvatarDock() {
 
   const src = buildAvatarFrameSrc({
     host: AVATAR_HOST_HOME,
-    autostart: !state.homeAvatarAutostarted,
+    autostart: true,
     conversationId: state.avatarConversationId
   });
   if (avatarDockIframeEl.dataset.src !== src) {
@@ -743,10 +849,10 @@ function syncSessionAvatarPanel() {
   }
 
   const rect = hostEl.getBoundingClientRect();
-  avatarSessionEl.style.left = `${rect.left}px`;
-  avatarSessionEl.style.top = `${rect.top}px`;
-  avatarSessionEl.style.width = `${rect.width}px`;
-  avatarSessionEl.style.height = `${rect.height}px`;
+  avatarSessionEl.style.left   = rect.left   + "px";
+  avatarSessionEl.style.top    = rect.top    + "px";
+  avatarSessionEl.style.width  = rect.width  + "px";
+  avatarSessionEl.style.height = rect.height + "px";
 
   const selectedSession = getSelectedSession();
   const src = buildAvatarFrameSrc({
@@ -777,6 +883,14 @@ function openSession(sessionId) {
 
 function goHome() {
   state.screen = "home";
+  if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
+  render();
+}
+
+function goProfile() {
+  endHomeDockAvatar();
+  state.screen = "profile";
+  if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
   render();
 }
 
@@ -811,6 +925,21 @@ function goToNextSlide() {
   if (changed) {
     advanceAvatarGuidance();
   }
+}
+
+function goToNextScriptSegment() {
+  const segments = SESSION_SCRIPTS[state.selectedSessionId] || [];
+  if (state.scriptSlideIndex >= segments.length - 1) {
+    endSelectedSession();
+    return;
+  }
+  state.scriptSlideIndex += 1;
+  render();
+  const segment = segments[state.scriptSlideIndex];
+  queueAvatarCommand(AVATAR_HOST_SESSION, {
+    type: "host-speak-script",
+    text: segment.text
+  });
 }
 
 function tracePattern() {
@@ -995,6 +1124,9 @@ function startSelectedSession() {
   if (selectedSession.kind === "guided") {
     state.placeholderMessage = "";
     resetBreathingTutorial();
+  } else if (selectedSession.kind === "scripted") {
+    state.scriptSlideIndex = 0;
+    state.placeholderMessage = "";
   } else {
     state.placeholderMessage = `${selectedSession.title} is intentionally empty right now. This page is reserved for the guided content you want to add later.`;
   }
@@ -1017,12 +1149,33 @@ function endSelectedSession() {
   );
 
   state.sessionDuration = formatDuration(elapsedSeconds);
+  let completed = true;
+  const trackingMetadata = { kind: selectedSession.kind };
 
   if (selectedSession.kind === "guided") {
     state.sessionSummary = buildGuidedSessionSummary(state.slideIndex, state.roundsDone);
+    completed = state.slideIndex === breathingSlides.length - 1 || state.roundsDone >= TOTAL_BREATHING_ROUNDS;
+    trackingMetadata.slideIndex = state.slideIndex;
+    trackingMetadata.roundsDone = state.roundsDone;
+    trackingMetadata.totalRounds = TOTAL_BREATHING_ROUNDS;
+  } else if (selectedSession.kind === "scripted") {
+    const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+    completed = segments.length > 0 && state.scriptSlideIndex >= segments.length - 1;
+    trackingMetadata.scriptSlideIndex = state.scriptSlideIndex;
+    trackingMetadata.scriptSegments = segments.length;
+    state.sessionSummary = completed
+      ? `You completed the full ${selectedSession.title} session.`
+      : `You ended ${selectedSession.title} after passage ${state.scriptSlideIndex + 1} of ${segments.length}.`;
   } else {
     state.sessionSummary = `${selectedSession.title} ended. This session page is still empty for now, but the layout is ready for future guided content.`;
   }
+
+  void recordSessionCompletion({
+    selectedSession,
+    elapsedSeconds,
+    completed,
+    metadata: trackingMetadata,
+  });
 
   state.summaryModalVisible = true;
   clearExerciseState();
@@ -1037,11 +1190,23 @@ async function handleWebSignIn() {
     render();
     return;
   }
-  // BYPASS: accept any credentials for testing — remove when Firebase env vars are configured
-  state.authenticated = true;
-  state.currentUser = { email };
-  state.authScreen = "signin";
+  state.signInError = "Signing in…";
   render();
+  try {
+    if (!window._fb) throw new Error("not-ready");
+    await window._fb.signIn(email, password);
+  } catch (err) {
+    const code = err.code || "";
+    state.signInError =
+      code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential"
+        ? "Email or password is incorrect."
+        : code === "auth/too-many-requests"
+        ? "Too many attempts. Please wait a moment and try again."
+        : err.message === "not-ready"
+        ? "Firebase is not configured yet. Add EXPO_PUBLIC_FIREBASE_* values to .env and restart the server."
+        : "Sign in failed. Please try again.";
+    render();
+  }
 }
 
 async function handleWebSignUp() {
@@ -1078,15 +1243,27 @@ async function handleWebSignUp() {
       dateOfBirth: state.signUpDob || "",
       languagePreference: state.locale,
       createdAt: new Date(),
+      sessionsFinished: 0,
+      totalSessionSeconds: 0,
+      totalSessionMinutes: 0,
       totalSessionTime: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      totalActiveDays: 0,
+      totalDays: 0,
+      lastActiveDate: null,
     });
   } catch (err) {
     const code = err.code || "";
     state.signUpError =
       code === "auth/email-already-in-use"
         ? "An account with this email already exists."
-        : code === "not-ready"
-        ? "Still connecting — please try again in a moment."
+        : code === "auth/invalid-email"
+        ? "Please enter a valid email address."
+        : code === "auth/weak-password"
+        ? "Password is too weak. Please use at least 8 characters."
+        : err.message === "not-ready"
+        ? "Firebase is not configured yet. Add EXPO_PUBLIC_FIREBASE_* values to .env and restart the server."
         : "Account creation failed. Please try again.";
     render();
   }
@@ -1103,6 +1280,7 @@ async function handleLogout() {
   state.screen = "home";
   state.languageModalVisible = true;
   state.avatarDockVisible = true;
+  if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
   render();
 }
 
@@ -1112,15 +1290,15 @@ function renderSessionTile(session) {
 
   return `
     <button
-      class="session-tile ${session.kind === "guided" ? "session-tile-guided" : "session-tile-placeholder"} ${selected ? "session-tile-selected" : ""}"
+      class="session-tile ${session.kind !== "placeholder" ? "session-tile-guided" : "session-tile-placeholder"} ${selected ? "session-tile-selected" : ""}"
       data-action="open-session"
       data-session-id="${session.id}"
       ${disabled ? "disabled" : ""}
     >
       <div class="session-tile-top">
         <span class="session-number">${session.number}</span>
-        <span class="pill ${session.kind === "guided" ? "pill-guided" : "pill-placeholder"}">
-          ${session.kind === "guided" ? "Ready" : "Empty"}
+        <span class="pill ${session.kind !== "placeholder" ? "pill-guided" : "pill-placeholder"}">
+          ${session.kind !== "placeholder" ? "Ready" : "Empty"}
         </span>
       </div>
       <div>
@@ -1419,21 +1597,9 @@ function renderHomeScreen() {
 
     <section class="connected-hero" style="border-radius:12px;">
       <div class="connected-hero-copy">
-        <span class="hero-eyebrow">Mindfulness Sessions</span>
         <h1 class="connected-hero-title">Mindfulness, guided with calm.</h1>
-        <p class="connected-hero-body">
-          Explore a softer session space where your avatar guide greets visitors on the selection page,
-          then supports each mindfulness exercise when you are ready to begin.
-        </p>
         <div class="hero-actions">
-          ${
-            !state.avatarDockVisible
-              ? `<button class="action-button action-button-primary" data-action="open-avatar-dock">Open Chat</button>`
-              : `<button class="action-button action-button-primary" data-action="open-session" data-session-id="${selectedSession.id}">Start With Box Breathing</button>`
-          }
-          <button class="action-button action-button-secondary" data-action="open-session" data-session-id="${selectedSession.id}" style="background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.35);">
-            Explore Sessions
-          </button>
+          <button class="action-button action-button-primary" data-action="open-session" data-session-id="${selectedSession.id}">Start With Box Breathing</button>
         </div>
       </div>
       <div class="connected-guide-card">
@@ -1464,22 +1630,31 @@ function renderHomeScreen() {
       </div>
     </section>
 
-    <section class="home-card-grid">
-      <article class="home-info-card">
-        <h2>${escapeHtml(t("card1Title"))}</h2>
-        <p>${escapeHtml(t("card1Text"))}</p>
-      </article>
-      <article class="home-info-card">
-        <h2>${escapeHtml(t("card3Title"))}</h2>
-        <p>${escapeHtml(t("card3Text"))}</p>
-      </article>
-      <article class="home-info-card">
-        <h2>${escapeHtml(t("card4Title"))}</h2>
-        <p>${escapeHtml(t("card4Text"))}</p>
-      </article>
-    </section>
+  `;
+}
 
-    <button class="home-support-btn" type="button">${escapeHtml(t("supportBtn"))}</button>
+function renderProfileScreen() {
+  return `
+    <h1 class="profile-title">${escapeHtml(t("profileTitle"))}</h1>
+
+    <section class="profile-section">
+      <button class="profile-row" data-action="profile-coming-soon" data-label="Personal Information" type="button">
+        <span class="profile-row-label">${escapeHtml(t("personalInformation"))}</span>
+        <span class="profile-arrow">›</span>
+      </button>
+      <button class="profile-row" data-action="profile-coming-soon" data-label="Settings" type="button">
+        <span class="profile-row-label">${escapeHtml(t("settings"))}</span>
+        <span class="profile-arrow">›</span>
+      </button>
+      <button class="profile-row" data-action="profile-coming-soon" data-label="Support" type="button">
+        <span class="profile-row-label">${escapeHtml(t("support"))}</span>
+        <span class="profile-arrow">›</span>
+      </button>
+      <button class="profile-row" data-action="logout" type="button">
+        <span class="profile-row-label profile-danger-text">${escapeHtml(t("logOut"))}</span>
+        <span class="profile-arrow">›</span>
+      </button>
+    </section>
   `;
 }
 
@@ -1496,8 +1671,8 @@ function renderSessionScreen() {
     <section class="detail-hero">
       <div class="detail-hero-top">
         <span class="detail-number">${selectedSession.number}</span>
-        <span class="detail-pill ${selectedSession.kind === "guided" ? "detail-pill-guided" : "detail-pill-placeholder"}">
-          ${selectedSession.kind === "guided" ? "Guided session" : "Empty session"}
+        <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
+          ${selectedSession.kind === "guided" ? "Guided session" : selectedSession.kind === "scripted" ? "Scripted session" : "Empty session"}
         </span>
       </div>
       <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
@@ -1536,7 +1711,19 @@ function renderSessionScreen() {
               </button>
             </div>
           `
-          : ""
+          : state.sessionActive && selectedSession.kind === "scripted"
+            ? (() => {
+                const segs  = SESSION_SCRIPTS[selectedSession.id] || [];
+                const isLast = state.scriptSlideIndex >= segs.length - 1;
+                return `
+                  <div class="session-avatar-controls">
+                    <button class="action-button action-button-primary" data-action="next-script-segment">
+                      ${isLast ? "Finish" : "Next"}
+                    </button>
+                  </div>
+                `;
+              })()
+            : ""
       }
     </section>
 
@@ -1545,19 +1732,21 @@ function renderSessionScreen() {
         ? state.sessionActive
           ? renderTutorialCard()
           : ""
-        : `
-            <section class="placeholder-card">
-              <p class="placeholder-title">Template Reserved</p>
-              <p class="placeholder-body">
-                This screen is intentionally empty for now. When you are ready, this is where the guided content,
-                timer, and visuals for ${escapeHtml(selectedSession.title)} can be added.
-              </p>
-            </section>
-          `
+        : selectedSession.kind === "scripted"
+          ? ""
+          : `
+              <section class="placeholder-card">
+                <p class="placeholder-title">Template Reserved</p>
+                <p class="placeholder-body">
+                  This screen is intentionally empty for now. When you are ready, this is where the guided content,
+                  timer, and visuals for ${escapeHtml(selectedSession.title)} can be added.
+                </p>
+              </section>
+            `
     }
 
     ${
-      selectedSession.kind === "guided"
+      selectedSession.kind === "guided" || selectedSession.kind === "scripted"
         ? ""
         : `
             <section class="panel-card">
@@ -1661,20 +1850,35 @@ function render() {
           </button>
         </div>
         <h1 class="home-header-title">${escapeHtml(t("headerTitle"))}</h1>
-        <button class="home-logout-btn" data-action="logout" type="button">${escapeHtml(t("logoutBtn"))}</button>
+        <div class="home-header-actions">
+          <button class="home-profile-btn ${state.screen === "home" ? "active" : ""}" data-action="go-home" type="button">Home</button>
+          <button class="home-profile-btn ${state.screen === "profile" ? "active" : ""}" data-action="go-profile" type="button">Profile</button>
+          <button class="home-logout-btn" data-action="logout" type="button">${escapeHtml(t("logoutBtn"))}</button>
+        </div>
       </header>
 
       <div class="home-scroll-body content-stack">
-        ${state.screen === "home" ? renderHomeScreen() : renderSessionScreen()}
+        ${
+          state.screen === "home"
+            ? renderHomeScreen()
+            : state.screen === "profile"
+              ? renderProfileScreen()
+              : renderSessionScreen()
+        }
       </div>
     </main>
+    ${
+      state.screen === "home" && !state.avatarDockVisible
+        ? `<button class="avatar-dock-launcher" data-action="open-avatar-dock" type="button" aria-label="Open mindfulness chat">Chat</button>`
+        : ""
+    }
     ${renderSummaryModal()}
   `;
 
   attachInputHandlers();
   scrollChatToBottom();
   syncAvatarDock();
-  syncSessionAvatarPanel();
+  requestAnimationFrame(() => requestAnimationFrame(syncSessionAvatarPanel));
 }
 
 function attachInputHandlers() {
@@ -1796,6 +2000,12 @@ appEl.addEventListener("click", (event) => {
       state.screen = "session";
       render();
       break;
+    case "go-profile":
+      goProfile();
+      break;
+    case "profile-coming-soon":
+      window.alert(`${actionEl.dataset.label || "This section"} is coming soon.`);
+      break;
     case "open-avatar-dock":
       state.avatarDockVisible = true;
       render();
@@ -1814,6 +2024,9 @@ appEl.addEventListener("click", (event) => {
       break;
     case "next-slide":
       goToNextSlide();
+      break;
+    case "next-script-segment":
+      goToNextScriptSegment();
       break;
     case "start-round":
       if (state.slideIndex === 3) {
@@ -1880,13 +2093,17 @@ window.addEventListener("resize", () => {
   if (avatarDockEl && !avatarDockEl.classList.contains("hidden")) {
     applyAvatarDockPosition();
   }
-
-  syncSessionAvatarPanel();
+  if (avatarSessionEl && !avatarSessionEl.classList.contains("hidden")) {
+    syncSessionAvatarPanel();
+  }
 });
 
 window.addEventListener("scroll", () => {
-  syncSessionAvatarPanel();
-});
+  if (avatarSessionEl && !avatarSessionEl.classList.contains("hidden")) {
+    syncSessionAvatarPanel();
+  }
+}, { passive: true });
+
 
 fetch(`${API_BASE_URL}/health`, {
   method: "GET",
@@ -1903,14 +2120,73 @@ window._fb = null;
     const res = await fetch("/firebase-config");
     const { firebaseConfig } = await res.json();
     if (firebaseConfig && firebaseConfig.apiKey) {
-      firebase.initializeApp(firebaseConfig);
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
       const auth = firebase.auth();
       const db = firebase.firestore();
+      const fieldValue = firebase.firestore.FieldValue;
       window._fb = {
         signIn:           (email, pw) => auth.signInWithEmailAndPassword(email, pw),
         signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
         signOut:          ()          => auth.signOut(),
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
+        recordCompletedSession: async ({ sessionId, sessionTitle, durationSeconds, completed = true, metadata = {} }) => {
+          const user = auth.currentUser;
+          const elapsedSeconds = Math.max(0, Math.floor(durationSeconds || 0));
+          if (!user || elapsedSeconds <= 0) return;
+
+          const todayKey = getLocalDateKey();
+          const sessionMinutes = roundSessionMinutes(elapsedSeconds);
+          const userRef = db.collection("users").doc(user.uid);
+          const sessionRef = userRef.collection("sessions").doc();
+
+          await db.runTransaction(async (transaction) => {
+            const snapshot = await transaction.get(userRef);
+            const data = snapshot.exists ? snapshot.data() : {};
+            const lastActiveDate = data.lastActiveDate || null;
+            const diff = getDayDifference(lastActiveDate, todayKey);
+            const isNewActiveDay = lastActiveDate !== todayKey;
+            const currentStreak = !isNewActiveDay
+              ? data.currentStreak || 1
+              : diff === 1
+                ? (data.currentStreak || 0) + 1
+                : 1;
+            const longestStreak = Math.max(data.longestStreak || 0, currentStreak);
+            const totalActiveDays = (data.totalActiveDays ?? data.totalDays ?? 0) + (isNewActiveDay ? 1 : 0);
+            const totalSessionSeconds = (data.totalSessionSeconds || 0) + elapsedSeconds;
+            const totalSessionMinutes = roundSessionMinutes(totalSessionSeconds);
+            const sessionsFinished = (data.sessionsFinished || 0) + 1;
+
+            transaction.set(sessionRef, {
+              sessionId,
+              sessionTitle,
+              durationSeconds: elapsedSeconds,
+              durationMinutes: sessionMinutes,
+              completed,
+              localDate: todayKey,
+              userId: user.uid,
+              userEmail: user.email || "",
+              metadata,
+              createdAt: fieldValue.serverTimestamp(),
+            });
+
+            transaction.set(userRef, {
+              email: user.email || data.email || "",
+              sessionsFinished,
+              totalSessionSeconds,
+              totalSessionMinutes,
+              totalSessionTime: totalSessionSeconds,
+              currentStreak,
+              longestStreak,
+              totalActiveDays,
+              totalDays: totalActiveDays,
+              lastActiveDate: todayKey,
+              lastSessionAt: fieldValue.serverTimestamp(),
+              updatedAt: fieldValue.serverTimestamp(),
+            }, { merge: true });
+          });
+        },
       };
       fbReady = true;
       auth.onAuthStateChanged((user) => {
@@ -1919,9 +2195,12 @@ window._fb = null;
         if (user) state.authScreen = "signin";
         render();
       });
+    } else {
+      state.signInError = "Firebase is not configured yet. Add EXPO_PUBLIC_FIREBASE_* values to .env and restart the server.";
     }
-  } catch (_) {
-    // Firebase unavailable — fall through to plain render
+  } catch (err) {
+    state.signInError = "Firebase failed to initialize. Check your Firebase config and restart the server.";
+    console.error("Firebase initialization failed", err);
   }
   if (!fbReady) render();
 })();
