@@ -4,9 +4,8 @@ This repository combines the mindfulness web/avatar chatbot, backend services, a
 
 ## Projects
 
-- `Web_Mindfulness_Chatbot/` contains the browser-based mindfulness chatbot and avatar experience.
-- `Mobile_Mindfulness_React/` contains the earlier mobile mindfulness React project.
-- The repository root now also contains the merged Expo mobile app from `mobile-app`.
+- `Web_mindfulnessconnected/` contains the browser-based mindfulness chatbot and avatar experience.
+- The repository root contains the Expo mobile app source (`App.js`, `src/`).
 - `server.py`, `chatbot.py`, `requirements.txt`, and `render.yaml` support the Python backend/deployment flow.
 
 ## Mobile App Setup
