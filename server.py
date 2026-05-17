@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from threading import Lock
+from threading import Lock, Thread
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 from chatbot import (
@@ -561,9 +561,21 @@ class ChatHandler(SimpleHTTPRequestHandler):
         send_json(self, {"summary": recap})
 
 
+def _prewarm_gemini():
+    """Run one tiny generate_content call so the model object, TLS, and
+    auth handshake are ready before the first real user request.
+    Executed in a daemon thread so it never blocks server startup."""
+    try:
+        call_gemini("ping", temperature=0.0)
+        print("Gemini pre-warm complete.")
+    except Exception as exc:
+        print(f"Gemini pre-warm failed (will lazy-init on first request): {exc}")
+
+
 def main():
     host = "0.0.0.0"
     port = int(os.getenv("PORT", "8000"))
+    Thread(target=_prewarm_gemini, daemon=True).start()
     with ThreadingHTTPServer((host, port), ChatHandler) as httpd:
         print(f"Serving on http://{host}:{port}")
         httpd.serve_forever()
