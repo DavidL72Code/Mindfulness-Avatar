@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "outputDirectory": "Web_mindfulnessconnected",
+  "rewrites": [
+    { "source": "/firebase-config", "destination": "https://mindfulness-avatar.onrender.com/firebase-config" },
+    { "source": "/chat", "destination": "https://mindfulness-avatar.onrender.com/chat" },
+    { "source": "/activities", "destination": "https://mindfulness-avatar.onrender.com/activities" },
+    { "source": "/activities/:path*", "destination": "https://mindfulness-avatar.onrender.com/activities/:path*" }
+  ]
+}
