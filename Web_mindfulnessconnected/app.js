@@ -2202,10 +2202,7 @@ function renderSessionScreen() {
         </div>
       </div>
 
-      <div class="detail-title-row">
-        <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
-        ${nextButtonHtml}
-      </div>
+      <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
 
       ${
         selectedSession.description
@@ -2215,24 +2212,26 @@ function renderSessionScreen() {
       <p class="detail-meta">Status: ${escapeHtml(state.sessionStatus)}</p>
     </section>
 
-    ${
-      showProgress
-        ? `
-          <section class="session-progress-card">
-            <div class="session-progress-head">
-              <span class="session-progress-label">Session progress</span>
-              <span class="session-progress-step">${escapeHtml(progress.label)} · ${progress.percent}%</span>
-            </div>
-            <div class="session-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress.percent}">
-              <div class="session-progress-fill" style="width: ${progress.percent}%"></div>
-            </div>
-          </section>
-        `
-        : ""
-    }
-
     <section class="panel-card session-avatar-shell">
       <div class="session-avatar-host" id="session-avatar-host"></div>
+      ${
+        showProgress
+          ? `
+            <div class="avatar-footer">
+              <div class="avatar-footer-progress">
+                <div class="session-progress-head">
+                  <span class="session-progress-label">Session progress</span>
+                  <span class="session-progress-step">${escapeHtml(progress.label)} · ${progress.percent}%</span>
+                </div>
+                <div class="session-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress.percent}">
+                  <div class="session-progress-fill" style="width: ${progress.percent}%"></div>
+                </div>
+              </div>
+              ${nextButtonHtml ? `<div class="avatar-footer-actions">${nextButtonHtml}</div>` : ""}
+            </div>
+          `
+          : ""
+      }
     </section>
 
     ${
