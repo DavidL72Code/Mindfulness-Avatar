@@ -264,6 +264,38 @@ button { border: none; background: none; }
 }
 
 /* ============================================================
+   WELCOME CARD (home page header)
+============================================================ */
+.welcome-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: var(--card-shadow);
+  border-left: 4px solid var(--brand);
+}
+.welcome-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin: 0 0 4px;
+}
+.welcome-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.welcome-body {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ============================================================
    RESUME CARD
 ============================================================ */
 .resume-card {
@@ -579,18 +611,41 @@ button { border: none; background: none; }
 .detail-hero {
   background: var(--white);
   border-radius: 16px;
-  padding: 14px;
+  padding: 16px;
   box-shadow: var(--card-shadow);
 }
 .detail-hero-top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.detail-hero-top-left {
+  display: flex;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 6px;
 }
+.detail-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.detail-hero-actions .action-button { padding: 8px 14px; font-size: 13px; }
+
+.detail-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.detail-next-btn { padding: 8px 16px; font-size: 13px; flex-shrink: 0; }
+
 .detail-number     { font-size: 28px; font-weight: 900; color: var(--brand); }
-.detail-title      { flex: 1; font-size: 16px; font-weight: 800; color: var(--text); }
+.detail-title      { flex: 1; font-size: 20px; font-weight: 800; color: var(--text); margin: 0; }
 .detail-description{ font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-top: 4px; }
 .detail-meta       { font-size: 11px; color: var(--subtitle); font-weight: 600; margin-top: 4px; }
 
@@ -598,7 +653,53 @@ button { border: none; background: none; }
 .detail-pill-guided      { background: var(--brand); color: #fff; }
 .detail-pill-placeholder { background: var(--tile-guided); color: var(--subtitle); }
 
-.control-row { display: flex; gap: 10px; }
+.session-progress-card {
+  background: var(--white);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: var(--card-shadow);
+}
+.session-progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.session-progress-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.session-progress-step {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand);
+}
+.session-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--input-bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.session-progress-fill {
+  height: 100%;
+  background: var(--brand);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 520px) {
+  .detail-hero-top { justify-content: flex-start; }
+  .detail-hero-actions { width: 100%; }
+  .detail-hero-actions .action-button { flex: 1; }
+  .detail-title-row { flex-direction: column; align-items: stretch; }
+  .detail-next-btn { width: 100%; }
+}
 
 .panel-card {
   background: var(--white);

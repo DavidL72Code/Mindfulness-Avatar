@@ -1743,6 +1743,16 @@ function renderHomeScreen() {
         : ""
     }
 
+    <section class="welcome-card">
+      <p class="welcome-eyebrow">Welcome</p>
+      <h2 class="welcome-title">Take a moment for yourself.</h2>
+      <p class="welcome-body">
+        Mindfulness sessions are short, guided practices designed to help you
+        slow down, breathe, and reset. Choose any session below — there's no
+        right or wrong place to begin. Even a few minutes can make a difference.
+      </p>
+    </section>
+
     ${
       state.sessionActive
         ? `
@@ -2119,6 +2129,30 @@ function renderSupportScreen() {
   `;
 }
 
+function computeSessionProgress(selectedSession) {
+  if (!state.sessionActive) return { percent: 0, label: "" };
+  if (selectedSession.kind === "guided") {
+    const total = Math.max(1, breathingSlides.length - 1);
+    const stepRatio = Math.min(1, state.slideIndex / total);
+    const inRoundsPhase = (breathingSlides[state.slideIndex] || {}).key === "rounds";
+    const roundsRatio = inRoundsPhase
+      ? Math.min(1, state.roundsDone / TOTAL_BREATHING_ROUNDS) * (1 / total)
+      : 0;
+    const percent = Math.min(100, Math.round((stepRatio + roundsRatio) * 100));
+    return {
+      percent,
+      label: `Step ${Math.min(state.slideIndex + 1, breathingSlides.length)} of ${breathingSlides.length}`,
+    };
+  }
+  if (selectedSession.kind === "scripted") {
+    const segs = SESSION_SCRIPTS[selectedSession.id] || [];
+    if (!segs.length) return { percent: 0, label: "" };
+    const percent = Math.min(100, Math.round(((state.scriptSlideIndex + 1) / segs.length) * 100));
+    return { percent, label: `Passage ${state.scriptSlideIndex + 1} of ${segs.length}` };
+  }
+  return { percent: 0, label: "" };
+}
+
 function renderSessionScreen() {
   const selectedSession = getSelectedSession();
   const currentSlide = breathingSlides[state.slideIndex] || breathingSlides[0];
@@ -2126,17 +2160,53 @@ function renderSessionScreen() {
     state.roundRunning ||
     (currentSlide.key === "rounds" && state.roundsDone < TOTAL_BREATHING_ROUNDS);
 
+  const isScripted = selectedSession.kind === "scripted";
+  const isGuided = selectedSession.kind === "guided";
+  const segs = isScripted ? (SESSION_SCRIPTS[selectedSession.id] || []) : [];
+  const scriptedIsLast = isScripted && state.scriptSlideIndex >= segs.length - 1;
+  const guidedIsLast = isGuided && state.slideIndex === breathingSlides.length - 1;
+
+  const nextButtonHtml = state.sessionActive
+    ? isGuided
+      ? `<button class="action-button action-button-primary detail-next-btn" data-action="next-slide" ${nextStepDisabled ? "disabled" : ""}>
+           ${guidedIsLast ? "Finish" : "Next"}
+         </button>`
+      : isScripted
+        ? `<button class="action-button action-button-primary detail-next-btn" data-action="next-script-segment">
+             ${scriptedIsLast ? "Finish" : "Next"}
+           </button>`
+        : ""
+    : "";
+
+  const progress = computeSessionProgress(selectedSession);
+  const showProgress = state.sessionActive && (isGuided || isScripted);
+
   return `
     <button class="action-button action-button-secondary" data-action="go-home">Back to sessions</button>
 
     <section class="detail-hero">
       <div class="detail-hero-top">
-        <span class="detail-number">${selectedSession.number}</span>
-        <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
-          ${selectedSession.kind === "guided" ? "Guided session" : selectedSession.kind === "scripted" ? "Scripted session" : "Empty session"}
-        </span>
+        <div class="detail-hero-top-left">
+          <span class="detail-number">${selectedSession.number}</span>
+          <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
+            ${isGuided ? "Guided session" : isScripted ? "Scripted session" : "Empty session"}
+          </span>
+        </div>
+        <div class="detail-hero-actions">
+          <button class="action-button action-button-primary" data-action="start-session" ${state.sessionActive ? "disabled" : ""}>
+            Start Session
+          </button>
+          <button class="action-button action-button-secondary" data-action="end-session" ${!state.sessionActive ? "disabled" : ""}>
+            End Session
+          </button>
+        </div>
       </div>
-      <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
+
+      <div class="detail-title-row">
+        <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
+        ${nextButtonHtml}
+      </div>
+
       ${
         selectedSession.description
           ? `<p class="detail-description">${escapeHtml(selectedSession.description)}</p>`
@@ -2145,47 +2215,24 @@ function renderSessionScreen() {
       <p class="detail-meta">Status: ${escapeHtml(state.sessionStatus)}</p>
     </section>
 
-    <section class="control-row">
-      <button class="action-button action-button-primary" data-action="start-session" ${state.sessionActive ? "disabled" : ""}>
-        Start Session
-      </button>
-      <button class="action-button action-button-secondary" data-action="end-session" ${!state.sessionActive ? "disabled" : ""}>
-        End Session
-      </button>
-    </section>
+    ${
+      showProgress
+        ? `
+          <section class="session-progress-card">
+            <div class="session-progress-head">
+              <span class="session-progress-label">Session progress</span>
+              <span class="session-progress-step">${escapeHtml(progress.label)} · ${progress.percent}%</span>
+            </div>
+            <div class="session-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress.percent}">
+              <div class="session-progress-fill" style="width: ${progress.percent}%"></div>
+            </div>
+          </section>
+        `
+        : ""
+    }
 
-    <div class="session-avatar-copy">
-      <p class="panel-title">Avatar Guide</p>
-    </div>
     <section class="panel-card session-avatar-shell">
       <div class="session-avatar-host" id="session-avatar-host"></div>
-      ${
-        state.sessionActive && selectedSession.kind === "guided"
-          ? `
-            <div class="session-avatar-controls">
-              <button
-                class="action-button action-button-primary"
-                data-action="next-slide"
-                ${nextStepDisabled ? "disabled" : ""}
-              >
-                ${state.slideIndex === breathingSlides.length - 1 ? "Finish" : "Next"}
-              </button>
-            </div>
-          `
-          : state.sessionActive && selectedSession.kind === "scripted"
-            ? (() => {
-                const segs  = SESSION_SCRIPTS[selectedSession.id] || [];
-                const isLast = state.scriptSlideIndex >= segs.length - 1;
-                return `
-                  <div class="session-avatar-controls">
-                    <button class="action-button action-button-primary" data-action="next-script-segment">
-                      ${isLast ? "Finish" : "Next"}
-                    </button>
-                  </div>
-                `;
-              })()
-            : ""
-      }
     </section>
 
     ${
