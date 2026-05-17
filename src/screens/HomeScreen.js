@@ -539,7 +539,7 @@ export default function HomeScreen({ navigation }) {
 
   // ── Avatar URIs — same chat_id for shared server-side conversation thread ──
   const homeDockUri = useMemo(() => buildAvatarUri(avatarHtmlBase, {
-    compact: '1', host: 'home-dock', chat_id: avatarConversationId, tts_base: avatarBackendUri,
+    compact: '1', host: 'home-dock', autostart: '1', chat_id: avatarConversationId, tts_base: avatarBackendUri,
   }), [avatarHtmlBase, avatarConversationId, avatarBackendUri]);
 
   const sessionAvatarUri = useMemo(() => buildAvatarUri(avatarHtmlBase, {
@@ -845,11 +845,6 @@ export default function HomeScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.hero}>
-            <Text style={styles.heroEyebrow}>Mindfulness Sessions</Text>
-            <Text style={styles.heroTitle}>Mindfulness,{'\n'}guided with calm.</Text>
-            <Text style={styles.heroBody}>
-              Choose a practice and let the guide lead the pace.
-            </Text>
             <View style={styles.heroActions}>
               {!dockExpanded ? (
                 <Pressable style={({ pressed }) => [styles.heroBtnPrimary, pressed && styles.btnPressed]} onPress={() => setDockExpanded(true)}>
@@ -992,6 +987,32 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
+          {selectedSession.kind === 'scripted' && sessionActive && (() => {
+            const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+            const total    = segments.length;
+            const current  = Math.min(scriptSlideIndex + 1, total);
+            const pct      = total > 0 ? (current / total) * 100 : 0;
+            const isLast   = scriptSlideIndex >= total - 1;
+            return (
+              <View style={styles.progressCard}>
+                <View style={styles.progressHeader}>
+                  <Text style={styles.progressCount}>{current} / {total}</Text>
+                </View>
+                <View style={styles.progressRow}>
+                  <View style={styles.progressTrack}>
+                    <View style={[styles.progressFill, { width: `${pct}%` }]} />
+                  </View>
+                  <Pressable
+                    style={({ pressed }) => [styles.progressNextBtn, pressed && styles.btnPressed]}
+                    onPress={goToNextScriptSegment}
+                  >
+                    <Text style={styles.startBtnText}>{isLast ? 'Finish' : 'Next →'}</Text>
+                  </Pressable>
+                </View>
+              </View>
+            );
+          })()}
+
           <SessionAvatarPanel
             avatarUri={sessionAvatarUri}
             avatarError={avatarLoadError}
@@ -1000,27 +1021,6 @@ export default function HomeScreen({ navigation }) {
             onError={handleAvatarWebViewError}
             onMessage={handleWebViewMessage}
           />
-
-          {selectedSession.kind === 'scripted' && sessionActive && (() => {
-            const segments = SESSION_SCRIPTS[selectedSession.id] || [];
-            const seg      = segments[scriptSlideIndex];
-            const isLast   = scriptSlideIndex >= segments.length - 1;
-            return (
-              <View style={styles.placeholderCard}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <Text style={styles.placeholderTitle}>{seg?.timeLabel ?? ''}</Text>
-                  <Text style={styles.placeholderTitle}>{scriptSlideIndex + 1} / {segments.length}</Text>
-                </View>
-                <Text style={styles.placeholderBody}>{seg?.text ?? ''}</Text>
-                <Pressable
-                  style={({ pressed }) => [styles.startBtn, { marginTop: 16 }, pressed && styles.btnPressed]}
-                  onPress={goToNextScriptSegment}
-                >
-                  <Text style={styles.startBtnText}>{isLast ? 'Finish' : 'Next →'}</Text>
-                </Pressable>
-              </View>
-            );
-          })()}
 
           {selectedSession.kind !== 'scripted' && !!placeholderMessage && (
             <View style={styles.placeholderCard}>
@@ -1079,7 +1079,7 @@ const styles = StyleSheet.create({
   logoutText:    { color: ThemeColor.WHITE, fontWeight: '700', fontSize: 14 },
 
   // Hero
-  hero:                { borderRadius: 16, backgroundColor: ThemeColor.BRAND, padding: 22, marginBottom: 16, gap: 10 },
+  hero:                { borderRadius: 16, backgroundColor: ThemeColor.BRAND, paddingHorizontal: 16, paddingVertical: 12, marginBottom: 12, gap: 8 },
   heroEyebrow:         { color: 'rgba(255,255,255,0.72)', fontSize: 12, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
   heroTitle:           { color: ThemeColor.WHITE, fontSize: 28, fontWeight: '900', lineHeight: 32 },
   heroBody:            { color: 'rgba(255,255,255,0.84)', fontSize: 14, lineHeight: 21 },
@@ -1188,6 +1188,14 @@ const styles = StyleSheet.create({
   placeholderCard:  { backgroundColor: ThemeColor.WHITE, borderRadius: 16, padding: 18, gap: 8, marginBottom: 16, ...cardShadow },
   placeholderTitle: { fontSize: 17, fontWeight: '800', color: ThemeColor.TEXT_PRIMARY },
   placeholderBody:  { fontSize: 14, color: ThemeColor.HOME_CARD_TEXT, lineHeight: 21 },
+  progressCard:     { backgroundColor: ThemeColor.WHITE, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10, marginBottom: 10, ...cardShadow },
+  progressHeader:   { flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 6 },
+  progressLabel:    { fontSize: 13, fontWeight: '700', color: ThemeColor.TEXT_PRIMARY },
+  progressCount:    { fontSize: 13, fontWeight: '800', color: ThemeColor.BRAND },
+  progressRow:      { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  progressTrack:    { flex: 1, height: 8, borderRadius: 4, backgroundColor: 'rgba(31,60,136,0.12)', overflow: 'hidden' },
+  progressFill:     { height: '100%', backgroundColor: ThemeColor.BRAND, borderRadius: 4 },
+  progressNextBtn:  { backgroundColor: ThemeColor.BRAND, borderRadius: 8, paddingVertical: 6, paddingHorizontal: 14 },
 
   // Summary modal
   overlay:             { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'center', alignItems: 'center', padding: 20 },

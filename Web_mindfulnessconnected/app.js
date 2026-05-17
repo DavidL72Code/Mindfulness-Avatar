@@ -330,7 +330,18 @@ const state = {
   boxTraceStatus: "idle",
   avatarDockVisible: true,
   avatarDockX: null,
-  avatarDockY: null
+  avatarDockY: null,
+  userStats: null,
+  userStatsLoading: false,
+  userStatsUnsubscribe: null,
+  userSessions: [],
+  userSessionsLoading: false,
+  userSessionsUnsubscribe: null,
+  settings: {
+    notifications: false,
+    theme: "light"
+  },
+  settingsBanner: { type: "", text: "" }
 };
 
 function createSessionId() {
@@ -347,6 +358,15 @@ function formatDuration(totalSeconds) {
   const seconds = totalSeconds % 60;
   const values = hours > 0 ? [hours, minutes, seconds] : [minutes, seconds];
   return values.map((value) => String(value).padStart(2, "0")).join(":");
+}
+
+function formatMinutes(seconds) {
+  if (!seconds || seconds <= 0) return "0 min";
+  const totalMinutes = Math.floor(seconds / 60);
+  if (totalMinutes < 60) return `${totalMinutes} min`;
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+  return mins === 0 ? `${hours} hr` : `${hours} hr ${mins} min`;
 }
 
 const TRACKING_DAY_MS = 24 * 60 * 60 * 1000;
@@ -894,6 +914,134 @@ function goProfile() {
   render();
 }
 
+function goStats() {
+  endHomeDockAvatar();
+  state.screen = "stats";
+  if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
+  render();
+}
+
+function goSubpage(screen) {
+  endHomeDockAvatar();
+  state.screen = screen;
+  state.settingsBanner = { type: "", text: "" };
+  if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
+  render();
+}
+
+const SETTINGS_STORAGE_KEY = "mc_settings_v1";
+
+function loadLocalSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      state.settings = { ...state.settings, ...parsed };
+    }
+  } catch {}
+  applyTheme(state.settings.theme);
+}
+
+function persistLocalSettings() {
+  try {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(state.settings));
+  } catch {}
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
+}
+
+async function persistRemoteSettings(patch) {
+  if (!window._fb || !state.currentUser || typeof firebase === "undefined") return;
+  try {
+    const db = firebase.firestore();
+    const payload = {};
+    if (Object.prototype.hasOwnProperty.call(patch, "locale")) {
+      payload.locale = patch.locale;
+    }
+    const settingsKeys = ["notifications", "theme"];
+    const settingsPatch = {};
+    let hasSettings = false;
+    settingsKeys.forEach((k) => {
+      if (Object.prototype.hasOwnProperty.call(patch, k)) {
+        settingsPatch[k] = patch[k];
+        hasSettings = true;
+      }
+    });
+    if (hasSettings) {
+      payload.settings = { ...state.settings, ...settingsPatch };
+    }
+    payload.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    await db.collection("users").doc(state.currentUser.uid).set(payload, { merge: true });
+  } catch (err) {
+    console.warn("Failed to save settings", err);
+  }
+}
+
+function showSettingsBanner(type, text) {
+  state.settingsBanner = { type, text };
+  render();
+  setTimeout(() => {
+    if (state.settingsBanner.text === text) {
+      state.settingsBanner = { type: "", text: "" };
+      if (state.screen === "settings") render();
+    }
+  }, 4000);
+}
+
+async function handleToggleNotifications() {
+  const next = !state.settings.notifications;
+  if (next) {
+    if (!("Notification" in window)) {
+      showSettingsBanner("error", "Notifications are not supported in this browser.");
+      return;
+    }
+    let permission = Notification.permission;
+    if (permission === "default") {
+      permission = await Notification.requestPermission();
+    }
+    if (permission !== "granted") {
+      showSettingsBanner("error", "Notification permission was denied. Enable it in your browser settings.");
+      return;
+    }
+    state.settings.notifications = true;
+    persistLocalSettings();
+    persistRemoteSettings({ notifications: true });
+    try { new Notification("Mindfulness Connected", { body: "Notifications are on. We'll nudge you gently." }); } catch {}
+    showSettingsBanner("ok", "Notifications enabled.");
+  } else {
+    state.settings.notifications = false;
+    persistLocalSettings();
+    persistRemoteSettings({ notifications: false });
+    showSettingsBanner("ok", "Notifications disabled.");
+  }
+  render();
+}
+
+function handleToggleTheme() {
+  state.settings.theme = state.settings.theme === "dark" ? "light" : "dark";
+  applyTheme(state.settings.theme);
+  persistLocalSettings();
+  persistRemoteSettings({ theme: state.settings.theme });
+  render();
+}
+
+async function handlePasswordReset() {
+  if (!window._fb || !state.currentUser || !state.currentUser.email) {
+    showSettingsBanner("error", "You must be signed in with an email to reset your password.");
+    return;
+  }
+  try {
+    const auth = firebase.auth();
+    await auth.sendPasswordResetEmail(state.currentUser.email);
+    showSettingsBanner("ok", `Password reset email sent to ${state.currentUser.email}.`);
+  } catch (err) {
+    showSettingsBanner("error", err.message || "Could not send reset email.");
+  }
+}
+
 function goToPreviousSlide() {
   if (state.slideIndex === 3) {
     clearBoxTimers();
@@ -1174,7 +1322,7 @@ function endSelectedSession() {
     selectedSession,
     elapsedSeconds,
     completed,
-    metadata: trackingMetadata,
+    metadata: { ...trackingMetadata, summary: state.sessionSummary },
   });
 
   state.summaryModalVisible = true;
@@ -1595,20 +1743,6 @@ function renderHomeScreen() {
         : ""
     }
 
-    <section class="connected-hero" style="border-radius:12px;">
-      <div class="connected-hero-copy">
-        <h1 class="connected-hero-title">Mindfulness, guided with calm.</h1>
-        <div class="hero-actions">
-          <button class="action-button action-button-primary" data-action="open-session" data-session-id="${selectedSession.id}">Start With Box Breathing</button>
-        </div>
-      </div>
-      <div class="connected-guide-card">
-        <span class="hero-stat-pill">Sessions</span>
-        <strong>12 mindful spaces</strong>
-        <p>Choose a practice and let the guide lead the pace.</p>
-      </div>
-    </section>
-
     ${
       state.sessionActive
         ? `
@@ -1633,20 +1767,152 @@ function renderHomeScreen() {
   `;
 }
 
+function formatSessionTimestamp(createdAt, localDate) {
+  if (createdAt instanceof Date && !Number.isNaN(createdAt.getTime())) {
+    return createdAt.toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+  if (localDate) {
+    const parsed = new Date(`${localDate}T00:00:00`);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+    return localDate;
+  }
+  return "";
+}
+
+function formatSessionLength(seconds) {
+  const s = Math.max(0, Math.floor(Number(seconds) || 0));
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  if (m < 60) return rem ? `${m}m ${rem}s` : `${m}m`;
+  const h = Math.floor(m / 60);
+  const mins = m % 60;
+  return mins ? `${h}h ${mins}m` : `${h}h`;
+}
+
+function renderSessionHistory() {
+  if (!state.currentUser) return "";
+  if (state.userSessionsLoading && state.userSessions.length === 0) {
+    return `
+      <section class="history-section">
+        <h2 class="history-title">Session history</h2>
+        <p class="history-empty">Loading your sessions…</p>
+      </section>
+    `;
+  }
+  if (!state.userSessions.length) {
+    return `
+      <section class="history-section">
+        <h2 class="history-title">Session history</h2>
+        <p class="history-empty">No completed sessions yet. Finish a session and it will appear here.</p>
+      </section>
+    `;
+  }
+  return `
+    <section class="history-section">
+      <h2 class="history-title">Session history</h2>
+      <ul class="history-list">
+        ${state.userSessions
+          .map((entry) => {
+            const when = formatSessionTimestamp(entry.createdAt, entry.localDate);
+            const length = formatSessionLength(entry.durationSeconds);
+            const status = entry.completed ? "Completed" : "Ended early";
+            return `
+              <li class="history-item">
+                <div class="history-item-head">
+                  <p class="history-item-title">${escapeHtml(entry.sessionTitle)}</p>
+                  <span class="history-item-pill ${entry.completed ? "history-pill-ok" : "history-pill-partial"}">${escapeHtml(status)}</span>
+                </div>
+                <p class="history-item-meta">
+                  ${when ? `<span>${escapeHtml(when)}</span>` : ""}
+                  ${when && length ? `<span class="history-dot">•</span>` : ""}
+                  ${length ? `<span>${escapeHtml(length)}</span>` : ""}
+                </p>
+                ${entry.summary ? `<p class="history-item-summary">${escapeHtml(entry.summary)}</p>` : ""}
+              </li>
+            `;
+          })
+          .join("")}
+      </ul>
+    </section>
+  `;
+}
+
+function renderStatsScreen() {
+  const data = state.userStats || {};
+  const totalSessionSeconds = data.totalSessionSeconds ?? data.totalSessionTime ?? 0;
+  const currentStreak = data.currentStreak ?? 0;
+  const longestStreak = data.longestStreak ?? 0;
+  const totalActiveDays = data.totalActiveDays ?? data.totalDays ?? 0;
+  const sessionsFinished = data.sessionsFinished ?? 0;
+
+  const subtitle = state.userStatsLoading
+    ? "Loading your activity…"
+    : !state.currentUser
+      ? "Sign in to see your activity."
+      : "Your mindfulness activity across all sessions.";
+
+  const longestHint =
+    longestStreak > 0
+      ? `Longest: ${longestStreak} day${longestStreak === 1 ? "" : "s"}`
+      : "";
+  const activeHint = totalActiveDays > 0 ? "Total unique days" : "";
+
+  return `
+    <h1 class="stats-title">Active Stats</h1>
+    <p class="stats-subtitle">${escapeHtml(subtitle)}</p>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-card-value">${escapeHtml(String(currentStreak))}</p>
+        <p class="stat-card-label">Day streak</p>
+        ${longestHint ? `<p class="stat-card-hint">${escapeHtml(longestHint)}</p>` : ""}
+      </div>
+      <div class="stat-card">
+        <p class="stat-card-value">${escapeHtml(String(totalActiveDays))}</p>
+        <p class="stat-card-label">Days active</p>
+        ${activeHint ? `<p class="stat-card-hint">${escapeHtml(activeHint)}</p>` : ""}
+      </div>
+      <div class="stat-card">
+        <p class="stat-card-value">${escapeHtml(formatMinutes(totalSessionSeconds))}</p>
+        <p class="stat-card-label">Time in sessions</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card-value">${escapeHtml(String(sessionsFinished))}</p>
+        <p class="stat-card-label">Sessions completed</p>
+      </div>
+    </section>
+
+    ${renderSessionHistory()}
+  `;
+}
+
 function renderProfileScreen() {
   return `
     <h1 class="profile-title">${escapeHtml(t("profileTitle"))}</h1>
 
     <section class="profile-section">
-      <button class="profile-row" data-action="profile-coming-soon" data-label="Personal Information" type="button">
+      <button class="profile-row" data-action="go-personal-info" type="button">
         <span class="profile-row-label">${escapeHtml(t("personalInformation"))}</span>
         <span class="profile-arrow">›</span>
       </button>
-      <button class="profile-row" data-action="profile-coming-soon" data-label="Settings" type="button">
+      <button class="profile-row" data-action="go-settings" type="button">
         <span class="profile-row-label">${escapeHtml(t("settings"))}</span>
         <span class="profile-arrow">›</span>
       </button>
-      <button class="profile-row" data-action="profile-coming-soon" data-label="Support" type="button">
+      <button class="profile-row" data-action="go-support" type="button">
         <span class="profile-row-label">${escapeHtml(t("support"))}</span>
         <span class="profile-arrow">›</span>
       </button>
@@ -1654,6 +1920,201 @@ function renderProfileScreen() {
         <span class="profile-row-label profile-danger-text">${escapeHtml(t("logOut"))}</span>
         <span class="profile-arrow">›</span>
       </button>
+    </section>
+  `;
+}
+
+function renderBackBar() {
+  return `
+    <div class="back-row">
+      <button class="back-btn" data-action="go-profile" type="button">‹ Profile</button>
+    </div>
+  `;
+}
+
+function formatDob(dob) {
+  if (!dob) return "—";
+  const parsed = new Date(`${dob}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return dob;
+  return parsed.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function renderPersonalInfoScreen() {
+  const user = state.currentUser;
+  const data = state.userStats || {};
+  const email = (user && user.email) || data.email || "—";
+  const firstName = data.firstName || "—";
+  const lastName = data.lastName || "—";
+  const dob = formatDob(data.dob);
+  const language = (data.locale || state.locale) === "ko" ? "한국어" : "English";
+  const creationTime = user && user.metadata && user.metadata.creationTime
+    ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })
+    : "—";
+
+  return `
+    ${renderBackBar()}
+    <h1 class="profile-title">${escapeHtml(t("personalInformation"))}</h1>
+    <p class="stats-subtitle">Account details linked to your sign-in.</p>
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Account</p>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-row-label">Email</span>
+          <span class="info-row-value">${escapeHtml(email)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Account created</span>
+          <span class="info-row-value">${escapeHtml(creationTime)}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Profile</p>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-row-label">First name</span>
+          <span class="info-row-value">${escapeHtml(firstName)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Last name</span>
+          <span class="info-row-value">${escapeHtml(lastName)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Date of birth</span>
+          <span class="info-row-value">${escapeHtml(dob)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Language</span>
+          <span class="info-row-value">${escapeHtml(language)}</span>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderSettingsScreen() {
+  const banner = state.settingsBanner;
+  const notifText = !("Notification" in window)
+    ? "Not supported in this browser"
+    : Notification.permission === "denied"
+      ? "Blocked — change in browser settings"
+      : state.settings.notifications ? "On" : "Off";
+
+  return `
+    ${renderBackBar()}
+    <h1 class="profile-title">${escapeHtml(t("settings"))}</h1>
+    <p class="stats-subtitle">Personalize the way the app feels and sounds.</p>
+
+    ${banner.text ? `<div class="settings-banner ${banner.type === "error" ? "error" : ""}">${escapeHtml(banner.text)}</div>` : ""}
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Preferences</p>
+      <div class="info-card">
+        <div class="settings-row">
+          <div class="settings-row-copy">
+            <p class="settings-row-label">Language</p>
+            <p class="settings-row-hint">Used across the app.</p>
+          </div>
+          <div class="lang-chip-group">
+            <button class="lang-chip ${state.locale === "en" ? "active" : ""}" data-action="set-language" data-locale="en" type="button">English</button>
+            <button class="lang-chip ${state.locale === "ko" ? "active" : ""}" data-action="set-language" data-locale="ko" type="button">한국어</button>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-copy">
+            <p class="settings-row-label">Theme</p>
+            <p class="settings-row-hint">${state.settings.theme === "dark" ? "Dark mode is on." : "Light mode."}</p>
+          </div>
+          <button class="toggle-switch ${state.settings.theme === "dark" ? "on" : ""}" data-action="toggle-theme" type="button" aria-label="Toggle theme"></button>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-row-copy">
+            <p class="settings-row-label">Notifications</p>
+            <p class="settings-row-hint">${escapeHtml(notifText)}</p>
+          </div>
+          <button class="toggle-switch ${state.settings.notifications ? "on" : ""}" data-action="toggle-notifications" type="button" aria-label="Toggle notifications"></button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Account</p>
+      <div class="info-card">
+        <div class="settings-row">
+          <div class="settings-row-copy">
+            <p class="settings-row-label">Password</p>
+            <p class="settings-row-hint">Send a reset link to your email.</p>
+          </div>
+          <button class="settings-action" data-action="reset-password" type="button">Reset password</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-copy">
+            <p class="settings-row-label">Sign out</p>
+            <p class="settings-row-hint">End your session on this device.</p>
+          </div>
+          <button class="settings-action danger" data-action="logout" type="button">Log out</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderSupportScreen() {
+  const appVersion = "1.0.0";
+  return `
+    ${renderBackBar()}
+    <h1 class="profile-title">${escapeHtml(t("support"))}</h1>
+    <p class="support-blurb">We're here to help. Reach out anytime or browse common questions below.</p>
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Contact</p>
+      <div class="info-card">
+        <div class="info-row support-contact">
+          <span class="info-row-label">Email</span>
+          <span class="info-row-value"><a href="mailto:support@mindfulnessconnected.app">support@mindfulnessconnected.app</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">App version</span>
+          <span class="info-row-value">${escapeHtml(appVersion)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Signed in as</span>
+          <span class="info-row-value">${escapeHtml((state.currentUser && state.currentUser.email) || "—")}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="subpage-section">
+      <p class="subpage-section-title">Frequently asked</p>
+      <details class="faq-item">
+        <summary>How do I start a meditation session?</summary>
+        <div class="faq-body">From the Home tab, pick any of the 12 session tiles and tap Start Session. Guided and scripted sessions play through the avatar; placeholder tiles are reserved for upcoming content.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How are my stats tracked?</summary>
+        <div class="faq-body">When you finish a session, your duration, streak, and totals are written to your account. They live on the My Stats tab and stay in sync between the web app and the mobile app.</div>
+      </details>
+      <details class="faq-item">
+        <summary>I'm not hearing the meditation guide.</summary>
+        <div class="faq-body">Open Settings and raise the Volume slider. If audio still doesn't play, make sure your browser tab isn't muted and that your system output device is correct.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How do I change my language?</summary>
+        <div class="faq-body">Use the language chip in the header, or open Settings → Preferences → Language. The choice is saved to your account so it follows you everywhere.</div>
+      </details>
+      <details class="faq-item">
+        <summary>I forgot my password.</summary>
+        <div class="faq-body">Go to Settings → Account → Reset password. We'll email a reset link to the address on your account.</div>
+      </details>
     </section>
   `;
 }
@@ -1852,7 +2313,8 @@ function render() {
         <h1 class="home-header-title">${escapeHtml(t("headerTitle"))}</h1>
         <div class="home-header-actions">
           <button class="home-profile-btn ${state.screen === "home" ? "active" : ""}" data-action="go-home" type="button">Home</button>
-          <button class="home-profile-btn ${state.screen === "profile" ? "active" : ""}" data-action="go-profile" type="button">Profile</button>
+          <button class="home-profile-btn ${state.screen === "stats" ? "active" : ""}" data-action="go-stats" type="button">My Stats</button>
+          <button class="home-profile-btn ${["profile","personal-info","settings","support"].includes(state.screen) ? "active" : ""}" data-action="go-profile" type="button">Profile</button>
           <button class="home-logout-btn" data-action="logout" type="button">${escapeHtml(t("logoutBtn"))}</button>
         </div>
       </header>
@@ -1861,9 +2323,17 @@ function render() {
         ${
           state.screen === "home"
             ? renderHomeScreen()
-            : state.screen === "profile"
-              ? renderProfileScreen()
-              : renderSessionScreen()
+            : state.screen === "stats"
+              ? renderStatsScreen()
+              : state.screen === "profile"
+                ? renderProfileScreen()
+                : state.screen === "personal-info"
+                  ? renderPersonalInfoScreen()
+                  : state.screen === "settings"
+                    ? renderSettingsScreen()
+                    : state.screen === "support"
+                      ? renderSupportScreen()
+                      : renderSessionScreen()
         }
       </div>
     </main>
@@ -1938,6 +2408,7 @@ function attachInputHandlers() {
       }
     });
   }
+
 }
 
 function scrollChatToBottom() {
@@ -1963,10 +2434,12 @@ appEl.addEventListener("click", (event) => {
   switch (action) {
     case "toggle-language":
       state.locale = state.locale === "en" ? "ko" : "en";
+      persistRemoteSettings({ locale: state.locale });
       render();
       break;
     case "set-language":
       state.locale = actionEl.dataset.locale === "ko" ? "ko" : "en";
+      persistRemoteSettings({ locale: state.locale });
       render();
       break;
     case "close-language-modal":
@@ -2003,8 +2476,26 @@ appEl.addEventListener("click", (event) => {
     case "go-profile":
       goProfile();
       break;
-    case "profile-coming-soon":
-      window.alert(`${actionEl.dataset.label || "This section"} is coming soon.`);
+    case "go-stats":
+      goStats();
+      break;
+    case "go-personal-info":
+      goSubpage("personal-info");
+      break;
+    case "go-settings":
+      goSubpage("settings");
+      break;
+    case "go-support":
+      goSubpage("support");
+      break;
+    case "toggle-theme":
+      handleToggleTheme();
+      break;
+    case "toggle-notifications":
+      handleToggleNotifications();
+      break;
+    case "reset-password":
+      handlePasswordReset();
       break;
     case "open-avatar-dock":
       state.avatarDockVisible = true;
@@ -2114,6 +2605,8 @@ fetch(`${API_BASE_URL}/health`, {
 
 window._fb = null;
 
+loadLocalSettings();
+
 (async function initApp() {
   let fbReady = false;
   try {
@@ -2131,6 +2624,38 @@ window._fb = null;
         signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
         signOut:          ()          => auth.signOut(),
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
+        subscribeToUserDoc: (uid, onData, onError) =>
+          db.collection("users").doc(uid).onSnapshot(
+            (snap) => onData(snap.exists ? snap.data() : {}),
+            (err) => { if (onError) onError(err); }
+          ),
+        subscribeToUserSessions: (uid, onData, onError) =>
+          db.collection("users").doc(uid).collection("sessions")
+            .orderBy("createdAt", "desc")
+            .limit(50)
+            .onSnapshot(
+              (snap) => {
+                const sessions = [];
+                snap.forEach((doc) => {
+                  const data = doc.data() || {};
+                  const created = data.createdAt && typeof data.createdAt.toDate === "function"
+                    ? data.createdAt.toDate()
+                    : null;
+                  sessions.push({
+                    id: doc.id,
+                    sessionId: data.sessionId || "",
+                    sessionTitle: data.sessionTitle || "Session",
+                    durationSeconds: data.durationSeconds || 0,
+                    completed: data.completed !== false,
+                    localDate: data.localDate || "",
+                    summary: (data.metadata && data.metadata.summary) || "",
+                    createdAt: created,
+                  });
+                });
+                onData(sessions);
+              },
+              (err) => { if (onError) onError(err); }
+            ),
         recordCompletedSession: async ({ sessionId, sessionTitle, durationSeconds, completed = true, metadata = {} }) => {
           const user = auth.currentUser;
           const elapsedSeconds = Math.max(0, Math.floor(durationSeconds || 0));
@@ -2193,6 +2718,63 @@ window._fb = null;
         state.authenticated = !!user;
         state.currentUser = user || null;
         if (user) state.authScreen = "signin";
+        if (typeof state.userStatsUnsubscribe === "function") {
+          state.userStatsUnsubscribe();
+          state.userStatsUnsubscribe = null;
+        }
+        if (typeof state.userSessionsUnsubscribe === "function") {
+          state.userSessionsUnsubscribe();
+          state.userSessionsUnsubscribe = null;
+        }
+        if (user) {
+          state.userStatsLoading = true;
+          state.userStats = null;
+          state.userStatsUnsubscribe = window._fb.subscribeToUserDoc(
+            user.uid,
+            (data) => {
+              state.userStats = data;
+              state.userStatsLoading = false;
+              if (data && data.settings && typeof data.settings === "object") {
+                const incoming = data.settings;
+                const merged = { ...state.settings };
+                if (typeof incoming.notifications === "boolean") merged.notifications = incoming.notifications;
+                if (incoming.theme === "dark" || incoming.theme === "light") merged.theme = incoming.theme;
+                state.settings = merged;
+                applyTheme(merged.theme);
+                persistLocalSettings();
+              }
+              if (data && (data.locale === "en" || data.locale === "ko")) {
+                state.locale = data.locale;
+              }
+              if (state.screen === "stats" || state.screen === "settings" || state.screen === "personal-info") render();
+            },
+            () => {
+              state.userStats = {};
+              state.userStatsLoading = false;
+              if (state.screen === "stats") render();
+            }
+          );
+          state.userSessionsLoading = true;
+          state.userSessions = [];
+          state.userSessionsUnsubscribe = window._fb.subscribeToUserSessions(
+            user.uid,
+            (sessions) => {
+              state.userSessions = sessions;
+              state.userSessionsLoading = false;
+              if (state.screen === "stats") render();
+            },
+            () => {
+              state.userSessions = [];
+              state.userSessionsLoading = false;
+              if (state.screen === "stats") render();
+            }
+          );
+        } else {
+          state.userStats = null;
+          state.userStatsLoading = false;
+          state.userSessions = [];
+          state.userSessionsLoading = false;
+        }
         render();
       });
     } else {
