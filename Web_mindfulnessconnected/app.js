@@ -2153,33 +2153,47 @@ function computeSessionProgress(selectedSession) {
   return { percent: 0, label: "" };
 }
 
+function computeNextButtonState(selectedSession) {
+  if (!state.sessionActive) return { visible: false, disabled: true, label: "Next" };
+  if (selectedSession.kind === "guided") {
+    const currentSlide = breathingSlides[state.slideIndex] || breathingSlides[0];
+    const disabled =
+      state.roundRunning ||
+      (currentSlide.key === "rounds" && state.roundsDone < TOTAL_BREATHING_ROUNDS);
+    const isLast = state.slideIndex === breathingSlides.length - 1;
+    return { visible: true, disabled, label: isLast ? "Finish" : "Next" };
+  }
+  if (selectedSession.kind === "scripted") {
+    const segs = SESSION_SCRIPTS[selectedSession.id] || [];
+    const isLast = state.scriptSlideIndex >= segs.length - 1;
+    return { visible: true, disabled: false, label: isLast ? "Finish" : "Next" };
+  }
+  return { visible: false, disabled: true, label: "Next" };
+}
+
+function syncSessionAvatarProgress() {
+  if (state.screen !== "session") return;
+  const selectedSession = getSelectedSession();
+  const progress = computeSessionProgress(selectedSession);
+  const showProgress =
+    state.sessionActive && (selectedSession.kind === "guided" || selectedSession.kind === "scripted");
+  const nextBtn = computeNextButtonState(selectedSession);
+
+  queueAvatarCommand(AVATAR_HOST_SESSION, {
+    type: "host-set-progress",
+    percent: showProgress ? progress.percent : 0,
+    label: showProgress ? `${progress.label} · ${progress.percent}%` : ""
+  });
+  queueAvatarCommand(AVATAR_HOST_SESSION, {
+    type: "host-set-next-button",
+    visible: nextBtn.visible,
+    disabled: nextBtn.disabled,
+    label: nextBtn.label
+  });
+}
+
 function renderSessionScreen() {
   const selectedSession = getSelectedSession();
-  const currentSlide = breathingSlides[state.slideIndex] || breathingSlides[0];
-  const nextStepDisabled =
-    state.roundRunning ||
-    (currentSlide.key === "rounds" && state.roundsDone < TOTAL_BREATHING_ROUNDS);
-
-  const isScripted = selectedSession.kind === "scripted";
-  const isGuided = selectedSession.kind === "guided";
-  const segs = isScripted ? (SESSION_SCRIPTS[selectedSession.id] || []) : [];
-  const scriptedIsLast = isScripted && state.scriptSlideIndex >= segs.length - 1;
-  const guidedIsLast = isGuided && state.slideIndex === breathingSlides.length - 1;
-
-  const nextButtonHtml = state.sessionActive
-    ? isGuided
-      ? `<button class="action-button action-button-primary detail-next-btn" data-action="next-slide" ${nextStepDisabled ? "disabled" : ""}>
-           ${guidedIsLast ? "Finish" : "Next"}
-         </button>`
-      : isScripted
-        ? `<button class="action-button action-button-primary detail-next-btn" data-action="next-script-segment">
-             ${scriptedIsLast ? "Finish" : "Next"}
-           </button>`
-        : ""
-    : "";
-
-  const progress = computeSessionProgress(selectedSession);
-  const showProgress = state.sessionActive && (isGuided || isScripted);
 
   return `
     <button class="action-button action-button-secondary" data-action="go-home">Back to sessions</button>
@@ -2189,7 +2203,7 @@ function renderSessionScreen() {
         <div class="detail-hero-top-left">
           <span class="detail-number">${selectedSession.number}</span>
           <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
-            ${isGuided ? "Guided session" : isScripted ? "Scripted session" : "Empty session"}
+            ${selectedSession.kind === "guided" ? "Guided session" : selectedSession.kind === "scripted" ? "Scripted session" : "Empty session"}
           </span>
         </div>
         <div class="detail-hero-actions">
@@ -2214,24 +2228,6 @@ function renderSessionScreen() {
 
     <section class="panel-card session-avatar-shell">
       <div class="session-avatar-host" id="session-avatar-host"></div>
-      ${
-        showProgress
-          ? `
-            <div class="avatar-footer">
-              <div class="avatar-footer-progress">
-                <div class="session-progress-head">
-                  <span class="session-progress-label">Session progress</span>
-                  <span class="session-progress-step">${escapeHtml(progress.label)} · ${progress.percent}%</span>
-                </div>
-                <div class="session-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress.percent}">
-                  <div class="session-progress-fill" style="width: ${progress.percent}%"></div>
-                </div>
-              </div>
-              ${nextButtonHtml ? `<div class="avatar-footer-actions">${nextButtonHtml}</div>` : ""}
-            </div>
-          `
-          : ""
-      }
     </section>
 
     ${
@@ -2395,6 +2391,7 @@ function render() {
   scrollChatToBottom();
   syncAvatarDock();
   requestAnimationFrame(() => requestAnimationFrame(syncSessionAvatarPanel));
+  syncSessionAvatarProgress();
 }
 
 function attachInputHandlers() {
@@ -2598,15 +2595,28 @@ window.addEventListener("message", (event) => {
   }
 
   const data = event.data;
-  if (!data || data.source !== "mindfulness-avatar" || data.type !== "avatar-ready") {
+  if (!data || data.source !== "mindfulness-avatar") return;
+
+  if (data.type === "avatar-ready") {
+    if (!avatarReadyState[data.host]) {
+      avatarReadyState[data.host] = true;
+    }
+    flushAvatarCommands(data.host);
+    if (data.host === AVATAR_HOST_SESSION) {
+      syncSessionAvatarProgress();
+    }
     return;
   }
 
-  if (!avatarReadyState[data.host]) {
-    avatarReadyState[data.host] = true;
+  if (data.type === "next-clicked" && data.host === AVATAR_HOST_SESSION) {
+    const selectedSession = getSelectedSession();
+    if (selectedSession.kind === "guided") {
+      goToNextSlide();
+    } else if (selectedSession.kind === "scripted") {
+      goToNextScriptSegment();
+    }
+    return;
   }
-
-  flushAvatarCommands(data.host);
 });
 
 window.addEventListener("keydown", (event) => {

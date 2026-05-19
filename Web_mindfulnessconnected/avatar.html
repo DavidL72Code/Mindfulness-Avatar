@@ -2105,6 +2105,16 @@ body.compact .snd{width:40px;height:40px;border-radius:10px}
 body.compact .hint{font-size:10px}
 body.compact .lov .ll{font-size:15px}
 body.compact .lov .ls{font-size:11px}
+.prog{margin-top:6px;display:flex;flex-direction:column;gap:8px}
+.prog-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prog-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prog-step{font-size:12px;font-weight:700;color:var(--accent)}
+.prog-track{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .3s ease;box-shadow:0 0 8px rgba(93,224,165,.4)}
+.prog-next{margin-top:2px;align-self:flex-end;padding:8px 18px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-family:var(--fb);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s}
+.prog-next:hover:not(:disabled){opacity:.92}
+.prog-next:active:not(:disabled){transform:translateY(1px)}
+.prog-next:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:860px){.layout{grid-template-columns:1fr;grid-template-rows:52vh 1fr}html,body{overflow:hidden}}
 </style>
 </head>
@@ -2130,6 +2140,14 @@ body.compact .lov .ls{font-size:11px}
     <div class="ch">
       <h2 id="chatheading">Mindfulness Assistant</h2>
       <p id="chatsubtitle">Your Gemini guide with a talking avatar and animated lip sync</p>
+      <div class="prog" id="prog" style="display:none;">
+        <div class="prog-head">
+          <span class="prog-label">Session progress</span>
+          <span class="prog-step" id="prog-step">—</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <button class="prog-next" id="prog-next" style="display:none;" type="button">Next</button>
+      </div>
       <div class="sr">
         <button class="sb p" id="bstart">Start Session</button>
         <button class="sb s" id="bend" disabled>End Session</button>
@@ -2199,12 +2217,23 @@ if(COMPACT_MODE){
     chatHeadingEl.style.display = 'none';
     chatSubtitleEl.style.display = 'none';
   }else{
-    chatHeadingEl.textContent = `${SESSION_NAME} Guide`;
-    chatSubtitleEl.textContent = 'A compact avatar helper with voice, lip sync, and quick chat.';
+    chatHeadingEl.style.display = 'none';
+    chatSubtitleEl.style.display = 'none';
+    const progEl = document.getElementById('prog');
+    if(progEl) progEl.style.display = 'flex';
   }
   inputEl.placeholder = getInactivePlaceholder();
 }else if(SESSION_KEY){
   chatHeadingEl.textContent = `${SESSION_NAME} Assistant`;
+}
+
+const progFillEl = document.getElementById('prog-fill');
+const progStepEl = document.getElementById('prog-step');
+const progNextEl = document.getElementById('prog-next');
+if(progNextEl){
+  progNextEl.addEventListener('click', () => {
+    postHostMessage({type:'next-clicked'});
+  });
 }
 
 function postHostMessage(message){
@@ -2872,6 +2901,26 @@ window.addEventListener('message',event=>{
 
   if(data.type==='host-pause-session'){
     hostPauseSession();
+    return;
+  }
+
+  if(data.type==='host-set-progress'){
+    if(progFillEl){
+      const pct = Math.max(0, Math.min(100, Number(data.percent)||0));
+      progFillEl.style.width = pct + '%';
+    }
+    if(progStepEl){
+      progStepEl.textContent = data.label || '—';
+    }
+    return;
+  }
+
+  if(data.type==='host-set-next-button'){
+    if(!progNextEl) return;
+    progNextEl.style.display = data.visible ? 'inline-flex' : 'none';
+    progNextEl.disabled = !!data.disabled;
+    if(typeof data.label === 'string') progNextEl.textContent = data.label;
+    return;
   }
 });
 
