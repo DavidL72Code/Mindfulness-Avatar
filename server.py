@@ -1,6 +1,9 @@
+import base64
 import json
 import os
+import queue
 import re
+from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Thread
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
@@ -508,25 +511,88 @@ class ChatHandler(SimpleHTTPRequestHandler):
         self.close_connection = True
         self.end_headers()
 
+        # Pipeline: Gemini streams text → per-sentence TTS runs concurrently in a
+        # thread pool → text and audio events are written in-order by this thread.
+        event_q = queue.Queue()
         full_chunks = []
-        buf = ""
-        try:
-            for fragment in call_gemini_stream(prompt):
-                buf += fragment
-                chunks, buf = extract_speakable_chunks(buf)
-                for chunk in chunks:
-                    full_chunks.append(chunk)
-                    self._write_sse({"chunk": chunk})
-            if buf.strip():
-                full_chunks.append(buf.strip())
-                self._write_sse({"chunk": buf.strip()})
-            complete_text = " ".join(full_chunks)
+
+        def _tts_worker(s, text):
+            try:
+                result = synthesize_edge_tts(text=text)
+                b64 = base64.b64encode(result["audio_bytes"]).decode("ascii")
+                event_q.put({"audio": b64, "seq": s, "ct": result["content_type"]})
+            except Exception:
+                event_q.put({"_audio_skip": True, "seq": s})
+
+        def _gemini_producer(pool):
+            buf = ""
+            seq = 0
+            try:
+                for fragment in call_gemini_stream(prompt):
+                    buf += fragment
+                    chunks, buf = extract_speakable_chunks(buf)
+                    for chunk in chunks:
+                        full_chunks.append(chunk)
+                        event_q.put({"chunk": chunk, "seq": seq})
+                        pool.submit(_tts_worker, seq, chunk)
+                        seq += 1
+                if buf.strip():
+                    full_chunks.append(buf.strip())
+                    event_q.put({"chunk": buf.strip(), "seq": seq})
+                    pool.submit(_tts_worker, seq, buf.strip())
+                    seq += 1
+            except Exception as exc:
+                event_q.put({"_producer_error": str(exc)})
+            finally:
+                event_q.put({"_gemini_done": True, "total": seq})
+
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            producer = Thread(target=_gemini_producer, args=(pool,), daemon=True)
+            producer.start()
+
+            gemini_done = False
+            total_sentences = 0
+            audio_done = 0
+
+            try:
+                while True:
+                    try:
+                        evt = event_q.get(timeout=45)
+                    except queue.Empty:
+                        break
+
+                    if "_gemini_done" in evt:
+                        gemini_done = True
+                        total_sentences = evt["total"]
+                        if total_sentences == 0 or audio_done >= total_sentences:
+                            break
+                    elif "_producer_error" in evt:
+                        self._write_sse({"error": evt["_producer_error"]})
+                        break
+                    elif "audio" in evt:
+                        self._write_sse({"audio": evt["audio"], "seq": evt["seq"], "ct": evt["ct"]})
+                        audio_done += 1
+                        if gemini_done and audio_done >= total_sentences:
+                            break
+                    elif "_audio_skip" in evt:
+                        self._write_sse({"audio_skip": True, "seq": evt["seq"]})
+                        audio_done += 1
+                        if gemini_done and audio_done >= total_sentences:
+                            break
+                    else:
+                        self._write_sse(evt)
+            except _ClientDisconnected:
+                pass
+
+            producer.join(timeout=5)
+
+        complete_text = " ".join(full_chunks)
+        if complete_text:
             update_session_memory(session, user_message, complete_text)
+        try:
             self._write_sse({"done": True, "session_id": session_id})
         except _ClientDisconnected:
             pass
-        except Exception as exc:
-            self._write_sse({"error": str(exc)})
 
     def handle_end_session(self):
         content_length = int(self.headers.get("Content-Length", "0"))

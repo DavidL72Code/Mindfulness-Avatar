@@ -1179,6 +1179,38 @@ async function sendChatMessage() {
     session_id: state.chatSessionId
   });
 
+  // Audio queue: plays per-sentence audio in seq order as it arrives from the stream.
+  let _audioCtx = null;
+  const audioSeqMap = {};
+  let nextAudioSeq = 0;
+  let audioPlaying = false;
+
+  function _playNextAudio() {
+    if (audioPlaying) return;
+    // Advance past any skipped sequences
+    while (nextAudioSeq in audioSeqMap && audioSeqMap[nextAudioSeq] === null) {
+      delete audioSeqMap[nextAudioSeq++];
+    }
+    const entry = audioSeqMap[nextAudioSeq];
+    if (!entry) return;
+    audioPlaying = true;
+    delete audioSeqMap[nextAudioSeq++];
+    try {
+      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const bytes = Uint8Array.from(atob(entry.data), c => c.charCodeAt(0)).buffer;
+      _audioCtx.decodeAudioData(bytes, (audioBuf) => {
+        const src = _audioCtx.createBufferSource();
+        src.buffer = audioBuf;
+        src.connect(_audioCtx.destination);
+        src.onended = () => { audioPlaying = false; _playNextAudio(); };
+        src.start(0);
+      }, () => { audioPlaying = false; _playNextAudio(); });
+    } catch (_) {
+      audioPlaying = false;
+      _playNextAudio();
+    }
+  }
+
   try {
     // Try streaming first so text appears as it generates
     let gotChunk = false;
@@ -1208,7 +1240,13 @@ async function sendChatMessage() {
           const evt = JSON.parse(part.slice(6));
           if (evt.error) throw new Error(evt.error);
           if (evt.done) break;
-          if (evt.chunk) {
+          if (evt.audio !== undefined) {
+            audioSeqMap[evt.seq] = { data: evt.audio };
+            _playNextAudio();
+          } else if (evt.audio_skip) {
+            audioSeqMap[evt.seq] = null;
+            _playNextAudio();
+          } else if (evt.chunk) {
             gotChunk = true;
             fullText += (fullText ? " " : "") + evt.chunk;
             state.chatMessages = state.chatMessages.map(m =>
