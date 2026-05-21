@@ -454,6 +454,8 @@ const state = {
   avatarDockVisible: true,
   avatarDockX: null,
   avatarDockY: null,
+  avatarDockWidth: null,
+  avatarDockHeight: null,
   userStats: null,
   userStatsLoading: false,
   userStatsUnsubscribe: null,
@@ -704,6 +706,7 @@ let avatarDockHeaderEl = null;
 let avatarDockIframeEl = null;
 let avatarDockTitleEl = null;
 let avatarDockDrag = null;
+let avatarDockResize = null;
 let avatarSessionEl = null;
 let avatarSessionIframeEl = null;
 let _voiceRecording = false;
@@ -848,6 +851,9 @@ function endAvatarGuidance() {
 }
 
 function getAvatarDockSize() {
+  if (state.avatarDockWidth != null && state.avatarDockHeight != null) {
+    return { width: state.avatarDockWidth, height: state.avatarDockHeight };
+  }
   return {
     width: window.innerWidth <= 760 ? Math.min(window.innerWidth - 24, 320) : 340,
     height: window.innerWidth <= 760 ? Math.min(window.innerHeight - 120, 460) : 500
@@ -889,6 +895,13 @@ function applyAvatarDockPosition() {
   avatarDockEl.style.top = `${position.y}px`;
 }
 
+function applyAvatarDockSize() {
+  if (!avatarDockEl) return;
+  const { width, height } = getAvatarDockSize();
+  avatarDockEl.style.width = `${width}px`;
+  avatarDockEl.style.height = `${height}px`;
+}
+
 function handleAvatarDockPointerMove(event) {
   if (!avatarDockDrag) {
     return;
@@ -907,6 +920,21 @@ function handleAvatarDockPointerMove(event) {
 function handleAvatarDockPointerUp() {
   avatarDockDrag = null;
   document.body.classList.remove("avatar-dragging");
+}
+
+function handleAvatarDockResizeMove(event) {
+  if (!avatarDockResize) return;
+  const minW = 220, minH = 280;
+  const maxW = Math.min(window.innerWidth - 24, 600);
+  const maxH = Math.min(window.innerHeight - 24, 700);
+  state.avatarDockWidth  = Math.min(maxW, Math.max(minW, avatarDockResize.startWidth  + (event.clientX - avatarDockResize.startX)));
+  state.avatarDockHeight = Math.min(maxH, Math.max(minH, avatarDockResize.startHeight + (event.clientY - avatarDockResize.startY)));
+  applyAvatarDockSize();
+  applyAvatarDockPosition();
+}
+
+function handleAvatarDockResizeUp() {
+  avatarDockResize = null;
 }
 
 function ensureAvatarDock() {
@@ -935,6 +963,7 @@ function ensureAvatarDock() {
     <div class="avatar-mic-strip">
       <button class="mic-btn" type="button" aria-label="Start voice input"></button>
     </div>
+    <div class="avatar-dock-resize-handle" aria-hidden="true"></div>
   `;
 
   document.body.appendChild(avatarDockEl);
@@ -970,6 +999,21 @@ function ensureAvatarDock() {
 
   window.addEventListener("pointermove", handleAvatarDockPointerMove);
   window.addEventListener("pointerup", handleAvatarDockPointerUp);
+
+  const resizeHandle = avatarDockEl.querySelector(".avatar-dock-resize-handle");
+  resizeHandle.addEventListener("pointerdown", (event) => {
+    event.stopPropagation();
+    const rect = avatarDockEl.getBoundingClientRect();
+    avatarDockResize = {
+      startX: event.clientX,
+      startY: event.clientY,
+      startWidth: rect.width,
+      startHeight: rect.height
+    };
+    resizeHandle.setPointerCapture(event.pointerId);
+  });
+  window.addEventListener("pointermove", handleAvatarDockResizeMove);
+  window.addEventListener("pointerup", handleAvatarDockResizeUp);
 }
 
 function syncAvatarDock() {
@@ -984,6 +1028,7 @@ function syncAvatarDock() {
 
   avatarDockTitleEl.textContent = "Mindfulness guide";
 
+  applyAvatarDockSize();
   applyAvatarDockPosition();
 
   const src = buildAvatarFrameSrc({

@@ -849,6 +849,8 @@ button { border: none; background: none; }
   overflow: hidden;
   background: #0d1b36;
   box-shadow: 0 6px 18px rgba(15,23,42,0.35);
+  display: flex;
+  flex-direction: column;
 }
 .avatar-dock.hidden { display: none; }
 
@@ -895,10 +897,36 @@ button { border: none; background: none; }
 .avatar-dock-title { color: #fff; font-size: 14px; font-weight: 700; }
 .avatar-dock-close { color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; }
 
+.avatar-dock-header { flex-shrink: 0; }
 .avatar-dock-frame-wrap,
-.avatar-dock-iframe-wrap { height: calc(100% - 60px - 65px); }
+.avatar-dock-iframe-wrap { flex: 1; min-height: 0; }
 .avatar-dock-frame,
 .avatar-dock-iframe-wrap iframe { width: 100%; height: 100%; border: none; }
+
+.avatar-dock-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+  z-index: 10;
+}
+.avatar-dock-resize-handle::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 2.5px,
+    rgba(255,255,255,0.35) 2.5px,
+    rgba(255,255,255,0.35) 3.5px
+  );
+}
 
 /* ============================================================
    PROFILE
@@ -1517,6 +1545,7 @@ body { top: 0 !important; }
   background: #172861;
   border-top: 1px solid rgba(255,255,255,0.1);
   flex-shrink: 0;
+  position: relative;
 }
 
 .avatar-mic-strip-light {
