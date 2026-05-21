@@ -2569,9 +2569,6 @@ function renderSessionScreen() {
 
     <section class="panel-card session-avatar-shell">
       <div class="session-avatar-host" id="session-avatar-host"></div>
-      <div class="avatar-mic-strip avatar-mic-strip-light">
-        <button class="mic-btn mic-btn-light" data-action="toggle-mic" type="button" aria-label="Start voice input">${_micIconSvg()}</button>
-      </div>
     </section>
 
     ${
