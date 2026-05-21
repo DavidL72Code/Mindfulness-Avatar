@@ -896,7 +896,7 @@ button { border: none; background: none; }
 .avatar-dock-close { color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; }
 
 .avatar-dock-frame-wrap,
-.avatar-dock-iframe-wrap { height: calc(100% - 60px); }
+.avatar-dock-iframe-wrap { height: calc(100% - 60px - 65px); }
 .avatar-dock-frame,
 .avatar-dock-iframe-wrap iframe { width: 100%; height: 100%; border: none; }
 
@@ -1426,6 +1426,153 @@ button { border: none; background: none; }
   transition: opacity 0.15s;
 }
 .composer-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ============================================================
+   LANGUAGE SELECT
+============================================================ */
+.lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(255,255,255,0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ffffff' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 10px;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 28px 6px 10px;
+  cursor: pointer;
+  min-width: 110px;
+  transition: background-color 0.15s;
+}
+.lang-select:hover { background-color: rgba(255,255,255,0.2); }
+.lang-select option { background: #1a2a5e; color: #fff; }
+
+/* Light variant for settings page */
+.lang-select-light {
+  background-color: var(--input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23555' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  border-color: var(--border);
+  color: var(--text);
+}
+.lang-select-light option { background: #fff; color: #111; }
+
+/* Sign-in corner select (compact) */
+.signin-lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23ffffff' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 8px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 22px 4px 8px;
+  cursor: pointer;
+}
+.signin-lang-select option { background: #1a2a5e; color: #fff; }
+
+/* RTL support for Arabic */
+[dir="rtl"] .composer { flex-direction: row-reverse; }
+[dir="rtl"] .lang-select,
+[dir="rtl"] .lang-select-light,
+[dir="rtl"] .signin-lang-select {
+  background-position: left 8px center;
+  padding: 6px 10px 6px 28px;
+}
+
+/* Hide Google Translate floating bar */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget,
+.skiptranslate { display: none !important; }
+body { top: 0 !important; }
+
+.composer-mic {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--input-bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.composer-mic:hover { background: var(--border); }
+.composer-mic.mic-recording { background: #ffe5e5; color: #e53935; }
+
+.avatar-mic-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background: #172861;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.avatar-mic-strip-light {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.mic-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.15s;
+}
+.mic-btn:hover { background: rgba(255,255,255,0.28); transform: scale(1.08); }
+.mic-btn.mic-recording {
+  background: #e53935;
+  border-color: transparent;
+  animation: mic-pulse 1.2s ease-in-out infinite;
+}
+.mic-btn-light {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+.mic-btn-light:hover { background: var(--border); transform: scale(1.08); }
+.mic-btn-light.mic-recording { background: #e53935; color: #fff; border-color: transparent; }
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.5); }
+  50%       { box-shadow: 0 0 0 10px rgba(229,57,53,0); }
+}
+
+.mic-wave { display: flex; align-items: center; gap: 2px; }
+.mic-wave-bar {
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+  animation: mic-bounce 0.7s ease-in-out infinite;
+}
+.mic-wave-bar:nth-child(1) { animation-delay: 0s; }
+.mic-wave-bar:nth-child(2) { animation-delay: 0.12s; }
+.mic-wave-bar:nth-child(3) { animation-delay: 0.24s; }
+.mic-wave-bar:nth-child(4) { animation-delay: 0.12s; }
+.mic-wave-bar:nth-child(5) { animation-delay: 0s; }
+@keyframes mic-bounce {
+  0%, 100% { height: 4px; }
+  50%       { height: 20px; }
+}
 
 /* ============================================================
    SUMMARY MODAL

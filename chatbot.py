@@ -3,6 +3,7 @@ import json
 import base64
 import hashlib
 import io
+import queue as _queue_mod
 import wave
 import asyncio
 import threading
@@ -78,6 +79,58 @@ def synthesize_edge_tts(text, voice=None):
             _TTS_CACHE.popitem(last=False)
 
     return result
+
+
+def synthesize_edge_tts_streaming(text, voice=None):
+    """Generator that yields raw MP3 bytes as they stream from Edge TTS.
+    Cache hit: yields the full cached audio in one shot (still instant).
+    Cache miss: yields each chunk as it arrives so the caller can forward it
+    to the client immediately — first byte in ~300 ms instead of ~2 s."""
+    prompt_text = (text or "").strip()
+    if not prompt_text:
+        return
+
+    v = voice or EDGE_TTS_VOICE
+    cache_key = hashlib.sha1(f"{v}|{prompt_text}".encode()).digest()
+
+    with _TTS_CACHE_LOCK:
+        if cache_key in _TTS_CACHE:
+            _TTS_CACHE.move_to_end(cache_key)
+            yield _TTS_CACHE[cache_key]["audio_bytes"]
+            return
+
+    chunk_q = _queue_mod.Queue()
+    all_chunks = []
+
+    async def _producer():
+        try:
+            communicate = edge_tts.Communicate(prompt_text, v)
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    chunk_q.put(chunk["data"])
+                    all_chunks.append(chunk["data"])
+        finally:
+            chunk_q.put(None)  # sentinel
+
+    asyncio.run_coroutine_threadsafe(_producer(), _TTS_LOOP)
+
+    while True:
+        try:
+            data = chunk_q.get(timeout=30)
+        except _queue_mod.Empty:
+            break
+        if data is None:
+            break
+        yield data
+
+    if all_chunks:
+        audio_bytes = b"".join(all_chunks)
+        result = {"audio_bytes": audio_bytes, "content_type": "audio/mpeg", "voice_name": v}
+        with _TTS_CACHE_LOCK:
+            _TTS_CACHE[cache_key] = result
+            _TTS_CACHE.move_to_end(cache_key)
+            if len(_TTS_CACHE) > _TTS_CACHE_MAX:
+                _TTS_CACHE.popitem(last=False)
 
 
 def pcm_to_wav_bytes(pcm_bytes, channels=1, sample_rate=GEMINI_TTS_SAMPLE_RATE, sample_width=2):
@@ -179,9 +232,16 @@ def build_activity_step_message(activity, step_index):
     )
 
 
-def build_chat_prompt(user_message, history=None, summary="", activity_context=None):
+def build_chat_prompt(user_message, history=None, summary="", activity_context=None, language="en"):
     history = history or []
+    lang_map = {
+        "ko": "Korean", "es": "Spanish", "fr": "French", "ja": "Japanese",
+        "zh": "Chinese (Simplified)", "ar": "Arabic", "pt": "Portuguese",
+        "hi": "Hindi", "de": "German", "vi": "Vietnamese",
+    }
     sections = [SYSTEM_PROMPT]
+    if language and language != "en" and language in lang_map:
+        sections.append(f"Always respond in {lang_map[language]}. Do not switch languages.")
 
     if summary:
         sections.append(f"Conversation summary so far:\n{summary}")

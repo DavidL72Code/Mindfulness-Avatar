@@ -3,6 +3,19 @@ const API_BASE_URL =
     ? window.location.origin
     : "https://multilingual-virtual-assistant.onrender.com";
 const TOTAL_BREATHING_ROUNDS = 4;
+const LANGUAGES = [
+  { code: "en", name: "English",     gtLang: "en",    srLang: "en-US", dir: "ltr" },
+  { code: "ko", name: "한국어",       gtLang: "ko",    srLang: "ko-KR", dir: "ltr" },
+  { code: "es", name: "Español",     gtLang: "es",    srLang: "es-ES", dir: "ltr" },
+  { code: "fr", name: "Français",    gtLang: "fr",    srLang: "fr-FR", dir: "ltr" },
+  { code: "ja", name: "日本語",       gtLang: "ja",    srLang: "ja-JP", dir: "ltr" },
+  { code: "zh", name: "中文",         gtLang: "zh-CN", srLang: "zh-CN", dir: "ltr" },
+  { code: "ar", name: "العربية",     gtLang: "ar",    srLang: "ar-SA", dir: "rtl" },
+  { code: "pt", name: "Português",   gtLang: "pt",    srLang: "pt-BR", dir: "ltr" },
+  { code: "hi", name: "हिन्दी",       gtLang: "hi",    srLang: "hi-IN", dir: "ltr" },
+  { code: "de", name: "Deutsch",     gtLang: "de",    srLang: "de-DE", dir: "ltr" },
+  { code: "vi", name: "Tiếng Việt",  gtLang: "vi",    srLang: "vi-VN", dir: "ltr" },
+];
 const BOX_TRACE_SIDES = ["top", "right", "bottom", "left"];
 
 const breathingPhases = [
@@ -213,71 +226,181 @@ const initialChatMessage =
 
 const translations = {
   en: {
-    signInWelcome: "Welcome back",
-    signInSubtitle: "Sign in to continue your mindfulness practice.",
-    email: "Email",
-    password: "Password",
-    signInButton: "Sign In",
-    signUpPrompt: "Create an account",
+    signInWelcome: "Welcome back", signInSubtitle: "Sign in to continue your mindfulness practice.",
+    email: "Email", password: "Password", signInButton: "Sign In", signUpPrompt: "Create an account",
     signInFooter: "Multilingual mindfulness support for calmer daily routines.",
-    headerTitle: "Mindfulness Sessions",
-    logoutBtn: "Logout",
-    chatHeader: "Mindfulness Virtual Assistant",
-    card1Title: "About the Assistant",
+    headerTitle: "Mindfulness Sessions", logoutBtn: "Logout",
+    chatHeader: "Mindfulness Virtual Assistant", card1Title: "About the Assistant",
     card1Text: "Our AI is trained to guide you through mindfulness exercises.",
-    card3Title: "Recent Updates",
-    card3Text: "We improved the Korean processing features recently.",
-    card4Title: "Quick Settings",
-    card4Text: "Customize your interface and accessibility options here.",
-    supportBtn: "Support Ticket",
-    language: "Language",
-    start: "Start",
-    profileTitle: "Profile",
-    personalInformation: "Personal Information",
-    settings: "Settings",
-    support: "Support",
-    logOut: "Log Out",
-    firstName: "First Name",
-    lastName: "Last Name",
-    dateOfBirth: "Date of Birth",
-    confirmPassword: "Confirm Password",
-    signUpHeader: "Create Account",
-    signUpSubmit: "Create Account",
-    backToSignIn: "Already have an account? Sign in",
+    card3Title: "Recent Updates", card3Text: "We improved the processing features recently.",
+    card4Title: "Quick Settings", card4Text: "Customize your interface and accessibility options here.",
+    supportBtn: "Support Ticket", language: "Language", start: "Start",
+    profileTitle: "Profile", personalInformation: "Personal Information",
+    settings: "Settings", support: "Support", logOut: "Log Out",
+    firstName: "First Name", lastName: "Last Name", dateOfBirth: "Date of Birth",
+    confirmPassword: "Confirm Password", signUpHeader: "Create Account",
+    signUpSubmit: "Create Account", backToSignIn: "Already have an account? Sign in",
   },
   ko: {
-    signInWelcome: "다시 오신 것을 환영합니다",
-    signInSubtitle: "명상 연습을 계속하려면 로그인하세요.",
-    email: "이메일",
-    password: "비밀번호",
-    signInButton: "로그인",
-    signUpPrompt: "계정 만들기",
+    signInWelcome: "다시 오신 것을 환영합니다", signInSubtitle: "명상 연습을 계속하려면 로그인하세요.",
+    email: "이메일", password: "비밀번호", signInButton: "로그인", signUpPrompt: "계정 만들기",
     signInFooter: "차분한 일상을 위한 다국어 명상 지원.",
-    headerTitle: "마음챙김 세션",
-    logoutBtn: "로그아웃",
-    chatHeader: "명상 가상 비서",
-    card1Title: "비서 정보",
+    headerTitle: "마음챙김 세션", logoutBtn: "로그아웃",
+    chatHeader: "명상 가상 비서", card1Title: "비서 정보",
     card1Text: "저희 AI는 명상 연습을 안내하도록 교육되었습니다.",
-    card3Title: "최신 업데이트",
-    card3Text: "최근 한국어 처리 기능을 개선했습니다.",
-    card4Title: "빠른 설정",
-    card4Text: "여기에서 인터페이스와 접근성 설정을 사용자 정의하십시오.",
-    supportBtn: "지원 티켓",
-    language: "Language",
-    start: "Start",
-    profileTitle: "프로필",
-    personalInformation: "개인 정보",
-    settings: "설정",
-    support: "지원",
-    logOut: "로그아웃",
-    firstName: "이름",
-    lastName: "성",
-    dateOfBirth: "생년월일",
-    confirmPassword: "비밀번호 확인",
-    signUpHeader: "계정 만들기",
-    signUpSubmit: "계정 만들기",
-    backToSignIn: "이미 계정이 있으신가요? 로그인",
-  }
+    card3Title: "최신 업데이트", card3Text: "최근 처리 기능을 개선했습니다.",
+    card4Title: "빠른 설정", card4Text: "여기에서 인터페이스와 접근성 설정을 사용자 정의하십시오.",
+    supportBtn: "지원 티켓", language: "언어", start: "시작",
+    profileTitle: "프로필", personalInformation: "개인 정보",
+    settings: "설정", support: "지원", logOut: "로그아웃",
+    firstName: "이름", lastName: "성", dateOfBirth: "생년월일",
+    confirmPassword: "비밀번호 확인", signUpHeader: "계정 만들기",
+    signUpSubmit: "계정 만들기", backToSignIn: "이미 계정이 있으신가요? 로그인",
+  },
+  es: {
+    signInWelcome: "Bienvenido de nuevo", signInSubtitle: "Inicia sesión para continuar tu práctica de mindfulness.",
+    email: "Correo electrónico", password: "Contraseña", signInButton: "Iniciar sesión", signUpPrompt: "Crear una cuenta",
+    signInFooter: "Apoyo multilingüe de mindfulness para una vida más tranquila.",
+    headerTitle: "Sesiones de mindfulness", logoutBtn: "Cerrar sesión",
+    chatHeader: "Asistente virtual de mindfulness", card1Title: "Acerca del asistente",
+    card1Text: "Nuestra IA está entrenada para guiarte en ejercicios de mindfulness.",
+    card3Title: "Actualizaciones recientes", card3Text: "Recientemente mejoramos las funciones de procesamiento.",
+    card4Title: "Ajustes rápidos", card4Text: "Personaliza tu interfaz y opciones de accesibilidad aquí.",
+    supportBtn: "Ticket de soporte", language: "Idioma", start: "Comenzar",
+    profileTitle: "Perfil", personalInformation: "Información personal",
+    settings: "Configuración", support: "Soporte", logOut: "Cerrar sesión",
+    firstName: "Nombre", lastName: "Apellido", dateOfBirth: "Fecha de nacimiento",
+    confirmPassword: "Confirmar contraseña", signUpHeader: "Crear cuenta",
+    signUpSubmit: "Crear cuenta", backToSignIn: "¿Ya tienes una cuenta? Inicia sesión",
+  },
+  fr: {
+    signInWelcome: "Bienvenue", signInSubtitle: "Connectez-vous pour continuer votre pratique de pleine conscience.",
+    email: "E-mail", password: "Mot de passe", signInButton: "Se connecter", signUpPrompt: "Créer un compte",
+    signInFooter: "Soutien multilingue pour des routines quotidiennes plus sereines.",
+    headerTitle: "Séances de pleine conscience", logoutBtn: "Déconnexion",
+    chatHeader: "Assistant virtuel de pleine conscience", card1Title: "À propos de l'assistant",
+    card1Text: "Notre IA est formée pour vous guider dans des exercices de pleine conscience.",
+    card3Title: "Mises à jour récentes", card3Text: "Nous avons récemment amélioré les fonctionnalités.",
+    card4Title: "Paramètres rapides", card4Text: "Personnalisez votre interface et options d'accessibilité ici.",
+    supportBtn: "Ticket de support", language: "Langue", start: "Commencer",
+    profileTitle: "Profil", personalInformation: "Informations personnelles",
+    settings: "Paramètres", support: "Support", logOut: "Se déconnecter",
+    firstName: "Prénom", lastName: "Nom de famille", dateOfBirth: "Date de naissance",
+    confirmPassword: "Confirmer le mot de passe", signUpHeader: "Créer un compte",
+    signUpSubmit: "Créer un compte", backToSignIn: "Vous avez déjà un compte ? Connectez-vous",
+  },
+  ja: {
+    signInWelcome: "おかえりなさい", signInSubtitle: "マインドフルネスの練習を続けるにはサインインしてください。",
+    email: "メールアドレス", password: "パスワード", signInButton: "サインイン", signUpPrompt: "アカウントを作成",
+    signInFooter: "穏やかな日常のための多言語マインドフルネスサポート。",
+    headerTitle: "マインドフルネスセッション", logoutBtn: "ログアウト",
+    chatHeader: "マインドフルネス仮想アシスタント", card1Title: "アシスタントについて",
+    card1Text: "AIはマインドフルネスの練習をガイドするよう訓練されています。",
+    card3Title: "最近の更新", card3Text: "最近、処理機能を改善しました。",
+    card4Title: "クイック設定", card4Text: "インターフェースとアクセシビリティのオプションをカスタマイズしてください。",
+    supportBtn: "サポートチケット", language: "言語", start: "開始",
+    profileTitle: "プロフィール", personalInformation: "個人情報",
+    settings: "設定", support: "サポート", logOut: "ログアウト",
+    firstName: "名", lastName: "姓", dateOfBirth: "生年月日",
+    confirmPassword: "パスワードを確認", signUpHeader: "アカウントを作成",
+    signUpSubmit: "アカウントを作成", backToSignIn: "すでにアカウントをお持ちですか？サインイン",
+  },
+  zh: {
+    signInWelcome: "欢迎回来", signInSubtitle: "登录以继续您的正念练习。",
+    email: "电子邮件", password: "密码", signInButton: "登录", signUpPrompt: "创建账户",
+    signInFooter: "多语言正念支持，助您日常更从容平静。",
+    headerTitle: "正念课程", logoutBtn: "退出登录",
+    chatHeader: "正念虚拟助手", card1Title: "关于助手",
+    card1Text: "我们的AI经过训练，引导您进行正念练习。",
+    card3Title: "最近更新", card3Text: "我们最近改进了处理功能。",
+    card4Title: "快速设置", card4Text: "在此自定义您的界面和辅助功能选项。",
+    supportBtn: "支持工单", language: "语言", start: "开始",
+    profileTitle: "个人资料", personalInformation: "个人信息",
+    settings: "设置", support: "支持", logOut: "退出登录",
+    firstName: "名字", lastName: "姓氏", dateOfBirth: "出生日期",
+    confirmPassword: "确认密码", signUpHeader: "创建账户",
+    signUpSubmit: "创建账户", backToSignIn: "已有账户？立即登录",
+  },
+  ar: {
+    signInWelcome: "مرحباً بعودتك", signInSubtitle: "سجّل الدخول لمواصلة ممارسة اليقظة الذهنية.",
+    email: "البريد الإلكتروني", password: "كلمة المرور", signInButton: "تسجيل الدخول", signUpPrompt: "إنشاء حساب",
+    signInFooter: "دعم متعدد اللغات لليقظة الذهنية من أجل روتين يومي أهدأ.",
+    headerTitle: "جلسات اليقظة الذهنية", logoutBtn: "تسجيل الخروج",
+    chatHeader: "مساعد اليقظة الذهنية الافتراضي", card1Title: "حول المساعد",
+    card1Text: "تم تدريب الذكاء الاصطناعي لإرشادك خلال تمارين اليقظة الذهنية.",
+    card3Title: "التحديثات الأخيرة", card3Text: "قمنا مؤخراً بتحسين ميزات المعالجة.",
+    card4Title: "الإعدادات السريعة", card4Text: "خصّص واجهتك وخيارات إمكانية الوصول هنا.",
+    supportBtn: "تذكرة الدعم", language: "اللغة", start: "ابدأ",
+    profileTitle: "الملف الشخصي", personalInformation: "المعلومات الشخصية",
+    settings: "الإعدادات", support: "الدعم", logOut: "تسجيل الخروج",
+    firstName: "الاسم الأول", lastName: "اسم العائلة", dateOfBirth: "تاريخ الميلاد",
+    confirmPassword: "تأكيد كلمة المرور", signUpHeader: "إنشاء حساب",
+    signUpSubmit: "إنشاء حساب", backToSignIn: "هل لديك حساب بالفعل؟ سجّل الدخول",
+  },
+  pt: {
+    signInWelcome: "Bem-vindo de volta", signInSubtitle: "Entre para continuar sua prática de mindfulness.",
+    email: "E-mail", password: "Senha", signInButton: "Entrar", signUpPrompt: "Criar uma conta",
+    signInFooter: "Suporte multilíngue de mindfulness para rotinas diárias mais calmas.",
+    headerTitle: "Sessões de mindfulness", logoutBtn: "Sair",
+    chatHeader: "Assistente virtual de mindfulness", card1Title: "Sobre o assistente",
+    card1Text: "Nossa IA é treinada para guiá-lo em exercícios de mindfulness.",
+    card3Title: "Atualizações recentes", card3Text: "Melhoramos recentemente os recursos de processamento.",
+    card4Title: "Configurações rápidas", card4Text: "Personalize sua interface e opções de acessibilidade aqui.",
+    supportBtn: "Ticket de suporte", language: "Idioma", start: "Começar",
+    profileTitle: "Perfil", personalInformation: "Informações pessoais",
+    settings: "Configurações", support: "Suporte", logOut: "Sair",
+    firstName: "Nome", lastName: "Sobrenome", dateOfBirth: "Data de nascimento",
+    confirmPassword: "Confirmar senha", signUpHeader: "Criar conta",
+    signUpSubmit: "Criar conta", backToSignIn: "Já tem uma conta? Entre",
+  },
+  hi: {
+    signInWelcome: "वापस स्वागत है", signInSubtitle: "अपनी माइंडफुलनेस प्रैक्टिस जारी रखने के लिए साइन इन करें।",
+    email: "ईमेल", password: "पासवर्ड", signInButton: "साइन इन", signUpPrompt: "खाता बनाएं",
+    signInFooter: "शांत दैनिक दिनचर्या के लिए बहुभाषी माइंडफुलनेस सहायता।",
+    headerTitle: "माइंडफुलनेस सत्र", logoutBtn: "लॉग आउट",
+    chatHeader: "माइंडफुलनेस वर्चुअल असिस्टेंट", card1Title: "असिस्टेंट के बारे में",
+    card1Text: "हमारा AI माइंडफुलनेस अभ्यासों में मार्गदर्शन करने के लिए प्रशिक्षित है।",
+    card3Title: "हालिया अपडेट", card3Text: "हमने हाल ही में प्रोसेसिंग सुविधाओं में सुधार किया है।",
+    card4Title: "त्वरित सेटिंग्स", card4Text: "यहां अपना इंटरफेस और एक्सेसिबिलिटी विकल्प कस्टमाइज़ करें।",
+    supportBtn: "सपोर्ट टिकट", language: "भाषा", start: "शुरू करें",
+    profileTitle: "प्रोफ़ाइल", personalInformation: "व्यक्तिगत जानकारी",
+    settings: "सेटिंग्स", support: "सहायता", logOut: "लॉग आउट",
+    firstName: "पहला नाम", lastName: "अंतिम नाम", dateOfBirth: "जन्म तिथि",
+    confirmPassword: "पासवर्ड की पुष्टि करें", signUpHeader: "खाता बनाएं",
+    signUpSubmit: "खाता बनाएं", backToSignIn: "पहले से खाता है? साइन इन करें",
+  },
+  de: {
+    signInWelcome: "Willkommen zurück", signInSubtitle: "Melden Sie sich an, um Ihre Achtsamkeitspraxis fortzusetzen.",
+    email: "E-Mail", password: "Passwort", signInButton: "Anmelden", signUpPrompt: "Konto erstellen",
+    signInFooter: "Mehrsprachige Achtsamkeitsunterstützung für ruhigere Alltagsroutinen.",
+    headerTitle: "Achtsamkeitssitzungen", logoutBtn: "Abmelden",
+    chatHeader: "Virtueller Achtsamkeitsassistent", card1Title: "Über den Assistenten",
+    card1Text: "Unsere KI ist darauf trainiert, Sie durch Achtsamkeitsübungen zu führen.",
+    card3Title: "Aktuelle Updates", card3Text: "Wir haben die Verarbeitungsfunktionen kürzlich verbessert.",
+    card4Title: "Schnelleinstellungen", card4Text: "Passen Sie hier Ihre Oberfläche und Zugänglichkeitsoptionen an.",
+    supportBtn: "Support-Ticket", language: "Sprache", start: "Starten",
+    profileTitle: "Profil", personalInformation: "Persönliche Informationen",
+    settings: "Einstellungen", support: "Support", logOut: "Abmelden",
+    firstName: "Vorname", lastName: "Nachname", dateOfBirth: "Geburtsdatum",
+    confirmPassword: "Passwort bestätigen", signUpHeader: "Konto erstellen",
+    signUpSubmit: "Konto erstellen", backToSignIn: "Haben Sie bereits ein Konto? Anmelden",
+  },
+  vi: {
+    signInWelcome: "Chào mừng trở lại", signInSubtitle: "Đăng nhập để tiếp tục thực hành chánh niệm của bạn.",
+    email: "Email", password: "Mật khẩu", signInButton: "Đăng nhập", signUpPrompt: "Tạo tài khoản",
+    signInFooter: "Hỗ trợ chánh niệm đa ngôn ngữ cho thói quen hàng ngày bình yên hơn.",
+    headerTitle: "Các phiên chánh niệm", logoutBtn: "Đăng xuất",
+    chatHeader: "Trợ lý chánh niệm ảo", card1Title: "Về trợ lý",
+    card1Text: "AI của chúng tôi được đào tạo để hướng dẫn bạn qua các bài tập chánh niệm.",
+    card3Title: "Cập nhật gần đây", card3Text: "Chúng tôi đã cải thiện các tính năng xử lý gần đây.",
+    card4Title: "Cài đặt nhanh", card4Text: "Tùy chỉnh giao diện và tùy chọn trợ năng của bạn tại đây.",
+    supportBtn: "Phiếu hỗ trợ", language: "Ngôn ngữ", start: "Bắt đầu",
+    profileTitle: "Hồ sơ", personalInformation: "Thông tin cá nhân",
+    settings: "Cài đặt", support: "Hỗ trợ", logOut: "Đăng xuất",
+    firstName: "Tên", lastName: "Họ", dateOfBirth: "Ngày sinh",
+    confirmPassword: "Xác nhận mật khẩu", signUpHeader: "Tạo tài khoản",
+    signUpSubmit: "Tạo tài khoản", backToSignIn: "Đã có tài khoản? Đăng nhập",
+  },
 };
 
 const appEl = document.getElementById("app");
@@ -420,6 +543,36 @@ function t(key) {
   return translations[state.locale]?.[key] || translations.en[key] || key;
 }
 
+function renderLangSelect(cssClass) {
+  return `<select class="${cssClass}" data-action="set-language" aria-label="${escapeHtml(t('language'))}">
+    ${LANGUAGES.map(l => `<option value="${l.code}"${state.locale === l.code ? " selected" : ""}>${l.name}</option>`).join("")}
+  </select>`;
+}
+
+function applyLocaleToDocument(locale) {
+  const lang = LANGUAGES.find(l => l.code === locale) || LANGUAGES[0];
+  document.documentElement.lang = locale;
+  document.documentElement.dir = lang.dir;
+}
+
+let _gtTimer = null;
+function scheduleGoogleRetranslate() {
+  if (state.locale === "en") return;
+  clearTimeout(_gtTimer);
+  _gtTimer = setTimeout(_doGoogleRetranslate, 150);
+}
+
+function _doGoogleRetranslate() {
+  const lang = LANGUAGES.find(l => l.code === state.locale);
+  if (!lang || lang.gtLang === "en") return;
+  const sel = document.querySelector("select.goog-te-combo");
+  if (!sel) { _gtTimer = setTimeout(_doGoogleRetranslate, 600); return; }
+  if (sel.value !== lang.gtLang) {
+    sel.value = lang.gtLang;
+    sel.dispatchEvent(new Event("change"));
+  }
+}
+
 function getSelectedSession() {
   return (
     sessionCatalog.find((session) => session.id === state.selectedSessionId) ||
@@ -553,6 +706,8 @@ let avatarDockTitleEl = null;
 let avatarDockDrag = null;
 let avatarSessionEl = null;
 let avatarSessionIframeEl = null;
+let _voiceRecording = false;
+let _recognition = null;
 
 const AVATAR_HOST_HOME = "home-dock";
 const AVATAR_HOST_SESSION = "session-panel";
@@ -777,6 +932,9 @@ function ensureAvatarDock() {
         allow="autoplay"
       ></iframe>
     </div>
+    <div class="avatar-mic-strip">
+      <button class="mic-btn" type="button" aria-label="Start voice input"></button>
+    </div>
   `;
 
   document.body.appendChild(avatarDockEl);
@@ -784,6 +942,10 @@ function ensureAvatarDock() {
   avatarDockHeaderEl = avatarDockEl.querySelector(".avatar-dock-header");
   avatarDockIframeEl = avatarDockEl.querySelector(".avatar-dock-frame");
   avatarDockTitleEl = avatarDockEl.querySelector(".avatar-dock-title");
+
+  const dockMicBtn = avatarDockEl.querySelector(".avatar-mic-strip .mic-btn");
+  dockMicBtn.innerHTML = _micIconSvg();
+  dockMicBtn.addEventListener("click", () => _toggleVoiceInput(dockMicBtn));
 
   avatarDockEl
     .querySelector(".avatar-dock-close")
@@ -1155,6 +1317,62 @@ function startRound() {
   }, elapsed + 100);
 }
 
+function _micIconSvg() {
+  return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>`;
+}
+
+function _waveHtml() {
+  return `<span class="mic-wave" aria-hidden="true"><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span></span>`;
+}
+
+function _toggleVoiceInput(btn) {
+  if (_voiceRecording) {
+    if (_recognition) _recognition.stop();
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    alert('Voice input is not supported in this browser. Try Chrome or Edge.');
+    return;
+  }
+  _voiceRecording = true;
+  btn.classList.add('mic-recording');
+  btn.innerHTML = _waveHtml();
+  btn.setAttribute('aria-label', 'Stop recording');
+
+  let _transcript = '';
+  _recognition = new SR();
+  _recognition.lang = (LANGUAGES.find(l => l.code === state.locale) || LANGUAGES[0]).srLang;
+  _recognition.interimResults = false;
+  _recognition.maxAlternatives = 1;
+
+  _recognition.onresult = (evt) => {
+    _transcript = (evt.results[0]?.[0]?.transcript || '').trim();
+  };
+  _recognition.onend = () => {
+    const text = _transcript;
+    _voiceRecording = false;
+    _recognition = null;
+    btn.classList.remove('mic-recording');
+    btn.innerHTML = _micIconSvg();
+    btn.setAttribute('aria-label', 'Start voice input');
+    if (text) {
+      state.chatDraft = text;
+      if (!state.chatModalVisible) { state.chatModalVisible = true; render(); }
+      sendChatMessage();
+    }
+  };
+  _recognition.onerror = () => {};
+
+  try { _recognition.start(); } catch (_) {
+    _voiceRecording = false;
+    _recognition = null;
+    btn.classList.remove('mic-recording');
+    btn.innerHTML = _micIconSvg();
+    btn.setAttribute('aria-label', 'Start voice input');
+  }
+}
+
 async function sendChatMessage() {
   const trimmedMessage = state.chatDraft.trim();
   if (!trimmedMessage || state.chatBusy) {
@@ -1176,50 +1394,93 @@ async function sendChatMessage() {
   const msgId = `assistant-${Date.now()}`;
   const body = JSON.stringify({
     message: buildChatPrompt(trimmedMessage, getSessionContext()),
-    session_id: state.chatSessionId
+    session_id: state.chatSessionId,
+    lang: state.locale,
   });
 
-  // Audio queue: plays per-sentence audio in seq order as it arrives from the stream.
-  // AudioContext is created here, inside the click handler, so the browser
-  // considers it user-gesture-gated and allows it to start.
-  let _audioCtx = null;
-  try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) {}
-  const audioSeqMap = {};
-  let nextAudioSeq = 0;
-  let audioPlaying = false;
+  // Streaming audio: MSE for Chrome/Firefox (plays at first chunk, ~300 ms latency),
+  // blob-URL fallback for Safari (plays when sentence completes, same as before).
+  const _mseSup = typeof MediaSource !== 'undefined' && MediaSource.isTypeSupported('audio/mpeg');
+  const _sents = {};   // seq -> { chunks, pending, ms, sb, audio, ended }
+  let _nextSeq = 0;
+  let _playingSeq = -1;
 
-  function _playNextAudio() {
-    if (audioPlaying) return;
-    // Advance past any skipped sequences
-    while (nextAudioSeq in audioSeqMap && audioSeqMap[nextAudioSeq] === null) {
-      delete audioSeqMap[nextAudioSeq++];
+  function _sentGet(seq) {
+    if (!_sents[seq]) _sents[seq] = { chunks: [], pending: [], ms: null, sb: null, audio: null, ended: false };
+    return _sents[seq];
+  }
+
+  function _sentFlush(seq) {
+    const s = _sents[seq];
+    if (!s || !s.sb || s.sb.updating || !s.pending.length) return;
+    const total = s.pending.reduce((n, c) => n + c.length, 0);
+    const buf = new Uint8Array(total);
+    let off = 0; for (const c of s.pending) { buf.set(c, off); off += c.length; }
+    s.pending = [];
+    s.sb.appendBuffer(buf);
+  }
+
+  function _sentTryPlay(seq) {
+    if (seq !== _nextSeq || _playingSeq !== -1) return;
+    const s = _sents[seq];
+    if (!s || !s.audio) return;
+    if (_mseSup && s.ms && s.audio.readyState < 3) return;
+    _playingSeq = seq;
+    s.audio.play().catch(() => { _playingSeq = -1; _sentAdvance(); });
+    s.audio.addEventListener('ended', _sentAdvance, { once: true });
+    s.audio.addEventListener('error', _sentAdvance, { once: true });
+  }
+
+  function _sentAdvance() {
+    const s = _sents[_nextSeq];
+    if (s && s.audio && s.audio.src && s.audio.src.startsWith('blob:')) URL.revokeObjectURL(s.audio.src);
+    delete _sents[_nextSeq];
+    _playingSeq = -1;
+    _nextSeq++;
+    _sentTryPlay(_nextSeq);
+  }
+
+  function onAudioChunk(seq, b64) {
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const s = _sentGet(seq);
+    s.chunks.push(bytes);
+    if (!_mseSup) return;
+    s.pending.push(bytes);
+    if (!s.ms) {
+      const ms = new MediaSource();
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(ms);
+      s.ms = ms; s.audio = audio;
+      ms.addEventListener('sourceopen', () => {
+        const sb = ms.addSourceBuffer('audio/mpeg');
+        s.sb = sb;
+        sb.addEventListener('updateend', () => _sentFlush(seq));
+        _sentFlush(seq);
+      }, { once: true });
+      audio.addEventListener('canplay', () => _sentTryPlay(seq));
+    } else if (s.sb && !s.sb.updating) {
+      _sentFlush(seq);
     }
-    const entry = audioSeqMap[nextAudioSeq];
-    if (!entry) return;
-    audioPlaying = true;
-    delete audioSeqMap[nextAudioSeq++];
-    const _doPlay = () => {
-      try {
-        const bytes = Uint8Array.from(atob(entry.data), c => c.charCodeAt(0)).buffer;
-        _audioCtx.decodeAudioData(bytes, (audioBuf) => {
-          const src = _audioCtx.createBufferSource();
-          src.buffer = audioBuf;
-          src.connect(_audioCtx.destination);
-          src.onended = () => { audioPlaying = false; _playNextAudio(); };
-          src.start(0);
-        }, () => { audioPlaying = false; _playNextAudio(); });
-      } catch (_) {
-        audioPlaying = false;
-        _playNextAudio();
-      }
+  }
+
+  function onAudioEnd(seq) {
+    const s = _sentGet(seq);
+    s.ended = true;
+    if (!_mseSup) {
+      const total = s.chunks.reduce((n, c) => n + c.length, 0);
+      const buf = new Uint8Array(total);
+      let off = 0; for (const c of s.chunks) { buf.set(c, off); off += c.length; }
+      s.audio = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/mpeg' })));
+      _sentTryPlay(seq);
+      return;
+    }
+    if (!s.ms || !s.sb) return;
+    const _fin = () => {
+      if (s.pending.length) { _sentFlush(seq); return; }
+      if (s.sb.updating) { s.sb.addEventListener('updateend', _fin, { once: true }); return; }
+      try { s.ms.endOfStream(); } catch (_) {}
     };
-    if (!_audioCtx) { audioPlaying = false; return; }
-    // Resume if the browser suspended the context (autoplay policy)
-    if (_audioCtx.state === "suspended") {
-      _audioCtx.resume().then(_doPlay).catch(() => { audioPlaying = false; _playNextAudio(); });
-    } else {
-      _doPlay();
-    }
+    _fin();
   }
 
   try {
@@ -1251,12 +1512,10 @@ async function sendChatMessage() {
           const evt = JSON.parse(part.slice(6));
           if (evt.error) throw new Error(evt.error);
           if (evt.done) break;
-          if (evt.audio !== undefined) {
-            audioSeqMap[evt.seq] = { data: evt.audio };
-            _playNextAudio();
-          } else if (evt.audio_skip) {
-            audioSeqMap[evt.seq] = null;
-            _playNextAudio();
+          if (evt.audio_chunk !== undefined) {
+            onAudioChunk(evt.seq, evt.audio_chunk);
+          } else if (evt.audio_end) {
+            onAudioEnd(evt.seq);
           } else if (evt.chunk) {
             gotChunk = true;
             fullText += (fullText ? " " : "") + evt.chunk;
@@ -1619,14 +1878,10 @@ function renderTutorialCard() {
 }
 
 function renderSignInScreen() {
-  const cornerLabel = state.locale === "en" ? "한국어" : "English";
-
   return `
     <main class="signin-screen">
       <div class="signin-lang-corner">
-        <button class="signin-lang-btn" data-action="toggle-language" type="button">
-          ${escapeHtml(cornerLabel)}
-        </button>
+        ${renderLangSelect("signin-lang-select")}
       </div>
 
       <section class="signin-card" aria-label="Sign in">
@@ -1678,13 +1933,10 @@ function renderSignInScreen() {
 }
 
 function renderSignUpScreen() {
-  const cornerLabel = state.locale === "en" ? "한국어" : "English";
   return `
     <main class="signin-screen">
       <div class="signin-lang-corner">
-        <button class="signin-lang-btn" data-action="toggle-language" type="button">
-          ${escapeHtml(cornerLabel)}
-        </button>
+        ${renderLangSelect("signin-lang-select")}
       </div>
 
       <section class="signin-card signup-card" aria-label="Create account">
@@ -1782,8 +2034,7 @@ function renderHomeScreen() {
             <section class="home-modal">
               <h2 class="home-modal-title">Language / 언어</h2>
               <div class="home-language-choices">
-                <button class="home-language-choice ${state.locale === "en" ? "selected" : ""}" data-action="set-language" data-locale="en" type="button">English</button>
-                <button class="home-language-choice ${state.locale === "ko" ? "selected" : ""}" data-action="set-language" data-locale="ko" type="button">한국어</button>
+                ${renderLangSelect("lang-select")}
               </div>
               <button class="home-start-btn" data-action="close-language-modal" type="button">${escapeHtml(t("start"))}</button>
             </section>
@@ -2009,7 +2260,8 @@ function renderPersonalInfoScreen() {
   const firstName = data.firstName || "—";
   const lastName = data.lastName || "—";
   const dob = formatDob(data.dob);
-  const language = (data.locale || state.locale) === "ko" ? "한국어" : "English";
+  const _langEntry = LANGUAGES.find(l => l.code === (data.locale || state.locale));
+  const language = _langEntry ? _langEntry.name : "English";
   const creationTime = user && user.metadata && user.metadata.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })
     : "—";
@@ -2080,10 +2332,7 @@ function renderSettingsScreen() {
             <p class="settings-row-label">Language</p>
             <p class="settings-row-hint">Used across the app.</p>
           </div>
-          <div class="lang-chip-group">
-            <button class="lang-chip ${state.locale === "en" ? "active" : ""}" data-action="set-language" data-locale="en" type="button">English</button>
-            <button class="lang-chip ${state.locale === "ko" ? "active" : ""}" data-action="set-language" data-locale="ko" type="button">한국어</button>
-          </div>
+          ${renderLangSelect("lang-select lang-select-light")}
         </div>
 
         <div class="settings-row">
@@ -2277,6 +2526,9 @@ function renderSessionScreen() {
 
     <section class="panel-card session-avatar-shell">
       <div class="session-avatar-host" id="session-avatar-host"></div>
+      <div class="avatar-mic-strip avatar-mic-strip-light">
+        <button class="mic-btn mic-btn-light" data-action="toggle-mic" type="button" aria-label="Start voice input">${_micIconSvg()}</button>
+      </div>
     </section>
 
     ${
@@ -2352,6 +2604,7 @@ function renderChatModal() {
             ${renderMessages(state.chatMessages)}
           </div>
           <div class="composer">
+            <button class="composer-mic${_voiceRecording ? ' mic-recording' : ''}" data-action="toggle-mic" type="button" aria-label="${_voiceRecording ? 'Stop recording' : 'Start voice input'}">${_voiceRecording ? _waveHtml() : _micIconSvg()}</button>
             <textarea
               class="chat-input"
               id="chat-input"
@@ -2389,6 +2642,7 @@ function render() {
     if (avatarSessionEl) {
       avatarSessionEl.classList.add("hidden");
     }
+    scheduleGoogleRetranslate();
     return;
   }
 
@@ -2396,10 +2650,7 @@ function render() {
     <main class="home-container">
       <header class="home-header">
         <div class="home-lang-container">
-          <span class="home-lang-label">${escapeHtml(t("language"))}</span>
-          <button class="home-header-lang-btn" data-action="toggle-language" type="button">
-            ${escapeHtml(state.locale.toUpperCase())}
-          </button>
+          ${renderLangSelect("lang-select")}
         </div>
         <h1 class="home-header-title">${escapeHtml(t("headerTitle"))}</h1>
         <div class="home-header-actions">
@@ -2441,6 +2692,7 @@ function render() {
   syncAvatarDock();
   requestAnimationFrame(() => requestAnimationFrame(syncSessionAvatarPanel));
   syncSessionAvatarProgress();
+  scheduleGoogleRetranslate();
 }
 
 function attachInputHandlers() {
@@ -2510,6 +2762,19 @@ function scrollChatToBottom() {
   }
 }
 
+appEl.addEventListener("change", (event) => {
+  const sel = event.target.closest("select[data-action='set-language']");
+  if (!sel) return;
+  const newLocale = sel.value;
+  if (newLocale && LANGUAGES.some(l => l.code === newLocale) && newLocale !== state.locale) {
+    state.locale = newLocale;
+    persistRemoteSettings({ locale: newLocale });
+    applyLocaleToDocument(newLocale);
+    scheduleGoogleRetranslate();
+    render();
+  }
+});
+
 appEl.addEventListener("click", (event) => {
   const actionEl = event.target.closest("[data-action]");
   if (!actionEl) {
@@ -2524,16 +2789,17 @@ appEl.addEventListener("click", (event) => {
   }
 
   switch (action) {
-    case "toggle-language":
-      state.locale = state.locale === "en" ? "ko" : "en";
-      persistRemoteSettings({ locale: state.locale });
-      render();
+    case "set-language": {
+      const newLocale = actionEl.dataset.locale;
+      if (newLocale && LANGUAGES.some(l => l.code === newLocale)) {
+        state.locale = newLocale;
+        persistRemoteSettings({ locale: newLocale });
+        applyLocaleToDocument(newLocale);
+        scheduleGoogleRetranslate();
+        render();
+      }
       break;
-    case "set-language":
-      state.locale = actionEl.dataset.locale === "ko" ? "ko" : "en";
-      persistRemoteSettings({ locale: state.locale });
-      render();
-      break;
+    }
     case "close-language-modal":
       state.languageModalVisible = false;
       render();
@@ -2628,6 +2894,9 @@ appEl.addEventListener("click", (event) => {
       break;
     case "send-chat":
       sendChatMessage();
+      break;
+    case "toggle-mic":
+      _toggleVoiceInput(actionEl);
       break;
     case "close-summary":
       state.summaryModalVisible = false;
@@ -2848,8 +3117,9 @@ loadLocalSettings();
                 applyTheme(merged.theme);
                 persistLocalSettings();
               }
-              if (data && (data.locale === "en" || data.locale === "ko")) {
+              if (data && LANGUAGES.some(l => l.code === data.locale)) {
                 state.locale = data.locale;
+                applyLocaleToDocument(data.locale);
               }
               if (state.screen === "stats" || state.screen === "settings" || state.screen === "personal-info") render();
             },

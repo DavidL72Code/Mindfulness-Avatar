@@ -17,6 +17,7 @@ from chatbot import (
     load_mindfulness_activities,
     summarize_history,
     synthesize_edge_tts,
+    synthesize_edge_tts_streaming,
 )
 
 
@@ -277,6 +278,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
             payload = json.loads(body.decode("utf-8"))
             user_message = payload.get("message", "").strip()
             session_id = payload.get("session_id", "").strip()
+            lang = payload.get("lang", "en").strip()
         except json.JSONDecodeError:
             self.send_error(400, "Invalid JSON")
             return
@@ -306,6 +308,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 if activity_context
                 else None
             ),
+            language=lang,
         )
 
         try:
@@ -503,6 +506,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
             payload = json.loads(body.decode("utf-8"))
             user_message = payload.get("message", "").strip()
             session_id = payload.get("session_id", "").strip()
+            lang = payload.get("lang", "en").strip()
         except json.JSONDecodeError:
             self.send_error(400, "Invalid JSON")
             return
@@ -531,6 +535,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 if activity_context
                 else None
             ),
+            language=lang,
         )
 
         self.send_response(200)
@@ -540,18 +545,21 @@ class ChatHandler(SimpleHTTPRequestHandler):
         self.close_connection = True
         self.end_headers()
 
-        # Pipeline: Gemini streams text → per-sentence TTS runs concurrently in a
-        # thread pool → text and audio events are written in-order by this thread.
+        # Each sentence from Gemini triggers a TTS worker that streams MP3
+        # chunks immediately as they arrive from Edge TTS.  The client receives
+        # audio_chunk events within ~300 ms of each sentence being extracted —
+        # no waiting for the full sentence to synthesise before playback starts.
         event_q = queue.Queue()
         full_chunks = []
 
-        def _tts_worker(s, text):
+        def _tts_stream_worker(seq, text):
             try:
-                result = synthesize_edge_tts(text=text)
-                b64 = base64.b64encode(result["audio_bytes"]).decode("ascii")
-                event_q.put({"audio": b64, "seq": s, "ct": result["content_type"]})
+                for raw in synthesize_edge_tts_streaming(text=text):
+                    event_q.put({"audio_chunk": base64.b64encode(raw).decode("ascii"), "seq": seq})
             except Exception:
-                event_q.put({"_audio_skip": True, "seq": s})
+                pass
+            finally:
+                event_q.put({"audio_end": True, "seq": seq})
 
         def _gemini_producer(pool):
             buf = ""
@@ -563,15 +571,15 @@ class ChatHandler(SimpleHTTPRequestHandler):
                     for chunk in chunks:
                         full_chunks.append(chunk)
                         event_q.put({"chunk": chunk, "seq": seq})
-                        pool.submit(_tts_worker, seq, chunk)
+                        pool.submit(_tts_stream_worker, seq, chunk)
                         seq += 1
                 if buf.strip():
                     full_chunks.append(buf.strip())
                     event_q.put({"chunk": buf.strip(), "seq": seq})
-                    pool.submit(_tts_worker, seq, buf.strip())
+                    pool.submit(_tts_stream_worker, seq, buf.strip())
                     seq += 1
             except Exception as exc:
-                event_q.put({"_producer_error": str(exc)})
+                event_q.put({"_error": str(exc)})
             finally:
                 event_q.put({"_gemini_done": True, "total": seq})
 
@@ -581,7 +589,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
 
             gemini_done = False
             total_sentences = 0
-            audio_done = 0
+            audio_ended = 0
 
             try:
                 while True:
@@ -593,20 +601,15 @@ class ChatHandler(SimpleHTTPRequestHandler):
                     if "_gemini_done" in evt:
                         gemini_done = True
                         total_sentences = evt["total"]
-                        if total_sentences == 0 or audio_done >= total_sentences:
+                        if total_sentences == 0 or audio_ended >= total_sentences:
                             break
-                    elif "_producer_error" in evt:
-                        self._write_sse({"error": evt["_producer_error"]})
+                    elif "_error" in evt:
+                        self._write_sse({"error": evt["_error"]})
                         break
-                    elif "audio" in evt:
-                        self._write_sse({"audio": evt["audio"], "seq": evt["seq"], "ct": evt["ct"]})
-                        audio_done += 1
-                        if gemini_done and audio_done >= total_sentences:
-                            break
-                    elif "_audio_skip" in evt:
-                        self._write_sse({"audio_skip": True, "seq": evt["seq"]})
-                        audio_done += 1
-                        if gemini_done and audio_done >= total_sentences:
+                    elif "audio_end" in evt:
+                        self._write_sse(evt)
+                        audio_ended += 1
+                        if gemini_done and audio_ended >= total_sentences:
                             break
                     else:
                         self._write_sse(evt)
