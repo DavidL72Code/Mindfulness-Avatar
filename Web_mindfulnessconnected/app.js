@@ -707,6 +707,7 @@ let avatarDockIframeEl = null;
 let avatarDockTitleEl = null;
 let avatarDockDrag = null;
 let avatarDockResize = null;
+let avatarDockInputEl = null;
 let avatarSessionEl = null;
 let avatarSessionIframeEl = null;
 let _voiceRecording = false;
@@ -960,8 +961,9 @@ function ensureAvatarDock() {
         allow="autoplay"
       ></iframe>
     </div>
-    <div class="avatar-mic-strip">
-      <button class="mic-btn" type="button" aria-label="Start voice input"></button>
+    <div class="avatar-dock-composer">
+      <button class="mic-btn avatar-dock-mic" type="button" aria-label="Start voice input"></button>
+      <input class="avatar-dock-input" type="text" placeholder="Type a message..." autocomplete="off">
     </div>
     <div class="avatar-dock-resize-handle" aria-hidden="true"></div>
   `;
@@ -972,9 +974,21 @@ function ensureAvatarDock() {
   avatarDockIframeEl = avatarDockEl.querySelector(".avatar-dock-frame");
   avatarDockTitleEl = avatarDockEl.querySelector(".avatar-dock-title");
 
-  const dockMicBtn = avatarDockEl.querySelector(".avatar-mic-strip .mic-btn");
+  avatarDockInputEl = avatarDockEl.querySelector(".avatar-dock-input");
+
+  const dockMicBtn = avatarDockEl.querySelector(".avatar-dock-mic");
   dockMicBtn.innerHTML = _micIconSvg();
-  dockMicBtn.addEventListener("click", () => _toggleVoiceInput(dockMicBtn));
+  dockMicBtn.addEventListener("click", () => _toggleVoiceInput(dockMicBtn, (text) => {
+    avatarDockInputEl.value = text;
+    _sendDockMessage();
+  }));
+
+  avatarDockInputEl.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      _sendDockMessage();
+    }
+  });
 
   avatarDockEl
     .querySelector(".avatar-dock-close")
@@ -1370,7 +1384,7 @@ function _waveHtml() {
   return `<span class="mic-wave" aria-hidden="true"><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span><span class="mic-wave-bar"></span></span>`;
 }
 
-function _toggleVoiceInput(btn) {
+function _toggleVoiceInput(btn, onResult) {
   if (_voiceRecording) {
     if (_recognition) _recognition.stop();
     return;
@@ -1402,9 +1416,13 @@ function _toggleVoiceInput(btn) {
     btn.innerHTML = _micIconSvg();
     btn.setAttribute('aria-label', 'Start voice input');
     if (text) {
-      state.chatDraft = text;
-      if (!state.chatModalVisible) { state.chatModalVisible = true; render(); }
-      sendChatMessage();
+      if (onResult) {
+        onResult(text);
+      } else {
+        state.chatDraft = text;
+        if (!state.chatModalVisible) { state.chatModalVisible = true; render(); }
+        sendChatMessage();
+      }
     }
   };
   _recognition.onerror = () => {};
@@ -1416,6 +1434,15 @@ function _toggleVoiceInput(btn) {
     btn.innerHTML = _micIconSvg();
     btn.setAttribute('aria-label', 'Start voice input');
   }
+}
+
+function _sendDockMessage() {
+  if (!avatarDockInputEl) return;
+  const text = avatarDockInputEl.value.trim();
+  if (!text || state.chatBusy) return;
+  avatarDockInputEl.value = "";
+  state.chatDraft = text;
+  sendChatMessage();
 }
 
 async function sendChatMessage() {
