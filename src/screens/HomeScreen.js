@@ -8,6 +8,7 @@ import {
 } from 'react';
 import {
   Alert,
+  AppState,
   BackHandler,
   Dimensions,
   KeyboardAvoidingView,
@@ -739,6 +740,11 @@ export default function HomeScreen({ navigation }) {
   const [sessionStartTime, setSessionStartTime]   = useState(null);
   const [placeholderMessage, setPlaceholderMessage] = useState('');
 
+  // Prevent double-recording when the session is auto-saved on blur/background
+  const sessionRecorded = useRef(false);
+  // Mirror of live session state for use inside AppState / focus callbacks
+  const liveSession = useRef({ sessionActive: false, sessionStartTime: null, selectedSessionId: null, scriptSlideIndex: 0 });
+
   // ── Script state (scripted sessions) ──
   const [scriptSlideIndex, setScriptSlideIndex] = useState(0);
 
@@ -962,6 +968,28 @@ export default function HomeScreen({ navigation }) {
     }, [screen]),
   );
 
+  // Keep liveSession ref current so AppState/blur callbacks always see fresh values
+  useEffect(() => {
+    liveSession.current = { sessionActive, sessionStartTime, selectedSessionId, scriptSlideIndex };
+  }, [sessionActive, sessionStartTime, selectedSessionId, scriptSlideIndex]);
+
+  // Auto-record when app goes to background (phone call, home button, etc.)
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (next) => {
+      if (next === 'background' || next === 'inactive') {
+        _autoRecordSession();
+      }
+    });
+    return () => sub.remove();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-record when the user switches to another tab
+  useFocusEffect(
+    useCallback(() => {
+      return () => { _autoRecordSession(); };
+    }, []), // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   // ── Auth ──
   const handleLogout = useCallback(async () => {
     try { await signOut(auth); } catch { /* ignore */ }
@@ -976,6 +1004,27 @@ export default function HomeScreen({ navigation }) {
   }, [t]);
 
   // ── Session logic ──
+
+  // Silently record an in-progress session if it has run for ≥ 3 min without a
+  // formal End — called on app-background and tab-blur to avoid losing that time.
+  function _autoRecordSession() {
+    const { sessionActive, sessionStartTime, selectedSessionId, scriptSlideIndex } = liveSession.current;
+    if (!sessionActive || sessionRecorded.current) return;
+    const elapsed = Math.max(0, Math.floor((Date.now() - (sessionStartTime || Date.now())) / 1000));
+    if (elapsed < 180) return;
+    const session = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
+    const segments = SESSION_SCRIPTS[session.id] || [];
+    const completed = session.kind !== 'scripted' || scriptSlideIndex >= segments.length - 1;
+    sessionRecorded.current = true;
+    void recordCompletedSession({
+      sessionId: session.id,
+      sessionTitle: session.title,
+      durationSeconds: elapsed,
+      completed,
+      metadata: { kind: session.kind, scriptSlideIndex, scriptSegments: segments.length, autoRecorded: true },
+    }).catch((err) => console.warn('Auto-record session failed', err));
+  }
+
   const openSession = useCallback((id) => {
     setSelectedSessionId(id);
     setScreen('session');
@@ -994,6 +1043,7 @@ export default function HomeScreen({ navigation }) {
   const startSession = useCallback(() => {
     const session = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
     setSummaryVisible(false);
+    sessionRecorded.current = false;
     setSessionStartTime(Date.now());
     setSessionActive(true);
     setSessionStatus('Session active');
@@ -1032,19 +1082,18 @@ export default function HomeScreen({ navigation }) {
           : `You ended ${session.title} after passage ${scriptSlideIndex + 1} of ${segments.length}.`
         : `${session.title} ended.`
     );
-    void recordCompletedSession({
-      sessionId: session.id,
-      sessionTitle: session.title,
-      durationSeconds: elapsed,
-      completed,
-      metadata: {
-        kind: session.kind,
-        scriptSlideIndex,
-        scriptSegments: segments.length,
-      },
-    }).catch((error) => {
-      console.warn('Failed to record session tracking data', error);
-    });
+    if (!sessionRecorded.current) {
+      sessionRecorded.current = true;
+      void recordCompletedSession({
+        sessionId: session.id,
+        sessionTitle: session.title,
+        durationSeconds: elapsed,
+        completed,
+        metadata: { kind: session.kind, scriptSlideIndex, scriptSegments: segments.length },
+      }).catch((error) => {
+        console.warn('Failed to record session tracking data', error);
+      });
+    }
     setSummaryVisible(true);
     setSessionActive(false);
     setSessionStatus('Not started');

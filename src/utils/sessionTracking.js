@@ -8,6 +8,7 @@ import {
 import { auth, db } from '../config/firebaseConfig';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const MIN_ACTIVE_DAY_SECONDS = 3 * 60; // 3 minutes to count as an active day
 
 function localDateKey(date = new Date()) {
   const year = date.getFullYear();
@@ -51,13 +52,20 @@ export async function recordCompletedSession({
     const data = snapshot.exists() ? snapshot.data() : {};
     const lastActiveDate = data.lastActiveDate || null;
     const diff = dayDifference(lastActiveDate, todayKey);
-    const isNewActiveDay = lastActiveDate !== todayKey;
-    const currentStreak = !isNewActiveDay
-      ? data.currentStreak || 1
-      : diff === 1
-        ? (data.currentStreak || 0) + 1
-        : 1;
-    const longestStreak = Math.max(data.longestStreak || 0, currentStreak);
+    // Only count as an active day (streak/calendar) if the session reached 3 minutes.
+    // Time is always added to totals regardless.
+    const countsAsActiveDay = elapsedSeconds >= MIN_ACTIVE_DAY_SECONDS;
+    const isNewActiveDay = countsAsActiveDay && lastActiveDate !== todayKey;
+    const currentStreak = !countsAsActiveDay
+      ? (data.currentStreak || 0)
+      : !isNewActiveDay
+        ? data.currentStreak || 1
+        : diff === 1
+          ? (data.currentStreak || 0) + 1
+          : 1;
+    const longestStreak = countsAsActiveDay
+      ? Math.max(data.longestStreak || 0, currentStreak)
+      : (data.longestStreak || 0);
     const totalActiveDays = (data.totalActiveDays ?? data.totalDays ?? 0) + (isNewActiveDay ? 1 : 0);
     const totalSessionSeconds = (data.totalSessionSeconds || 0) + elapsedSeconds;
     const totalSessionMinutes = roundMinutes(totalSessionSeconds);
@@ -86,7 +94,7 @@ export async function recordCompletedSession({
       longestStreak,
       totalActiveDays,
       totalDays: totalActiveDays,
-      lastActiveDate: todayKey,
+      lastActiveDate: countsAsActiveDay ? todayKey : (lastActiveDate || todayKey),
       lastSessionAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
