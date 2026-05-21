@@ -2070,7 +2070,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .tt input:checked+.ts{background:var(--accent)}
 .tt input:checked+.ts::before{transform:translateX(13px)}
 .cmp{padding:12px 14px 14px;border-top:1px solid var(--border);
-  display:grid;grid-template-columns:1fr auto;gap:10px;flex-shrink:0}
+  display:grid;grid-template-columns:auto 1fr auto;gap:10px;flex-shrink:0}
 .cmp textarea{resize:none;min-height:58px;max-height:110px;background:var(--surface);
   border:1px solid var(--border);border-radius:12px;padding:11px 13px;font-size:14px;
   font-family:var(--fb);color:var(--text);outline:none;transition:border-color .2s}
@@ -2081,6 +2081,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
   transition:background .2s,transform .12s;flex-shrink:0}
 .snd:hover{background:#2549a6}.snd:active{transform:scale(.93)}.snd:disabled{opacity:.35;cursor:not-allowed}
+.mic-av{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.mic-av:hover:not(:disabled){background:var(--border)}
+.mic-av.recording{background:#ffe5e5;color:#e53935;border-color:transparent;animation:mpulse 1.2s ease-in-out infinite}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(229,57,53,.4)}50%{box-shadow:0 0 0 8px rgba(229,57,53,0)}}
 .hint{grid-column:1/-1;font-size:11px;color:var(--muted);margin-top:-4px}
 body.controlled .sr{display:none}
 body.controlled .ch{padding-bottom:12px}
@@ -2101,7 +2105,7 @@ body.compact .msg{max-width:92%;padding:10px 12px;font-size:13px;line-height:1.4
 body.compact .tr{padding:6px 12px 4px;font-size:11px}
 body.compact .cmp{padding:10px 12px 12px;gap:8px}
 body.compact .cmp textarea{min-height:52px;max-height:88px;padding:10px 12px;font-size:13px}
-body.compact .snd{width:40px;height:40px;border-radius:10px}
+body.compact .snd,body.compact .mic-av{width:40px;height:40px;border-radius:10px}
 body.compact .hint{font-size:10px}
 body.compact .lov .ll{font-size:15px}
 body.compact .lov .ls{font-size:11px}
@@ -2160,6 +2164,11 @@ body.compact .lov .ls{font-size:11px}
       <span>Voice playback</span>
     </div>
     <div class="cmp">
+      <button class="snd mic-av" id="bmic" disabled aria-label="Voice input">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/>
+        </svg>
+      </button>
       <textarea id="inp" placeholder="Start a session to chat…" disabled rows="2"></textarea>
       <button class="snd" id="bsend" disabled>
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -2808,12 +2817,32 @@ async function replyWithStream(prompt){
 /* =========================================================
    UI
 ========================================================= */
-const msgsEl=document.getElementById('msgs'),typEl=document.getElementById('typ'),inp=document.getElementById('inp'),bstart=document.getElementById('bstart'),bend=document.getElementById('bend'),bsend=document.getElementById('bsend');
+const msgsEl=document.getElementById('msgs'),typEl=document.getElementById('typ'),inp=document.getElementById('inp'),bstart=document.getElementById('bstart'),bend=document.getElementById('bend'),bsend=document.getElementById('bsend'),bmic=document.getElementById('bmic');
 function createSessionId(){return window.crypto&&typeof window.crypto.randomUUID==='function'?window.crypto.randomUUID():'session-'+Date.now()+'-'+Math.random().toString(16).slice(2);}
 function setSt(state,text){document.getElementById('ast').className='ast'+(state!=='idle'?' '+state:'');document.getElementById('stxt').textContent=text;}
 function addMsg(role,text){messageLog.push({role,text});persistTranscript();const d=document.createElement('div');d.className='msg '+role;d.textContent=text;msgsEl.appendChild(d);msgsEl.scrollTop=msgsEl.scrollHeight;}
 function setTyp(on){typEl.classList.toggle('on',on);if(on)msgsEl.scrollTop=msgsEl.scrollHeight;}
-function setUi(active){inp.disabled=!active;bsend.disabled=!active;bend.disabled=!active;bstart.disabled=active;inp.placeholder=active?'Type a message…':getInactivePlaceholder();}
+function setUi(active){inp.disabled=!active;bsend.disabled=!active;bmic.disabled=!active;bend.disabled=!active;bstart.disabled=active;inp.placeholder=active?'Type a message…':getInactivePlaceholder();}
+
+let _micRecording=false,_micRecog=null;
+bmic.addEventListener('click',()=>{
+  if(_micRecording){if(_micRecog)_micRecog.stop();return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Voice input not supported in this browser. Try Chrome or Edge.');return;}
+  _micRecording=true;bmic.classList.add('recording');bmic.setAttribute('aria-label','Stop recording');
+  _micRecog=new SR();
+  _micRecog.lang=document.documentElement.lang||'en-US';
+  _micRecog.interimResults=false;_micRecog.maxAlternatives=1;
+  let _t='';
+  _micRecog.onresult=(e)=>{_t=(e.results[0]?.[0]?.transcript||'').trim();};
+  _micRecog.onend=()=>{
+    _micRecording=false;_micRecog=null;
+    bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');
+    if(_t){inp.value=_t;handleSend();}
+  };
+  _micRecog.onerror=()=>{_micRecording=false;_micRecog=null;bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');};
+  try{_micRecog.start();}catch(_){_micRecording=false;bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');}
+});
 
 async function startAvatarSession(options={}){
   const { promptOverride=null, announce=true } = options;
