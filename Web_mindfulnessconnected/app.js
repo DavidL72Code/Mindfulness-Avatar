@@ -1180,7 +1180,10 @@ async function sendChatMessage() {
   });
 
   // Audio queue: plays per-sentence audio in seq order as it arrives from the stream.
+  // AudioContext is created here, inside the click handler, so the browser
+  // considers it user-gesture-gated and allows it to start.
   let _audioCtx = null;
+  try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) {}
   const audioSeqMap = {};
   let nextAudioSeq = 0;
   let audioPlaying = false;
@@ -1195,19 +1198,27 @@ async function sendChatMessage() {
     if (!entry) return;
     audioPlaying = true;
     delete audioSeqMap[nextAudioSeq++];
-    try {
-      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const bytes = Uint8Array.from(atob(entry.data), c => c.charCodeAt(0)).buffer;
-      _audioCtx.decodeAudioData(bytes, (audioBuf) => {
-        const src = _audioCtx.createBufferSource();
-        src.buffer = audioBuf;
-        src.connect(_audioCtx.destination);
-        src.onended = () => { audioPlaying = false; _playNextAudio(); };
-        src.start(0);
-      }, () => { audioPlaying = false; _playNextAudio(); });
-    } catch (_) {
-      audioPlaying = false;
-      _playNextAudio();
+    const _doPlay = () => {
+      try {
+        const bytes = Uint8Array.from(atob(entry.data), c => c.charCodeAt(0)).buffer;
+        _audioCtx.decodeAudioData(bytes, (audioBuf) => {
+          const src = _audioCtx.createBufferSource();
+          src.buffer = audioBuf;
+          src.connect(_audioCtx.destination);
+          src.onended = () => { audioPlaying = false; _playNextAudio(); };
+          src.start(0);
+        }, () => { audioPlaying = false; _playNextAudio(); });
+      } catch (_) {
+        audioPlaying = false;
+        _playNextAudio();
+      }
+    };
+    if (!_audioCtx) { audioPlaying = false; return; }
+    // Resume if the browser suspended the context (autoplay policy)
+    if (_audioCtx.state === "suspended") {
+      _audioCtx.resume().then(_doPlay).catch(() => { audioPlaying = false; _playNextAudio(); });
+    } else {
+      _doPlay();
     }
   }
 
