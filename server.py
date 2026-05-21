@@ -216,6 +216,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
             self.handle_tts()
             return
 
+        if self.path == "/tts/prewarm":
+            self.handle_tts_prewarm()
+            return
+
         if self.path == "/session/end":
             self.handle_end_session()
             return
@@ -351,6 +355,31 @@ class ChatHandler(SimpleHTTPRequestHandler):
             payload=result["audio_bytes"],
             content_type=result["content_type"],
         )
+
+    def handle_tts_prewarm(self):
+        content_length = int(self.headers.get("Content-Length", "0"))
+        body = self.rfile.read(content_length)
+        try:
+            payload = json.loads(body.decode("utf-8"))
+            texts = payload.get("texts", [])
+        except json.JSONDecodeError:
+            self.send_error(400, "Invalid JSON")
+            return
+
+        if not isinstance(texts, list):
+            self.send_error(400, "texts must be an array")
+            return
+
+        def _warm():
+            for t in texts:
+                if isinstance(t, str) and t.strip():
+                    try:
+                        synthesize_edge_tts(text=t.strip())
+                    except Exception:
+                        pass
+
+        Thread(target=_warm, daemon=True).start()
+        send_json(self, {"ok": True, "queued": len(texts)})
 
     def handle_activity_select(self):
         content_length = int(self.headers.get("Content-Length", "0"))

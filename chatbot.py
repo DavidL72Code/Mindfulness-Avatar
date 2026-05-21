@@ -1,11 +1,14 @@
 import os
 import json
 import base64
+import hashlib
 import io
 import wave
 import asyncio
+import threading
 import urllib.request
 import urllib.error
+from collections import OrderedDict
 import edge_tts
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -29,6 +32,18 @@ GEMINI_TTS_SAMPLE_RATE = 24000
 EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-AndrewMultilingualNeural")
 
 
+# Single persistent event loop for all Edge TTS calls — shared across threads,
+# avoids the overhead of creating and tearing down a loop per request.
+_TTS_LOOP = asyncio.new_event_loop()
+threading.Thread(target=_TTS_LOOP.run_forever, daemon=True, name="tts-loop").start()
+
+# LRU cache keyed by (text, voice) — script texts are fixed so they only hit
+# Microsoft's servers once per server process.
+_TTS_CACHE: "OrderedDict[bytes, dict]" = OrderedDict()
+_TTS_CACHE_LOCK = threading.Lock()
+_TTS_CACHE_MAX = 300
+
+
 async def _edge_tts_async(text, voice):
     communicate = edge_tts.Communicate(text, voice)
     chunks = []
@@ -42,12 +57,27 @@ def synthesize_edge_tts(text, voice=None):
     prompt_text = (text or "").strip()
     if not prompt_text:
         raise ValueError("Missing text for speech synthesis.")
-    audio_bytes = asyncio.run(_edge_tts_async(prompt_text, voice or EDGE_TTS_VOICE))
-    return {
-        "audio_bytes": audio_bytes,
-        "content_type": "audio/mpeg",
-        "voice_name": voice or EDGE_TTS_VOICE,
-    }
+
+    v = voice or EDGE_TTS_VOICE
+    cache_key = hashlib.sha1(f"{v}|{prompt_text}".encode()).digest()
+
+    with _TTS_CACHE_LOCK:
+        if cache_key in _TTS_CACHE:
+            _TTS_CACHE.move_to_end(cache_key)
+            return _TTS_CACHE[cache_key]
+
+    future = asyncio.run_coroutine_threadsafe(_edge_tts_async(prompt_text, v), _TTS_LOOP)
+    audio_bytes = future.result(timeout=30)
+
+    result = {"audio_bytes": audio_bytes, "content_type": "audio/mpeg", "voice_name": v}
+
+    with _TTS_CACHE_LOCK:
+        _TTS_CACHE[cache_key] = result
+        _TTS_CACHE.move_to_end(cache_key)
+        if len(_TTS_CACHE) > _TTS_CACHE_MAX:
+            _TTS_CACHE.popitem(last=False)
+
+    return result
 
 
 def pcm_to_wav_bytes(pcm_bytes, channels=1, sample_rate=GEMINI_TTS_SAMPLE_RATE, sample_width=2):

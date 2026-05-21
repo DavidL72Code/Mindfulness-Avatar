@@ -603,6 +603,17 @@ export default function HomeScreen({ navigation }) {
       .catch(() => {});
   }, []);
 
+  // ── Pre-warm TTS cache for all static script texts ──
+  // Fires once on mount so script segments are cached before the user starts a session.
+  useEffect(() => {
+    const texts = Object.values(SESSION_SCRIPTS).flat().map((s) => s.text);
+    fetch(`${API_BASE_URL}/tts/prewarm`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts }),
+    }).catch(() => {});
+  }, []);
+
   // ── Handle messages sent from avatar.html via ReactNativeWebView.postMessage ──
   const handleWebViewMessage = useCallback((event) => {
     try {
