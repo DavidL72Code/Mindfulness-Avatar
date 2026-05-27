@@ -268,7 +268,7 @@ def build_chat_prompt(user_message, history=None, summary="", activity_context=N
     return "\n\n".join(sections)
 
 
-def summarize_history(history, prior_summary="", model="gemini-2.5-flash"):
+def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite-preview"):
     if not history:
         return prior_summary
 
@@ -287,7 +287,7 @@ def summarize_history(history, prior_summary="", model="gemini-2.5-flash"):
     return result["choices"][0]["message"]["content"]
 
 
-def build_session_recap(summary="", history=None, model="gemini-2.5-flash"):
+def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite-preview"):
     history = history or []
     transcript = "\n".join(
         f"{item['role'].capitalize()}: {item['content']}" for item in history

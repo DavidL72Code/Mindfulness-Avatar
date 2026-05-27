@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -10,17 +10,20 @@ import {
   useWindowDimensions,
   Platform,
 } from 'react-native';
+import { Asset } from 'expo-asset';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth } from '../config/firebaseConfig';
 import { useLanguage } from '../context/LanguageContext';
 import { KOREAN_NATIVE_LABEL } from '../i18n/labels';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { ThemeColor, ThemeGradient, ThemeRadius } from '../theme/appTheme';
+import { setRememberMePreference } from '../utils/authPreferences';
 
 /** Kept for any link styles; avoids ReferenceError if Metro serves a stale bundle. */
 const SIGN_IN_LINK_BLUE = '#2563eb';
+const WELLNESS_LOGO = require('../../assets/multi-lang-wellness.png');
 
 function clamp(n, min, max) {
   return Math.min(Math.max(n, min), max);
@@ -33,6 +36,24 @@ export default function SignInScreen({ navigation }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [logoReady, setLogoReady] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    Asset.loadAsync([WELLNESS_LOGO])
+      .then(() => {
+        if (active) setLogoReady(true);
+      })
+      .catch(() => {
+        if (active) setLogoReady(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const toggleUILanguage = () => {
     void setLocale(locale === 'en' ? 'ko' : 'en');
@@ -47,9 +68,25 @@ export default function SignInScreen({ navigation }) {
     }
 
     try {
+      await setRememberMePreference(rememberMe);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       Alert.alert(t('signInFailedTitle'), t('signInFailedBody'));
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      Alert.alert(t('errorTitle'), t('forgotPasswordEnterEmail'));
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, trimmedEmail);
+      Alert.alert(t('forgotPasswordSentTitle'), t('forgotPasswordSentBody'));
+    } catch (error) {
+      Alert.alert(t('forgotPasswordFailedTitle'), t('forgotPasswordFailedBody'));
     }
   };
 
@@ -80,11 +117,23 @@ export default function SignInScreen({ navigation }) {
         <View style={styles.layout}>
           <View style={styles.content}>
             <View style={styles.logoSlot}>
-              <Image
-                source={require('../../assets/multi-lang-wellness.png')}
-                style={{ width: logoSize, height: logoSize }}
-                resizeMode="contain"
-              />
+              {logoReady ? (
+                <Image
+                  source={WELLNESS_LOGO}
+                  style={{ width: logoSize, height: logoSize }}
+                  resizeMode="contain"
+                  onError={() => setLogoReady(false)}
+                />
+              ) : (
+                <View style={[styles.logoFallback, { width: logoSize, height: logoSize }]}>
+                  <Ionicons
+                    name="leaf-outline"
+                    size={Math.round(logoSize * 0.28)}
+                    color={ThemeColor.BRAND}
+                  />
+                  <Text style={styles.logoFallbackText}>Mindfulness</Text>
+                </View>
+              )}
             </View>
 
             <Text style={styles.title}>{t('signInWelcome')}</Text>
@@ -128,6 +177,23 @@ export default function SignInScreen({ navigation }) {
               </View>
             </View>
 
+            <Pressable
+              onPress={() => setRememberMe((prev) => !prev)}
+              style={({ pressed }) => [
+                styles.rememberRow,
+                pressed && styles.signUpPressed,
+              ]}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: rememberMe }}
+            >
+              <View style={[styles.rememberBox, rememberMe && styles.rememberBoxChecked]}>
+                {rememberMe ? (
+                  <Ionicons name="checkmark" size={16} color={ThemeColor.WHITE} />
+                ) : null}
+              </View>
+              <Text style={styles.rememberText}>{t('rememberMe')}</Text>
+            </Pressable>
+
             <View style={styles.buttonShadow}>
               <Pressable
                 onPress={handleSignIn}
@@ -157,6 +223,16 @@ export default function SignInScreen({ navigation }) {
                 </LinearGradient>
               </Pressable>
             </View>
+
+            <Pressable
+              onPress={handleForgotPassword}
+              style={({ pressed }) => [
+                styles.forgotPasswordRow,
+                pressed && styles.signUpPressed,
+              ]}
+            >
+              <Text style={styles.forgotPasswordText}>{t('forgotPassword')}</Text>
+            </Pressable>
 
             <Pressable
               onPress={() => navigation.navigate('SignUp')}
@@ -235,6 +311,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
+  logoFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.55)',
+    borderWidth: 1,
+    borderColor: 'rgba(37, 99, 235, 0.14)',
+    gap: 10,
+  },
+  logoFallbackText: {
+    color: ThemeColor.BRAND,
+    fontSize: 18,
+    fontWeight: '700',
+  },
   footer: {
     paddingHorizontal: 20,
     paddingBottom: 6,
@@ -263,7 +353,34 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   fieldGroup: {
-    marginBottom: 8,
+    marginBottom: 6,
+  },
+  rememberRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    paddingVertical: 8,
+    marginBottom: 6,
+  },
+  rememberBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: ThemeColor.INPUT_BORDER,
+    backgroundColor: ThemeColor.WHITE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  rememberBoxChecked: {
+    backgroundColor: ThemeColor.BRAND,
+    borderColor: ThemeColor.BRAND,
+  },
+  rememberText: {
+    color: ThemeColor.TEXT_MUTED,
+    fontSize: 15,
+    fontWeight: '500',
   },
   inputShell: {
     flexDirection: 'row',
@@ -346,5 +463,16 @@ const styles = StyleSheet.create({
     color: ThemeColor.BRAND,
     fontWeight: '600',
     fontSize: 15,
+  },
+  forgotPasswordRow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 2,
+    paddingBottom: 12,
+  },
+  forgotPasswordText: {
+    color: SIGN_IN_LINK_BLUE,
+    fontWeight: '600',
+    fontSize: 14,
   },
 });

@@ -9,6 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import SessionTracker from './src/components/SessionTracker';
 import { auth } from './src/config/firebaseConfig';
 import { LanguageProvider } from './src/context/LanguageContext';
+import { getRememberMePreference } from './src/utils/authPreferences';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -66,10 +67,33 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (nextUser) => {
+    let active = true;
+
+    const unsubscribe = onAuthStateChanged(auth, async (nextUser) => {
+      if (!active) return;
+
+      if (!nextUser) {
+        setUser(null);
+        setInitializing(false);
+        return;
+      }
+
+      const rememberMe = await getRememberMePreference();
+      if (!active) return;
+
+      if (!rememberMe) {
+        await auth.signOut();
+        return;
+      }
+
       setUser(nextUser);
       setInitializing(false);
     });
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
   }, []);
 
   if (initializing) {

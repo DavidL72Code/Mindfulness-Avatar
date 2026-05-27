@@ -44,10 +44,18 @@ export const STRINGS = {
     signInWelcome: 'Welcome',
     signInSubtitle: 'Sign in to continue',
     signInButton: 'Sign In',
+    rememberMe: 'Remember me',
     signInErrorBothFields: 'Please enter both email and password.',
     signInFailedTitle: 'Sign In Failed',
     signInFailedBody:
       'Invalid email or password. Please try again.',
+    forgotPassword: 'Forgot password?',
+    forgotPasswordEnterEmail: 'Enter your email first so we know where to send the reset link.',
+    forgotPasswordSentTitle: 'Reset Email Sent',
+    forgotPasswordSentBody: 'Check your inbox for a password reset link.',
+    forgotPasswordFailedTitle: 'Reset Failed',
+    forgotPasswordFailedBody:
+      'We could not send a reset email right now. Please confirm the address and try again.',
     signUpPrompt: 'Need an account? Sign up',
     signInFooter:
       'Internal preview — University of Massachusetts Boston. Not for public distribution.',
@@ -93,10 +101,18 @@ export const STRINGS = {
     signInWelcome: '환영합니다',
     signInSubtitle: '계속하려면 로그인하세요',
     signInButton: '로그인',
+    rememberMe: '로그인 상태 유지',
     signInErrorBothFields: '이메일과 비밀번호를 모두 입력해 주세요.',
     signInFailedTitle: '로그인 실패',
     signInFailedBody:
       '이메일 또는 비밀번호가 올바르지 않습니다. 다시 시도해 주세요.',
+    forgotPassword: '비밀번호를 잊으셨나요?',
+    forgotPasswordEnterEmail: '재설정 링크를 보낼 이메일을 먼저 입력해 주세요.',
+    forgotPasswordSentTitle: '재설정 이메일 전송됨',
+    forgotPasswordSentBody: '비밀번호 재설정 링크를 이메일로 보냈습니다. 받은편지함을 확인해 주세요.',
+    forgotPasswordFailedTitle: '재설정 실패',
+    forgotPasswordFailedBody:
+      '지금은 재설정 이메일을 보낼 수 없습니다. 이메일 주소를 확인한 뒤 다시 시도해 주세요.',
     signUpPrompt: '계정이 없으신가요? 가입하기',
     signInFooter:
       '내부 프리뷰 버전 - UMass Boston. 외부 배포 금지.',
