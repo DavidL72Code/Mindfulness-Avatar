@@ -268,7 +268,7 @@ def build_chat_prompt(user_message, history=None, summary="", activity_context=N
     return "\n\n".join(sections)
 
 
-def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite-preview"):
+def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite"):
     if not history:
         return prior_summary
 
@@ -287,7 +287,7 @@ def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite-pr
     return result["choices"][0]["message"]["content"]
 
 
-def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite-preview"):
+def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite"):
     history = history or []
     transcript = "\n".join(
         f"{item['role'].capitalize()}: {item['content']}" for item in history
@@ -306,7 +306,7 @@ def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite-p
 _MODEL_CACHE = {}
 
 
-def call_gemini_stream(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
+def call_gemini_stream(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
     """Yield text fragments as Gemini streams its response."""
     if model not in _MODEL_CACHE:
         _MODEL_CACHE[model] = genai.GenerativeModel(model)
@@ -327,7 +327,7 @@ def call_gemini_stream(prompt, model="gemini-3.1-flash-lite-preview", temperatur
             yield chunk.text
 
 
-def call_gemini(prompt, model="gemini-3.1-flash-lite-preview", temperature=0.7):
+def call_gemini(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
     if model not in _MODEL_CACHE:
         _MODEL_CACHE[model] = genai.GenerativeModel(model)
     model_obj = _MODEL_CACHE[model]

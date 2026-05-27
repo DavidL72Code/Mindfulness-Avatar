@@ -121,7 +121,7 @@ The app ships with 11 built-in locales. UI strings (buttons, labels, form fields
 | Web frontend | Vanilla JS (no framework), CSS custom properties |
 | 3D avatar rendering | Three.js r0.162, GLTFLoader, OrbitControls |
 | Avatar model | Avaturn-exported `.glb` with ARKit 52 blendshapes |
-| AI text generation | Google Gemini (`gemini-3.1-flash-lite-preview`) via `google-generativeai` |
+| AI text generation | Google Gemini (`gemini-3.1-flash-lite`) via `google-generativeai` |
 | TTS | Microsoft Edge TTS (`edge-tts`) — streaming MP3 over WebSocket |
 | Audio playback | MediaSource Extensions (MSE) — Chrome/Firefox; Blob URL — Safari |
 | Voice input | Web Speech API (`SpeechRecognition`) |
