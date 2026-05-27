@@ -228,6 +228,10 @@ const translations = {
   en: {
     signInWelcome: "Welcome back", signInSubtitle: "Sign in to continue your mindfulness practice.",
     email: "Email", password: "Password", signInButton: "Sign In", signUpPrompt: "Create an account",
+    forgotPassword: "Forgot password?",
+    forgotPasswordEnterEmail: "Enter your email first so we know where to send the reset link.",
+    forgotPasswordSent: "Check your inbox for a password reset link.",
+    forgotPasswordFailed: "We could not send a reset email right now. Please confirm the address and try again.",
     signInFooter: "Multilingual mindfulness support for calmer daily routines.",
     headerTitle: "Mindfulness Sessions", logoutBtn: "Logout",
     chatHeader: "Mindfulness Virtual Assistant", card1Title: "About the Assistant",
@@ -244,6 +248,10 @@ const translations = {
   ko: {
     signInWelcome: "다시 오신 것을 환영합니다", signInSubtitle: "명상 연습을 계속하려면 로그인하세요.",
     email: "이메일", password: "비밀번호", signInButton: "로그인", signUpPrompt: "계정 만들기",
+    forgotPassword: "비밀번호를 잊으셨나요?",
+    forgotPasswordEnterEmail: "재설정 링크를 보낼 이메일을 먼저 입력해 주세요.",
+    forgotPasswordSent: "비밀번호 재설정 링크를 이메일로 보냈습니다. 받은편지함을 확인해 주세요.",
+    forgotPasswordFailed: "지금은 재설정 이메일을 보낼 수 없습니다. 이메일 주소를 확인한 뒤 다시 시도해 주세요.",
     signInFooter: "차분한 일상을 위한 다국어 명상 지원.",
     headerTitle: "마음챙김 세션", logoutBtn: "로그아웃",
     chatHeader: "명상 가상 비서", card1Title: "비서 정보",
@@ -1708,6 +1716,21 @@ async function handleWebSignIn() {
   }
 }
 
+async function handleWebForgotPassword() {
+  const email = state.signInEmail.trim();
+  if (!email) {
+    alert(t("forgotPasswordEnterEmail"));
+    return;
+  }
+  try {
+    const auth = firebase.auth();
+    await auth.sendPasswordResetEmail(email);
+    alert(t("forgotPasswordSent"));
+  } catch (err) {
+    alert(err.message || t("forgotPasswordFailed"));
+  }
+}
+
 async function handleWebSignUp() {
   const firstName = state.signUpFirstName.trim();
   const lastName  = state.signUpLastName.trim();
@@ -1963,6 +1986,10 @@ function renderSignInScreen() {
         <button class="signin-submit" data-action="sign-in" type="button">
           <span>${escapeHtml(t("signInButton"))}</span>
           <span aria-hidden="true">›</span>
+        </button>
+
+        <button class="signin-link signin-link-secondary" data-action="forgot-password" type="button">
+          ${escapeHtml(t("forgotPassword"))}
         </button>
 
         <button class="signin-link" data-action="sign-up-placeholder" type="button">
@@ -2846,6 +2873,9 @@ appEl.addEventListener("click", (event) => {
       break;
     case "sign-in":
       handleWebSignIn();
+      break;
+    case "forgot-password":
+      handleWebForgotPassword();
       break;
     case "sign-up-placeholder":
     case "go-sign-up":
