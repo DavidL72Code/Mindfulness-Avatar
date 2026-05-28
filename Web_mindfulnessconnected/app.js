@@ -231,6 +231,7 @@ const translations = {
     forgotPassword: "Forgot password?",
     forgotPasswordEnterEmail: "Enter your email first so we know where to send the reset link.",
     forgotPasswordSent: "Check your inbox for a password reset link.",
+    forgotPasswordNotLinked: "This email is not linked to an account.",
     forgotPasswordFailed: "We could not send a reset email right now. Please confirm the address and try again.",
     signInFooter: "Multilingual mindfulness support for calmer daily routines.",
     headerTitle: "Mindfulness Sessions", logoutBtn: "Logout",
@@ -251,6 +252,7 @@ const translations = {
     forgotPassword: "비밀번호를 잊으셨나요?",
     forgotPasswordEnterEmail: "재설정 링크를 보낼 이메일을 먼저 입력해 주세요.",
     forgotPasswordSent: "비밀번호 재설정 링크를 이메일로 보냈습니다. 받은편지함을 확인해 주세요.",
+    forgotPasswordNotLinked: "이 이메일은 계정에 연결되어 있지 않습니다.",
     forgotPasswordFailed: "지금은 재설정 이메일을 보낼 수 없습니다. 이메일 주소를 확인한 뒤 다시 시도해 주세요.",
     signInFooter: "차분한 일상을 위한 다국어 명상 지원.",
     headerTitle: "마음챙김 세션", logoutBtn: "로그아웃",
@@ -1237,17 +1239,36 @@ function handleToggleTheme() {
   render();
 }
 
+function getPasswordResetMessage(err) {
+  const code = (err && err.code) || "";
+  if (code === "auth/invalid-email") {
+    return "Please enter a valid email address.";
+  }
+  if (code === "auth/user-not-found") {
+    return t("forgotPasswordNotLinked");
+  }
+  if (code === "auth/too-many-requests") {
+    return "Too many reset attempts. Please wait a moment and try again.";
+  }
+  if (code === "auth/network-request-failed") {
+    return "Network error while sending the reset email. Please check your connection and try again.";
+  }
+  if (err && err.message === "not-ready") {
+    return "Firebase is still starting up. Please wait a moment and try again.";
+  }
+  return (err && err.message) || "Could not send reset email.";
+}
+
 async function handlePasswordReset() {
   if (!window._fb || !state.currentUser || !state.currentUser.email) {
     showSettingsBanner("error", "You must be signed in with an email to reset your password.");
     return;
   }
   try {
-    const auth = firebase.auth();
-    await auth.sendPasswordResetEmail(state.currentUser.email);
+    await window._fb.sendPasswordResetEmail(state.currentUser.email);
     showSettingsBanner("ok", `Password reset email sent to ${state.currentUser.email}.`);
   } catch (err) {
-    showSettingsBanner("error", err.message || "Could not send reset email.");
+    showSettingsBanner("error", getPasswordResetMessage(err));
   }
 }
 
@@ -1717,17 +1738,19 @@ async function handleWebSignIn() {
 }
 
 async function handleWebForgotPassword() {
-  const email = state.signInEmail.trim();
+  const emailInput = document.getElementById("signin-email");
+  const email = ((emailInput && emailInput.value) || state.signInEmail).trim();
+  state.signInEmail = email;
   if (!email) {
     alert(t("forgotPasswordEnterEmail"));
     return;
   }
   try {
-    const auth = firebase.auth();
-    await auth.sendPasswordResetEmail(email);
+    if (!window._fb) throw new Error("not-ready");
+    await window._fb.sendPasswordResetEmailIfAccountExists(email);
     alert(t("forgotPasswordSent"));
   } catch (err) {
-    alert(err.message || t("forgotPasswordFailed"));
+    alert(getPasswordResetMessage(err) || t("forgotPasswordFailed"));
   }
 }
 
@@ -3067,6 +3090,16 @@ loadLocalSettings();
         signIn:           (email, pw) => auth.signInWithEmailAndPassword(email, pw),
         signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
         signOut:          ()          => auth.signOut(),
+        sendPasswordResetEmail: (email) => auth.sendPasswordResetEmail(email),
+        sendPasswordResetEmailIfAccountExists: async (email) => {
+          const methods = await auth.fetchSignInMethodsForEmail(email);
+          if (!methods.includes("password")) {
+            const err = new Error("user-not-found");
+            err.code = "auth/user-not-found";
+            throw err;
+          }
+          return auth.sendPasswordResetEmail(email);
+        },
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
         subscribeToUserDoc: (uid, onData, onError) =>
           db.collection("users").doc(uid).onSnapshot(
