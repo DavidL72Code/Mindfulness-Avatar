@@ -443,6 +443,12 @@ button { border: none; background: none; }
   text-align: center;
 }
 .home-language-choices { display: flex; gap: 10px; }
+.home-language-select {
+  width: 100%;
+  min-width: 0;
+  font-size: 15px;
+  padding: 12px 36px 12px 12px;
+}
 .home-language-choice {
   flex: 1;
   padding: 12px;

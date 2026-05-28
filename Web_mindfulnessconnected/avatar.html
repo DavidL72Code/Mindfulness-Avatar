@@ -2379,6 +2379,21 @@ function buildTL(text,totalDuration=0){
   }
   return out;
 }
+function buildTLFromWordBoundaries(text,marks,totalDuration=0){
+  if(!Array.isArray(marks)||!marks.length)return buildTL(text,totalDuration);
+  const tl=[];let previousEnd=0;
+  for(const mark of marks){
+    const word=(mark.text||'').trim();
+    const start=Math.max(0,(mark.offset||0)/10000000);
+    const duration=Math.max(.04,(mark.duration||0)/10000000);
+    if(start>previousEnd+.025)tl.push({v:'sil',s:previousEnd,d:start-previousEnd,i:0});
+    const wordTL=buildTL(word,duration);
+    for(const ev of wordTL)tl.push({...ev,s:start+ev.s});
+    previousEnd=Math.max(previousEnd,start+duration);
+  }
+  if(totalDuration>0&&previousEnd<totalDuration-.04)tl.push({v:'sil',s:previousEnd,d:totalDuration-previousEnd,i:text.length});
+  return tl.length?tl:buildTL(text,totalDuration);
+}
 const audioState={ctx:null,analyser:null,data:null,src:null,active:false,
   async prime(){
     const Ctx=window.AudioContext||window.webkitAudioContext;
@@ -2438,7 +2453,7 @@ const audioState={ctx:null,analyser:null,data:null,src:null,active:false,
   }
 };
 const lipsync={active:false,tl:[],t0:0,energy:0,brightness:0,
-  play(tx,totalDuration=0){this.tl=buildTL(tx,totalDuration);this.t0=performance.now()/1000;this.active=true;},
+  play(tx,totalDuration=0,marks=null){this.tl=buildTLFromWordBoundaries(tx,marks,totalDuration);this.t0=performance.now()/1000;this.active=true;},
   stop(){this.active=false;this.tl=[];},
   elapsed(now=performance.now()/1000){return now-this.t0;},
   update(dt){
@@ -2633,13 +2648,26 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
 const ttschk=document.getElementById('ttschk');
 const TTS_VOICE='en-US-AndrewMultilingualNeural';
 let speechToken=0;
+function b64ToArrayBuffer(b64){
+  const bin=atob(b64),bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
 async function apiTts(text){
   const r=await fetchFromCandidates('/tts',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({text,voice_name:TTS_VOICE})
+    body:JSON.stringify({text,voice_name:TTS_VOICE,lipsync_metadata:true})
   },TTS_SERVER_CANDIDATES);
-  return await r.arrayBuffer();
+  const contentType=r.headers.get('content-type')||'';
+  if(contentType.includes('application/json')){
+    const payload=await r.json();
+    return{
+      audioBuffer:b64ToArrayBuffer(payload.audio||''),
+      wordBoundaries:payload.word_boundaries||[]
+    };
+  }
+  return{audioBuffer:await r.arrayBuffer(),wordBoundaries:[]};
 }
 function stopSpeech(status='Listening…'){
   speechToken+=1;
@@ -2658,12 +2686,12 @@ async function speak(text){
   if(!ttschk.checked){setSt('idle','Listening…');return;}
   try{
     setSt('thinking','Generating voice…');
-    const audioBuffer=await apiTts(trimmed);
+    const tts=await apiTts(trimmed);
     if(token!==speechToken)return;
-    await audioState.playAudio(audioBuffer,{
+    await audioState.playAudio(tts.audioBuffer,{
       onstart:(duration)=>{
         if(token!==speechToken){audioState.stop();return;}
-        lipsync.play(trimmed,duration);
+        lipsync.play(trimmed,duration,tts.wordBoundaries);
         setSt('speaking','Speaking…');
       },
       onended:()=>{

@@ -54,6 +54,22 @@ async def _edge_tts_async(text, voice):
     return b"".join(chunks)
 
 
+async def _edge_tts_with_word_boundaries_async(text, voice):
+    communicate = edge_tts.Communicate(text, voice, boundary="WordBoundary")
+    chunks = []
+    word_boundaries = []
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            chunks.append(chunk["data"])
+        elif chunk["type"] == "WordBoundary":
+            word_boundaries.append({
+                "text": chunk.get("text", ""),
+                "offset": chunk.get("offset", 0),
+                "duration": chunk.get("duration", 0),
+            })
+    return b"".join(chunks), word_boundaries
+
+
 def synthesize_edge_tts(text, voice=None):
     prompt_text = (text or "").strip()
     if not prompt_text:
@@ -79,6 +95,26 @@ def synthesize_edge_tts(text, voice=None):
             _TTS_CACHE.popitem(last=False)
 
     return result
+
+
+def synthesize_edge_tts_with_word_boundaries(text, voice=None):
+    prompt_text = (text or "").strip()
+    if not prompt_text:
+        raise ValueError("Missing text for speech synthesis.")
+
+    v = voice or EDGE_TTS_VOICE
+    future = asyncio.run_coroutine_threadsafe(
+        _edge_tts_with_word_boundaries_async(prompt_text, v),
+        _TTS_LOOP,
+    )
+    audio_bytes, word_boundaries = future.result(timeout=30)
+
+    return {
+        "audio_bytes": audio_bytes,
+        "content_type": "audio/mpeg",
+        "voice_name": v,
+        "word_boundaries": word_boundaries,
+    }
 
 
 def synthesize_edge_tts_streaming(text, voice=None):

@@ -556,7 +556,7 @@ function t(key) {
 }
 
 function renderLangSelect(cssClass) {
-  return `<select class="${cssClass}" data-action="set-language" aria-label="${escapeHtml(t('language'))}">
+  return `<select class="${cssClass} notranslate" data-action="set-language" aria-label="${escapeHtml(t('language'))}" translate="no">
     ${LANGUAGES.map(l => `<option value="${l.code}"${state.locale === l.code ? " selected" : ""}>${l.name}</option>`).join("")}
   </select>`;
 }
@@ -569,9 +569,32 @@ function applyLocaleToDocument(locale) {
 
 let _gtTimer = null;
 function scheduleGoogleRetranslate() {
-  if (state.locale === "en") return;
+  if (state.locale === "en") {
+    resetGoogleTranslate();
+    return;
+  }
   clearTimeout(_gtTimer);
   _gtTimer = setTimeout(_doGoogleRetranslate, 150);
+}
+
+function clearGoogleTranslateCookie(name, domain) {
+  const domainPart = domain ? `; domain=${domain}` : "";
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domainPart}`;
+}
+
+function resetGoogleTranslate() {
+  clearTimeout(_gtTimer);
+  clearGoogleTranslateCookie("googtrans");
+  clearGoogleTranslateCookie("googtrans", window.location.hostname);
+  const parts = window.location.hostname.split(".");
+  if (parts.length > 1) {
+    clearGoogleTranslateCookie("googtrans", `.${parts.slice(-2).join(".")}`);
+  }
+  const sel = document.querySelector("select.goog-te-combo");
+  if (sel && sel.value) {
+    sel.value = "";
+    sel.dispatchEvent(new Event("change"));
+  }
 }
 
 function _doGoogleRetranslate() {
@@ -743,7 +766,8 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
   const params = new URLSearchParams({
     compact: "1",
     controlled: "1",
-    host
+    host,
+    v: "2"
   });
 
   if (autostart) {
@@ -2127,7 +2151,7 @@ function renderHomeScreen() {
             <section class="home-modal">
               <h2 class="home-modal-title">Language / 언어</h2>
               <div class="home-language-choices">
-                ${renderLangSelect("lang-select")}
+                ${renderLangSelect("lang-select lang-select-light home-language-select")}
               </div>
               <button class="home-start-btn" data-action="close-language-modal" type="button">${escapeHtml(t("start"))}</button>
             </section>

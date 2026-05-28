@@ -17,6 +17,7 @@ from chatbot import (
     load_mindfulness_activities,
     summarize_history,
     synthesize_edge_tts,
+    synthesize_edge_tts_with_word_boundaries,
     synthesize_edge_tts_streaming,
 )
 
@@ -339,6 +340,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
             payload = json.loads(body.decode("utf-8"))
             text = payload.get("text", "").strip()
             voice_name = payload.get("voice_name", "").strip() or None
+            include_lipsync = bool(payload.get("lipsync_metadata"))
         except json.JSONDecodeError:
             self.send_error(400, "Invalid JSON")
             return
@@ -348,9 +350,22 @@ class ChatHandler(SimpleHTTPRequestHandler):
             return
 
         try:
-            result = synthesize_edge_tts(text=text, voice=voice_name)
+            result = (
+                synthesize_edge_tts_with_word_boundaries(text=text, voice=voice_name)
+                if include_lipsync
+                else synthesize_edge_tts(text=text, voice=voice_name)
+            )
         except Exception as exc:
             self.send_error(500, f"TTS error: {exc}")
+            return
+
+        if include_lipsync:
+            send_json(self, {
+                "audio": base64.b64encode(result["audio_bytes"]).decode("ascii"),
+                "content_type": result["content_type"],
+                "voice_name": result["voice_name"],
+                "word_boundaries": result["word_boundaries"],
+            })
             return
 
         send_bytes(
