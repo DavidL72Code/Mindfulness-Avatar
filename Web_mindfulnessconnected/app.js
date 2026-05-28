@@ -230,7 +230,7 @@ const translations = {
     email: "Email", password: "Password", signInButton: "Sign In", signUpPrompt: "Create an account",
     forgotPassword: "Forgot password?",
     forgotPasswordEnterEmail: "Enter your email first so we know where to send the reset link.",
-    forgotPasswordSent: "Check your inbox for a password reset link.",
+    forgotPasswordSent: "If this email is linked to an account, we'll send a password reset link.",
     forgotPasswordNotLinked: "This email is not linked to an account.",
     forgotPasswordFailed: "We could not send a reset email right now. Please confirm the address and try again.",
     signInFooter: "Multilingual mindfulness support for calmer daily routines.",
@@ -251,7 +251,7 @@ const translations = {
     email: "이메일", password: "비밀번호", signInButton: "로그인", signUpPrompt: "계정 만들기",
     forgotPassword: "비밀번호를 잊으셨나요?",
     forgotPasswordEnterEmail: "재설정 링크를 보낼 이메일을 먼저 입력해 주세요.",
-    forgotPasswordSent: "비밀번호 재설정 링크를 이메일로 보냈습니다. 받은편지함을 확인해 주세요.",
+    forgotPasswordSent: "이 이메일이 계정에 연결되어 있다면 비밀번호 재설정 링크를 보내드립니다.",
     forgotPasswordNotLinked: "이 이메일은 계정에 연결되어 있지 않습니다.",
     forgotPasswordFailed: "지금은 재설정 이메일을 보낼 수 없습니다. 이메일 주소를 확인한 뒤 다시 시도해 주세요.",
     signInFooter: "차분한 일상을 위한 다국어 명상 지원.",
@@ -1747,7 +1747,7 @@ async function handleWebForgotPassword() {
   }
   try {
     if (!window._fb) throw new Error("not-ready");
-    await window._fb.sendPasswordResetEmailIfAccountExists(email);
+    await window._fb.sendPasswordResetEmail(email);
     alert(t("forgotPasswordSent"));
   } catch (err) {
     alert(getPasswordResetMessage(err) || t("forgotPasswordFailed"));
@@ -3091,15 +3091,6 @@ loadLocalSettings();
         signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
         signOut:          ()          => auth.signOut(),
         sendPasswordResetEmail: (email) => auth.sendPasswordResetEmail(email),
-        sendPasswordResetEmailIfAccountExists: async (email) => {
-          const methods = await auth.fetchSignInMethodsForEmail(email);
-          if (!methods.includes("password")) {
-            const err = new Error("user-not-found");
-            err.code = "auth/user-not-found";
-            throw err;
-          }
-          return auth.sendPasswordResetEmail(email);
-        },
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
         subscribeToUserDoc: (uid, onData, onError) =>
           db.collection("users").doc(uid).onSnapshot(
