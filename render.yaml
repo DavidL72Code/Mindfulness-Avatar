@@ -2,7 +2,7 @@ services:
   - type: web
     name: multilingual-virtual-assistant
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python3 scripts/install_rhubarb.py
     startCommand: python3 server.py
     healthCheckPath: /health
     autoDeployTrigger: commit

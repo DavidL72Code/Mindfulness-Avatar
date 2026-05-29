@@ -4,6 +4,9 @@ import base64
 import hashlib
 import io
 import queue as _queue_mod
+import shutil
+import subprocess
+import tempfile
 import wave
 import asyncio
 import threading
@@ -31,6 +34,10 @@ GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
 GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Iapetus")
 GEMINI_TTS_SAMPLE_RATE = 24000
 EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-AndrewMultilingualNeural")
+RHUBARB_BIN = os.getenv(
+    "RHUBARB_BIN",
+    os.path.join(os.path.dirname(__file__), "vendor", "rhubarb", "rhubarb"),
+)
 
 
 # Single persistent event loop for all Edge TTS calls — shared across threads,
@@ -43,6 +50,10 @@ threading.Thread(target=_TTS_LOOP.run_forever, daemon=True, name="tts-loop").sta
 _TTS_CACHE: "OrderedDict[bytes, dict]" = OrderedDict()
 _TTS_CACHE_LOCK = threading.Lock()
 _TTS_CACHE_MAX = 300
+
+_LIPSYNC_CACHE: "OrderedDict[bytes, dict]" = OrderedDict()
+_LIPSYNC_CACHE_LOCK = threading.Lock()
+_LIPSYNC_CACHE_MAX = 120
 
 
 async def _edge_tts_async(text, voice):
@@ -115,6 +126,121 @@ def synthesize_edge_tts_with_word_boundaries(text, voice=None):
         "voice_name": v,
         "word_boundaries": word_boundaries,
     }
+
+
+def _find_rhubarb_binary():
+    candidates = [RHUBARB_BIN, shutil.which("rhubarb")]
+    for candidate in candidates:
+        if candidate and os.path.exists(candidate) and os.access(candidate, os.X_OK):
+            return candidate
+    return None
+
+
+def _find_ffmpeg_binary():
+    ffmpeg_bin = os.getenv("FFMPEG_BIN") or shutil.which("ffmpeg")
+    if ffmpeg_bin:
+        return ffmpeg_bin
+    try:
+        import imageio_ffmpeg
+
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+
+
+def _run_rhubarb_lipsync(audio_bytes, text):
+    rhubarb_bin = _find_rhubarb_binary()
+    ffmpeg_bin = _find_ffmpeg_binary()
+    if not rhubarb_bin or not ffmpeg_bin:
+        return None
+
+    with tempfile.TemporaryDirectory(prefix="rhubarb_lipsync_") as tmp_dir:
+        mp3_path = os.path.join(tmp_dir, "speech.mp3")
+        wav_path = os.path.join(tmp_dir, "speech.wav")
+        dialog_path = os.path.join(tmp_dir, "dialog.txt")
+        output_path = os.path.join(tmp_dir, "mouth.json")
+
+        with open(mp3_path, "wb") as file_obj:
+            file_obj.write(audio_bytes)
+        with open(dialog_path, "w", encoding="utf-8") as file_obj:
+            file_obj.write(text or "")
+
+        subprocess.run(
+            [
+                ffmpeg_bin,
+                "-y",
+                "-loglevel",
+                "error",
+                "-i",
+                mp3_path,
+                "-ac",
+                "1",
+                "-ar",
+                "16000",
+                wav_path,
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            timeout=20,
+        )
+        subprocess.run(
+            [
+                rhubarb_bin,
+                "--quiet",
+                "--recognizer",
+                "phonetic",
+                "--exportFormat",
+                "json",
+                "--dialogFile",
+                dialog_path,
+                "-o",
+                output_path,
+                wav_path,
+            ],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            timeout=20,
+        )
+
+        with open(output_path, "r", encoding="utf-8") as file_obj:
+            return json.load(file_obj)
+
+
+def synthesize_edge_tts_with_lipsync(text, voice=None):
+    prompt_text = (text or "").strip()
+    if not prompt_text:
+        raise ValueError("Missing text for speech synthesis.")
+
+    v = voice or EDGE_TTS_VOICE
+    cache_key = hashlib.sha1(f"lipsync|{v}|{prompt_text}".encode()).digest()
+
+    with _LIPSYNC_CACHE_LOCK:
+        if cache_key in _LIPSYNC_CACHE:
+            _LIPSYNC_CACHE.move_to_end(cache_key)
+            return _LIPSYNC_CACHE[cache_key]
+
+    result = synthesize_edge_tts_with_word_boundaries(prompt_text, v)
+    try:
+        rhubarb_result = _run_rhubarb_lipsync(result["audio_bytes"], prompt_text)
+    except Exception:
+        rhubarb_result = None
+
+    if rhubarb_result and isinstance(rhubarb_result.get("mouthCues"), list):
+        result["rhubarb_mouth_cues"] = rhubarb_result["mouthCues"]
+        result["lipsync_source"] = "rhubarb"
+    else:
+        result["rhubarb_mouth_cues"] = []
+        result["lipsync_source"] = "word_boundaries"
+
+    with _LIPSYNC_CACHE_LOCK:
+        _LIPSYNC_CACHE[cache_key] = result
+        _LIPSYNC_CACHE.move_to_end(cache_key)
+        if len(_LIPSYNC_CACHE) > _LIPSYNC_CACHE_MAX:
+            _LIPSYNC_CACHE.popitem(last=False)
+
+    return result
 
 
 def synthesize_edge_tts_streaming(text, voice=None):

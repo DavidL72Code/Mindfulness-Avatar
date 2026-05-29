@@ -123,6 +123,7 @@ The app ships with 11 built-in locales. UI strings (buttons, labels, form fields
 | Avatar model | Avaturn-exported `.glb` with ARKit 52 blendshapes |
 | AI text generation | Google Gemini (`gemini-3.1-flash-lite`) via `google-generativeai` |
 | TTS | Microsoft Edge TTS (`edge-tts`) — streaming MP3 over WebSocket |
+| Avatar lip sync | Rhubarb Lip Sync mouth cues with Edge word-boundary fallback |
 | Audio playback | MediaSource Extensions (MSE) — Chrome/Firefox; Blob URL — Safari |
 | Voice input | Web Speech API (`SpeechRecognition`) |
 | Backend | Python `http.server.ThreadingHTTPServer`, `ThreadPoolExecutor` for TTS workers |
@@ -141,6 +142,7 @@ The Python backend (`server.py`) serves the static web files from `Web_mindfulne
 
 1. Push to the `main` branch on GitHub. Render picks up the commit automatically (`autoDeployTrigger: commit` in `render.yaml`).
 2. Render runs `pip install -r requirements.txt` then `python3 server.py`.
+   The build also downloads the free Rhubarb Lip Sync CLI into `vendor/rhubarb/` for higher-quality avatar mouth cues.
 3. Set the following environment variables in the Render dashboard:
 
 | Variable | Value |

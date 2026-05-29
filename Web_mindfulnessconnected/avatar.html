@@ -2349,6 +2349,7 @@ const idle={
 ========================================================= */
 const ALL_V=['sil','PP','FF','TH','DD','kk','CH','SS','nn','RR','aa','E','I','O','U'];
 const L2V={a:'aa',b:'PP',c:'kk',d:'DD',e:'E',f:'FF',g:'kk',h:'nn',i:'I',j:'CH',k:'kk',l:'nn',m:'PP',n:'nn',o:'O',p:'PP',q:'kk',r:'RR',s:'SS',t:'DD',u:'U',v:'FF',w:'U',x:'kk',y:'I',z:'SS'};
+const RHUBARB_TO_V={A:'PP',B:'SS',C:'E',D:'aa',E:'O',F:'U',G:'O',H:'U',X:'sil'};
 const V_OPEN={sil:.00,PP:.00,FF:.05,TH:.10,DD:.25,kk:.28,CH:.18,SS:.06,nn:.20,RR:.24,aa:.65,E:.38,I:.22,O:.55,U:.15};
 const VISEME_STRENGTH=.6;
 const MOUTH_SCALE=.42;
@@ -2392,6 +2393,22 @@ function buildTLFromWordBoundaries(text,marks,totalDuration=0){
     previousEnd=Math.max(previousEnd,start+duration);
   }
   if(totalDuration>0&&previousEnd<totalDuration-.04)tl.push({v:'sil',s:previousEnd,d:totalDuration-previousEnd,i:text.length});
+  return tl.length?tl:buildTL(text,totalDuration);
+}
+function buildTLFromRhubarbCues(text,cues,totalDuration=0){
+  if(!Array.isArray(cues)||!cues.length)return buildTL(text,totalDuration);
+  const tl=cues
+    .map((cue,i)=>{
+      const start=Number(cue.start);
+      const end=Number(cue.end);
+      if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)return null;
+      return{v:RHUBARB_TO_V[cue.value]||'sil',s:Math.max(0,start),d:Math.max(.02,end-start),i};
+    })
+    .filter(Boolean);
+  if(totalDuration>0&&tl.length){
+    const last=tl.at(-1),end=last.s+last.d;
+    if(end<totalDuration-.04)tl.push({v:'sil',s:end,d:totalDuration-end,i:tl.length});
+  }
   return tl.length?tl:buildTL(text,totalDuration);
 }
 const audioState={ctx:null,analyser:null,data:null,src:null,active:false,
@@ -2453,7 +2470,12 @@ const audioState={ctx:null,analyser:null,data:null,src:null,active:false,
   }
 };
 const lipsync={active:false,tl:[],t0:0,energy:0,brightness:0,
-  play(tx,totalDuration=0,marks=null){this.tl=buildTLFromWordBoundaries(tx,marks,totalDuration);this.t0=performance.now()/1000;this.active=true;},
+  play(tx,totalDuration=0,marks=null,rhubarbCues=null){
+    this.tl=Array.isArray(rhubarbCues)&&rhubarbCues.length
+      ? buildTLFromRhubarbCues(tx,rhubarbCues,totalDuration)
+      : buildTLFromWordBoundaries(tx,marks,totalDuration);
+    this.t0=performance.now()/1000;this.active=true;
+  },
   stop(){this.active=false;this.tl=[];},
   elapsed(now=performance.now()/1000){return now-this.t0;},
   update(dt){
@@ -2662,12 +2684,13 @@ async function apiTts(text){
   const contentType=r.headers.get('content-type')||'';
   if(contentType.includes('application/json')){
     const payload=await r.json();
-    return{
-      audioBuffer:b64ToArrayBuffer(payload.audio||''),
-      wordBoundaries:payload.word_boundaries||[]
+      return{
+        audioBuffer:b64ToArrayBuffer(payload.audio||''),
+      wordBoundaries:payload.word_boundaries||[],
+      rhubarbCues:payload.rhubarb_mouth_cues||[]
     };
   }
-  return{audioBuffer:await r.arrayBuffer(),wordBoundaries:[]};
+  return{audioBuffer:await r.arrayBuffer(),wordBoundaries:[],rhubarbCues:[]};
 }
 function stopSpeech(status='Listening…'){
   speechToken+=1;
@@ -2691,7 +2714,7 @@ async function speak(text){
     await audioState.playAudio(tts.audioBuffer,{
       onstart:(duration)=>{
         if(token!==speechToken){audioState.stop();return;}
-        lipsync.play(trimmed,duration,tts.wordBoundaries);
+        lipsync.play(trimmed,duration,tts.wordBoundaries,tts.rhubarbCues);
         setSt('speaking','Speaking…');
       },
       onended:()=>{

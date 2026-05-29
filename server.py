@@ -17,6 +17,7 @@ from chatbot import (
     load_mindfulness_activities,
     summarize_history,
     synthesize_edge_tts,
+    synthesize_edge_tts_with_lipsync,
     synthesize_edge_tts_with_word_boundaries,
     synthesize_edge_tts_streaming,
 )
@@ -351,7 +352,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
 
         try:
             result = (
-                synthesize_edge_tts_with_word_boundaries(text=text, voice=voice_name)
+                synthesize_edge_tts_with_lipsync(text=text, voice=voice_name)
                 if include_lipsync
                 else synthesize_edge_tts(text=text, voice=voice_name)
             )
@@ -365,6 +366,8 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 "content_type": result["content_type"],
                 "voice_name": result["voice_name"],
                 "word_boundaries": result["word_boundaries"],
+                "rhubarb_mouth_cues": result.get("rhubarb_mouth_cues", []),
+                "lipsync_source": result.get("lipsync_source", "word_boundaries"),
             })
             return
 
