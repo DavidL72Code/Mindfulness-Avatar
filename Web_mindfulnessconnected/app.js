@@ -565,13 +565,23 @@ function applyLocaleToDocument(locale) {
   const lang = LANGUAGES.find(l => l.code === locale) || LANGUAGES[0];
   document.documentElement.lang = locale;
   document.documentElement.dir = lang.dir;
+  const shouldPreventGoogleTranslate = locale === "en";
+  document.documentElement.classList.toggle("notranslate", shouldPreventGoogleTranslate);
+  document.documentElement.setAttribute("translate", shouldPreventGoogleTranslate ? "no" : "yes");
+  if (document.body) {
+    document.body.classList.toggle("notranslate", shouldPreventGoogleTranslate);
+    document.body.setAttribute("translate", shouldPreventGoogleTranslate ? "no" : "yes");
+  }
 }
 
 let _gtTimer = null;
+let _gtResetTimer = null;
 let _lastGoogleTranslateLocale = "en";
 function scheduleGoogleRetranslate() {
+  clearTimeout(_gtResetTimer);
   if (state.locale === "en") {
     resetGoogleTranslate();
+    scheduleGoogleTranslateResetRetries();
     return;
   }
   _lastGoogleTranslateLocale = state.locale;
@@ -579,25 +589,55 @@ function scheduleGoogleRetranslate() {
   _gtTimer = setTimeout(_doGoogleRetranslate, 150);
 }
 
-function clearGoogleTranslateCookie(name, domain) {
+function clearGoogleTranslateCookie(name, domain, path = "/") {
   const domainPart = domain ? `; domain=${domain}` : "";
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${domainPart}`;
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}${domainPart}`;
+}
+
+function setGoogleTranslateCookie(value, domain, path = "/") {
+  const domainPart = domain ? `; domain=${domain}` : "";
+  document.cookie = `googtrans=${value}; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=${path}${domainPart}`;
+}
+
+function getGoogleTranslateDomains() {
+  const hostname = window.location.hostname;
+  const domains = ["", hostname];
+  const parts = hostname.split(".").filter(Boolean);
+  if (parts.length > 1) {
+    domains.push(`.${parts.slice(-2).join(".")}`);
+    domains.push(`.${hostname}`);
+  }
+  return [...new Set(domains)];
+}
+
+function getGoogleTranslateCookiePaths() {
+  const languagePaths = LANGUAGES.flatMap((lang) => {
+    const gtLang = lang.gtLang || lang.code;
+    return [`/${gtLang}`, `/en/${gtLang}`];
+  });
+  return [...new Set(["/", "/en", "/en/en", ...languagePaths])];
 }
 
 function resetGoogleTranslate() {
   clearTimeout(_gtTimer);
   const previousLocale = _lastGoogleTranslateLocale;
   _lastGoogleTranslateLocale = "en";
-  clearGoogleTranslateCookie("googtrans");
-  clearGoogleTranslateCookie("googtrans", window.location.hostname);
-  const parts = window.location.hostname.split(".");
-  if (parts.length > 1) {
-    clearGoogleTranslateCookie("googtrans", `.${parts.slice(-2).join(".")}`);
-  }
+  applyLocaleToDocument("en");
+  getGoogleTranslateDomains().forEach((domain) => {
+    getGoogleTranslateCookiePaths().forEach((path) => {
+      setGoogleTranslateCookie("/en/en", domain, path);
+      clearGoogleTranslateCookie("googtrans", domain, path);
+    });
+  });
   const sel = document.querySelector("select.goog-te-combo");
   if (sel && sel.value) {
     sel.value = "";
     sel.dispatchEvent(new Event("change"));
+  }
+  document.documentElement.classList.remove("translated-ltr", "translated-rtl");
+  if (document.body) {
+    document.body.classList.remove("translated-ltr", "translated-rtl");
+    document.body.style.top = "";
   }
   if (previousLocale !== "en") {
     document.querySelectorAll("iframe").forEach((iframe) => {
@@ -606,6 +646,21 @@ function resetGoogleTranslate() {
       } catch {}
     });
   }
+}
+
+function scheduleGoogleTranslateResetRetries() {
+  let attempts = 0;
+  const retry = () => {
+    if (state.locale !== "en") {
+      return;
+    }
+    resetGoogleTranslate();
+    attempts += 1;
+    if (attempts < 8) {
+      _gtResetTimer = setTimeout(retry, attempts < 3 ? 150 : 500);
+    }
+  };
+  _gtResetTimer = setTimeout(retry, 50);
 }
 
 function _doGoogleRetranslate() {
@@ -780,7 +835,7 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
     controlled: "1",
     host,
     locale: state.locale,
-    v: "2"
+    v: "3"
   });
 
   if (autostart) {

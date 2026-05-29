@@ -2196,8 +2196,123 @@ const TTS_BASE_URL = queryParams.get('tts_base') || '';
 const SUPPORTED_LOCALES = new Set(['en','ko','es','fr','ja','zh','ar','pt','hi','de','vi']);
 const AVATAR_LOCALE = SUPPORTED_LOCALES.has(queryParams.get('locale')) ? queryParams.get('locale') : 'en';
 const AVATAR_SESSION_ID = SHARED_CHAT_ID ? `${SHARED_CHAT_ID}:${AVATAR_LOCALE}` : '';
+const AVATAR_STRINGS = {
+  en: {
+    sessionProgress: 'Session progress', startSession: 'Start Session', endSession: 'End Session',
+    voicePlayback: 'Voice playback', enterHint: 'Enter to send · Shift+Enter for newline',
+    voiceInput: 'Voice input', inactiveSession: 'Press Start Session to begin...',
+    inactiveHome: 'Ask a mindfulness question...', inactiveCompact: 'Start the chat to begin...',
+    inactiveStandalone: 'Start a session to chat…', typeMessage: 'Type a message…',
+    preparingWelcome: 'Preparing welcome…', listening: 'Listening…', readyStart: 'Ready — start a session',
+    generatingVoice: 'Generating voice…', speaking: 'Speaking…', thinking: 'Thinking…',
+    next: 'Next', finish: 'Finish', step: 'Step', passage: 'Passage', of: 'of'
+  },
+  ko: {
+    sessionProgress: '세션 진행률', startSession: '세션 시작', endSession: '세션 종료',
+    voicePlayback: '음성 재생', enterHint: 'Enter로 보내기 · Shift+Enter로 줄바꿈',
+    voiceInput: '음성 입력', inactiveSession: '시작하려면 세션 시작을 누르세요...',
+    inactiveHome: '마음챙김 질문을 해보세요...', inactiveCompact: '채팅을 시작하세요...',
+    inactiveStandalone: '채팅하려면 세션을 시작하세요…', typeMessage: '메시지를 입력하세요…',
+    preparingWelcome: '환영 메시지 준비 중…', listening: '듣는 중…', readyStart: '준비됨 — 세션을 시작하세요',
+    generatingVoice: '음성 생성 중…', speaking: '말하는 중…', thinking: '생각 중…',
+    next: '다음', finish: '완료', step: '단계', passage: '구절', of: '/'
+  },
+  es: {
+    sessionProgress: 'Progreso de la sesión', startSession: 'Iniciar sesión', endSession: 'Finalizar sesión',
+    voicePlayback: 'Reproducción de voz', enterHint: 'Enter para enviar · Shift+Enter para nueva línea',
+    voiceInput: 'Entrada de voz', inactiveSession: 'Pulsa Iniciar sesión para comenzar...',
+    inactiveHome: 'Haz una pregunta de mindfulness...', inactiveCompact: 'Inicia el chat para comenzar...',
+    inactiveStandalone: 'Inicia una sesión para chatear…', typeMessage: 'Escribe un mensaje…',
+    preparingWelcome: 'Preparando bienvenida…', listening: 'Escuchando…', readyStart: 'Listo — inicia una sesión',
+    generatingVoice: 'Generando voz…', speaking: 'Hablando…', thinking: 'Pensando…',
+    next: 'Siguiente', finish: 'Finalizar', step: 'Paso', passage: 'Pasaje', of: 'de'
+  },
+  fr: {
+    sessionProgress: 'Progression de la séance', startSession: 'Démarrer la séance', endSession: 'Terminer la séance',
+    voicePlayback: 'Lecture vocale', enterHint: 'Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne',
+    voiceInput: 'Entrée vocale', inactiveSession: 'Appuyez sur Démarrer la séance pour commencer...',
+    inactiveHome: 'Posez une question de pleine conscience...', inactiveCompact: 'Lancez le chat pour commencer...',
+    inactiveStandalone: 'Démarrez une séance pour discuter…', typeMessage: 'Écrivez un message…',
+    preparingWelcome: 'Préparation de l’accueil…', listening: 'Écoute…', readyStart: 'Prêt — démarrez une séance',
+    generatingVoice: 'Génération de la voix…', speaking: 'Parle…', thinking: 'Réflexion…',
+    next: 'Suivant', finish: 'Terminer', step: 'Étape', passage: 'Passage', of: 'sur'
+  },
+  ja: {
+    sessionProgress: 'セッションの進行状況', startSession: 'セッション開始', endSession: 'セッション終了',
+    voicePlayback: '音声再生', enterHint: 'Enterで送信 · Shift+Enterで改行',
+    voiceInput: '音声入力', inactiveSession: '開始するにはセッション開始を押してください...',
+    inactiveHome: 'マインドフルネスについて質問してください...', inactiveCompact: 'チャットを開始してください...',
+    inactiveStandalone: 'チャットするにはセッションを開始してください…', typeMessage: 'メッセージを入力…',
+    preparingWelcome: '歓迎メッセージを準備中…', listening: '聞いています…', readyStart: '準備完了 — セッションを開始',
+    generatingVoice: '音声を生成中…', speaking: '話しています…', thinking: '考え中…',
+    next: '次へ', finish: '完了', step: 'ステップ', passage: 'パッセージ', of: '/'
+  },
+  zh: {
+    sessionProgress: '课程进度', startSession: '开始课程', endSession: '结束课程',
+    voicePlayback: '语音播放', enterHint: 'Enter 发送 · Shift+Enter 换行',
+    voiceInput: '语音输入', inactiveSession: '按“开始课程”开始...',
+    inactiveHome: '提出一个正念问题...', inactiveCompact: '开始聊天...',
+    inactiveStandalone: '开始课程后聊天…', typeMessage: '输入消息…',
+    preparingWelcome: '正在准备欢迎语…', listening: '正在聆听…', readyStart: '准备就绪 — 开始课程',
+    generatingVoice: '正在生成语音…', speaking: '正在说话…', thinking: '正在思考…',
+    next: '下一步', finish: '完成', step: '步骤', passage: '段落', of: '/'
+  },
+  ar: {
+    sessionProgress: 'تقدم الجلسة', startSession: 'بدء الجلسة', endSession: 'إنهاء الجلسة',
+    voicePlayback: 'تشغيل الصوت', enterHint: 'Enter للإرسال · Shift+Enter لسطر جديد',
+    voiceInput: 'إدخال صوتي', inactiveSession: 'اضغط بدء الجلسة للبدء...',
+    inactiveHome: 'اطرح سؤالا عن اليقظة...', inactiveCompact: 'ابدأ الدردشة...',
+    inactiveStandalone: 'ابدأ جلسة للدردشة…', typeMessage: 'اكتب رسالة…',
+    preparingWelcome: 'جار تجهيز الترحيب…', listening: 'جار الاستماع…', readyStart: 'جاهز — ابدأ جلسة',
+    generatingVoice: 'جار إنشاء الصوت…', speaking: 'يتحدث…', thinking: 'يفكر…',
+    next: 'التالي', finish: 'إنهاء', step: 'خطوة', passage: 'مقطع', of: 'من'
+  },
+  pt: {
+    sessionProgress: 'Progresso da sessão', startSession: 'Iniciar sessão', endSession: 'Encerrar sessão',
+    voicePlayback: 'Reprodução de voz', enterHint: 'Enter para enviar · Shift+Enter para nova linha',
+    voiceInput: 'Entrada de voz', inactiveSession: 'Pressione Iniciar sessão para começar...',
+    inactiveHome: 'Faça uma pergunta de mindfulness...', inactiveCompact: 'Inicie o chat para começar...',
+    inactiveStandalone: 'Inicie uma sessão para conversar…', typeMessage: 'Digite uma mensagem…',
+    preparingWelcome: 'Preparando boas-vindas…', listening: 'Ouvindo…', readyStart: 'Pronto — inicie uma sessão',
+    generatingVoice: 'Gerando voz…', speaking: 'Falando…', thinking: 'Pensando…',
+    next: 'Próximo', finish: 'Finalizar', step: 'Etapa', passage: 'Passagem', of: 'de'
+  },
+  hi: {
+    sessionProgress: 'सत्र प्रगति', startSession: 'सत्र शुरू करें', endSession: 'सत्र समाप्त करें',
+    voicePlayback: 'आवाज प्लेबैक', enterHint: 'भेजने के लिए Enter · नई पंक्ति के लिए Shift+Enter',
+    voiceInput: 'आवाज इनपुट', inactiveSession: 'शुरू करने के लिए सत्र शुरू करें दबाएं...',
+    inactiveHome: 'माइंडफुलनेस प्रश्न पूछें...', inactiveCompact: 'शुरू करने के लिए चैट शुरू करें...',
+    inactiveStandalone: 'चैट करने के लिए सत्र शुरू करें…', typeMessage: 'संदेश लिखें…',
+    preparingWelcome: 'स्वागत तैयार हो रहा है…', listening: 'सुन रहा है…', readyStart: 'तैयार — सत्र शुरू करें',
+    generatingVoice: 'आवाज बन रही है…', speaking: 'बोल रहा है…', thinking: 'सोच रहा है…',
+    next: 'अगला', finish: 'समाप्त', step: 'चरण', passage: 'अंश', of: 'में से'
+  },
+  de: {
+    sessionProgress: 'Sitzungsfortschritt', startSession: 'Sitzung starten', endSession: 'Sitzung beenden',
+    voicePlayback: 'Sprachwiedergabe', enterHint: 'Enter zum Senden · Shift+Enter für neue Zeile',
+    voiceInput: 'Spracheingabe', inactiveSession: 'Drücke Sitzung starten, um zu beginnen...',
+    inactiveHome: 'Stelle eine Achtsamkeitsfrage...', inactiveCompact: 'Starte den Chat...',
+    inactiveStandalone: 'Starte eine Sitzung zum Chatten…', typeMessage: 'Nachricht eingeben…',
+    preparingWelcome: 'Begrüßung wird vorbereitet…', listening: 'Hört zu…', readyStart: 'Bereit — starte eine Sitzung',
+    generatingVoice: 'Stimme wird erzeugt…', speaking: 'Spricht…', thinking: 'Denkt nach…',
+    next: 'Weiter', finish: 'Fertig', step: 'Schritt', passage: 'Abschnitt', of: 'von'
+  },
+  vi: {
+    sessionProgress: 'Tiến trình phiên', startSession: 'Bắt đầu phiên', endSession: 'Kết thúc phiên',
+    voicePlayback: 'Phát giọng nói', enterHint: 'Enter để gửi · Shift+Enter để xuống dòng',
+    voiceInput: 'Nhập bằng giọng nói', inactiveSession: 'Nhấn Bắt đầu phiên để bắt đầu...',
+    inactiveHome: 'Hỏi một câu về chánh niệm...', inactiveCompact: 'Bắt đầu trò chuyện...',
+    inactiveStandalone: 'Bắt đầu phiên để trò chuyện…', typeMessage: 'Nhập tin nhắn…',
+    preparingWelcome: 'Đang chuẩn bị lời chào…', listening: 'Đang nghe…', readyStart: 'Sẵn sàng — bắt đầu phiên',
+    generatingVoice: 'Đang tạo giọng nói…', speaking: 'Đang nói…', thinking: 'Đang suy nghĩ…',
+    next: 'Tiếp', finish: 'Hoàn tất', step: 'Bước', passage: 'Đoạn', of: 'trên'
+  }
+};
+const avT = (key) => (AVATAR_STRINGS[AVATAR_LOCALE] && AVATAR_STRINGS[AVATAR_LOCALE][key]) || AVATAR_STRINGS.en[key] || key;
 
 document.documentElement.lang = AVATAR_LOCALE;
+document.documentElement.classList.toggle('notranslate', AVATAR_LOCALE === 'en');
+document.documentElement.setAttribute('translate', AVATAR_LOCALE === 'en' ? 'no' : 'yes');
 
 function formatSessionName(value){
   return value
@@ -2217,12 +2332,46 @@ const CAMERA_PRESET = CAMERA_PRESETS[HOST_KEY] || CAMERA_PRESETS.standalone;
 
 document.body.classList.toggle('compact', COMPACT_MODE);
 document.body.classList.toggle('controlled', CONTROLLED_MODE);
+document.body.classList.toggle('notranslate', AVATAR_LOCALE === 'en');
+document.body.setAttribute('translate', AVATAR_LOCALE === 'en' ? 'no' : 'yes');
 document.title = COMPACT_MODE ? 'Avatar Guide' : `${SESSION_NAME} Avatar Guide`;
 
 const navTitleEl = document.getElementById('navtitle');
 const chatHeadingEl = document.getElementById('chatheading');
 const chatSubtitleEl = document.getElementById('chatsubtitle');
 const inputEl = document.getElementById('inp');
+const progLabelEl = document.querySelector('.prog-label');
+const startButtonEl = document.getElementById('bstart');
+const endButtonEl = document.getElementById('bend');
+const voicePlaybackEl = document.querySelector('.tr span:last-child');
+const hintEl = document.querySelector('.hint');
+const micButtonEl = document.getElementById('bmic');
+const progNextEl = document.getElementById('prog-next');
+
+function translateActionLabel(label){
+  if(label === 'Next')return avT('next');
+  if(label === 'Finish')return avT('finish');
+  return label;
+}
+
+function translateProgressLabel(label){
+  if(!label)return '';
+  return label
+    .replace(/^Step (\d+) of (\d+)/, `${avT('step')} $1 ${avT('of')} $2`)
+    .replace(/^Passage (\d+) of (\d+)/, `${avT('passage')} $1 ${avT('of')} $2`);
+}
+
+function applyAvatarStaticText(){
+  if(progLabelEl)progLabelEl.textContent=avT('sessionProgress');
+  if(startButtonEl)startButtonEl.textContent=avT('startSession');
+  if(endButtonEl)endButtonEl.textContent=avT('endSession');
+  if(voicePlaybackEl)voicePlaybackEl.textContent=avT('voicePlayback');
+  if(hintEl)hintEl.textContent=avT('enterHint');
+  if(micButtonEl)micButtonEl.setAttribute('aria-label', avT('voiceInput'));
+  if(progNextEl)progNextEl.textContent=avT('next');
+}
+
+applyAvatarStaticText();
 
 if(COMPACT_MODE){
   navTitleEl.textContent = '';
@@ -2243,7 +2392,6 @@ if(COMPACT_MODE){
 
 const progFillEl = document.getElementById('prog-fill');
 const progStepEl = document.getElementById('prog-step');
-const progNextEl = document.getElementById('prog-next');
 if(progNextEl){
   progNextEl.addEventListener('click', () => {
     postHostMessage({type:'next-clicked'});
@@ -2263,9 +2411,9 @@ function postHostMessage(message){
 }
 
 function getInactivePlaceholder(){
-  if(CONTROLLED_MODE&&HOST_KEY==='session-panel')return 'Press Start Session to begin...';
-  if(CONTROLLED_MODE&&HOST_KEY==='home-dock')return 'Ask a mindfulness question...';
-  return COMPACT_MODE?'Start the chat to begin...':'Start a session to chat…';
+  if(CONTROLLED_MODE&&HOST_KEY==='session-panel')return avT('inactiveSession');
+  if(CONTROLLED_MODE&&HOST_KEY==='home-dock')return avT('inactiveHome');
+  return COMPACT_MODE?avT('inactiveCompact'):avT('inactiveStandalone');
 }
 
 function getInitialWelcomePrompt(){
@@ -2659,7 +2807,7 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
       document.getElementById('lov').classList.add('hidden');
       setSt(
         SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?'thinking':'idle',
-        SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?'Preparing welcome…':HOST_KEY==='home-dock'?'Listening…':'Ready — start a session'
+        SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?avT('preparingWelcome'):HOST_KEY==='home-dock'?avT('listening'):avT('readyStart')
       );
     },(err)=>{
       window.createImageBitmap=_cib; unpatchImageLoader();
@@ -2697,7 +2845,7 @@ async function apiTts(text){
   }
   return{audioBuffer:await r.arrayBuffer(),wordBoundaries:[],rhubarbCues:[]};
 }
-function stopSpeech(status='Listening…'){
+function stopSpeech(status=avT('listening')){
   speechToken+=1;
   audioState.stop();
   lipsync.stop();
@@ -2711,21 +2859,21 @@ async function speak(text){
   const token=speechToken;
   audioState.stop();
   lipsync.stop();
-  if(!ttschk.checked){setSt('idle','Listening…');return;}
+  if(!ttschk.checked){setSt('idle',avT('listening'));return;}
   try{
-    setSt('thinking','Generating voice…');
+    setSt('thinking',avT('generatingVoice'));
     const tts=await apiTts(trimmed);
     if(token!==speechToken)return;
     await audioState.playAudio(tts.audioBuffer,{
       onstart:(duration)=>{
         if(token!==speechToken){audioState.stop();return;}
         lipsync.play(trimmed,duration,tts.wordBoundaries,tts.rhubarbCues);
-        setSt('speaking','Speaking…');
+        setSt('speaking',avT('speaking'));
       },
       onended:()=>{
         if(token!==speechToken)return;
         lipsync.stop();
-        setSt('idle','Listening…');
+        setSt('idle',avT('listening'));
       }
     });
   }catch(err){
@@ -2853,7 +3001,7 @@ async function replyWithStream(prompt){
         if(speechToken!==myToken)return;
         setTyp(false);
         appendChunk(chunk);
-        setSt('thinking','Typing…');
+        setSt('thinking',avT('thinking'));
       }
     }catch(streamErr){
       if(gotChunk)throw streamErr;
@@ -2865,7 +3013,7 @@ async function replyWithStream(prompt){
     if(fullText){messageLog.push({role:'assistant',text:fullText});persistTranscript();}
     if(speechToken===myToken)await speak(fullText);
   }catch{
-    setTyp(false);setSt('idle','Listening…');
+    setTyp(false);setSt('idle',avT('listening'));
     addMsg('system','Could not connect to the mindfulness server right now.');
   }
 }
@@ -2878,7 +3026,7 @@ function createSessionId(){return window.crypto&&typeof window.crypto.randomUUID
 function setSt(state,text){document.getElementById('ast').className='ast'+(state!=='idle'?' '+state:'');document.getElementById('stxt').textContent=text;}
 function addMsg(role,text){messageLog.push({role,text});persistTranscript();const d=document.createElement('div');d.className='msg '+role;d.textContent=text;msgsEl.appendChild(d);msgsEl.scrollTop=msgsEl.scrollHeight;}
 function setTyp(on){typEl.classList.toggle('on',on);if(on)msgsEl.scrollTop=msgsEl.scrollHeight;}
-function setUi(active){inp.disabled=!active;bsend.disabled=!active;bmic.disabled=!active;bend.disabled=!active;bstart.disabled=active;inp.placeholder=active?'Type a message…':getInactivePlaceholder();}
+function setUi(active){inp.disabled=!active;bsend.disabled=!active;bmic.disabled=!active;bend.disabled=!active;bstart.disabled=active;inp.placeholder=active?avT('typeMessage'):getInactivePlaceholder();}
 
 let _micRecording=false,_micRecog=null;
 bmic.addEventListener('click',()=>{
@@ -2893,20 +3041,20 @@ bmic.addEventListener('click',()=>{
   _micRecog.onresult=(e)=>{_t=(e.results[0]?.[0]?.transcript||'').trim();};
   _micRecog.onend=()=>{
     _micRecording=false;_micRecog=null;
-    bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');
+    bmic.classList.remove('recording');bmic.setAttribute('aria-label',avT('voiceInput'));
     if(_t){inp.value=_t;handleSend();}
   };
-  _micRecog.onerror=()=>{_micRecording=false;_micRecog=null;bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');};
-  try{_micRecog.start();}catch(_){_micRecording=false;bmic.classList.remove('recording');bmic.setAttribute('aria-label','Voice input');}
+  _micRecog.onerror=()=>{_micRecording=false;_micRecog=null;bmic.classList.remove('recording');bmic.setAttribute('aria-label',avT('voiceInput'));};
+  try{_micRecog.start();}catch(_){_micRecording=false;bmic.classList.remove('recording');bmic.setAttribute('aria-label',avT('voiceInput'));}
 });
 
 async function startAvatarSession(options={}){
   const { promptOverride=null, announce=true } = options;
   const hasTranscript=messageLog.length>0;
-  if(!sid)sid=SHARED_CHAT_ID||createSessionId();
+  if(!sid)sid=AVATAR_SESSION_ID||createSessionId();
   setUi(true);
   if(!hasTranscript&&announce)addMsg('system',`${SESSION_NAME} session started. Your mindfulness guide is here.`);
-  setSt('thinking',HOST_KEY==='home-dock'?'Preparing welcome…':'Thinking…');inp.focus();setTyp(true);
+  setSt('thinking',HOST_KEY==='home-dock'?avT('preparingWelcome'):avT('thinking'));inp.focus();setTyp(true);
   const prompt=promptOverride||getInitialWelcomePrompt();
   await replyWithStream(prompt);
 }
@@ -2915,7 +3063,7 @@ async function startAvatarSession(options={}){
 async function speakScriptLine(text){
   const trimmed=(text||'').trim();
   if(!trimmed)return;
-  if(!sid)sid=SHARED_CHAT_ID||createSessionId();
+  if(!sid)sid=AVATAR_SESSION_ID||createSessionId();
   setUi(true);
   setTyp(false);
   addMsg('assistant',trimmed);
@@ -2929,7 +3077,7 @@ bend.addEventListener('click',async()=>{
 });
 async function handleSend(){
   const text=inp.value.trim();if(!text||!sid)return;
-  inp.value='';addMsg('user',text);inp.disabled=true;bsend.disabled=true;setTyp(true);setSt('thinking','Thinking…');
+  inp.value='';addMsg('user',text);inp.disabled=true;bsend.disabled=true;setTyp(true);setSt('thinking',avT('thinking'));
   await replyWithStream(text);
   inp.disabled=false;bsend.disabled=false;inp.focus();
 }
@@ -2937,21 +3085,21 @@ async function handleSend(){
 async function hostEndSession(){
   if(!sid){
     setUi(Boolean(messageLog.length||HOST_KEY==='home-dock'));
-    setSt('idle','Listening…');
+    setSt('idle',avT('listening'));
     return;
   }
   stopSpeech('Session concluded');
   setTyp(false);
   setUi(true);
-  setSt('idle','Listening…');
+  setSt('idle',avT('listening'));
   addMsg('system','Session concluded. You can keep chatting with your mindfulness assistant.');
 }
 
 function hostPauseSession(){
-  stopSpeech('Listening…');
+  stopSpeech(avT('listening'));
   setTyp(false);
   setUi(Boolean(messageLog.length||HOST_KEY==='home-dock'));
-  setSt('idle','Listening…');
+  setSt('idle',avT('listening'));
 }
 
 window.addEventListener('message',event=>{
@@ -2991,6 +3139,10 @@ window.addEventListener('message',event=>{
 
   if(data.type==='host-reset-translation'){
     document.documentElement.lang = 'en';
+    document.documentElement.classList.add('notranslate');
+    document.documentElement.setAttribute('translate', 'no');
+    document.body.classList.add('notranslate');
+    document.body.setAttribute('translate', 'no');
     return;
   }
 
@@ -3000,7 +3152,7 @@ window.addEventListener('message',event=>{
       progFillEl.style.width = pct + '%';
     }
     if(progStepEl){
-      progStepEl.textContent = data.label || '—';
+      progStepEl.textContent = translateProgressLabel(data.label) || '—';
     }
     return;
   }
@@ -3009,18 +3161,18 @@ window.addEventListener('message',event=>{
     if(!progNextEl) return;
     progNextEl.style.display = data.visible ? 'inline-flex' : 'none';
     progNextEl.disabled = !!data.disabled;
-    if(typeof data.label === 'string') progNextEl.textContent = data.label;
+    if(typeof data.label === 'string') progNextEl.textContent = translateActionLabel(data.label);
     return;
   }
 });
 
 bsend.addEventListener('click',()=>{unlockCtx();handleSend();});
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();unlockCtx();handleSend();}});
-ttschk.addEventListener('change',()=>{unlockCtx();if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech('Listening…');});
+ttschk.addEventListener('change',()=>{unlockCtx();if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech(avT('listening'));});
 const hasStoredTranscript=restoreTranscript();
 if(hasStoredTranscript){
   setUi(true);
-  setSt('idle','Listening…');
+  setSt('idle',avT('listening'));
 }
 window.addEventListener('load',()=>{postHostMessage({type:'avatar-ready'});},{once:true});
 if(SHOULD_AUTOSTART&&!hasStoredTranscript){window.addEventListener('load',()=>{setTimeout(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});},40);},{once:true});}
