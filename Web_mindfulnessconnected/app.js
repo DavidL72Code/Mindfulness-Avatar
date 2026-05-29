@@ -540,6 +540,24 @@ function roundSessionMinutes(seconds) {
   return Math.round((seconds / 60) * 100) / 100;
 }
 
+function getFirebaseTrackingErrorMessage(error) {
+  const code = error?.code || "";
+  if (code === "permission-denied" || code === "firestore/permission-denied") {
+    return "Firebase blocked this save with permission-denied. Your Firestore rules likely do not allow this session write.";
+  }
+  if (code === "unauthenticated" || code === "firestore/unauthenticated") {
+    return "Firebase rejected the save because the session is no longer authenticated. Please sign in again.";
+  }
+  if (code === "unavailable" || code === "firestore/unavailable") {
+    return "Firebase is temporarily unavailable. Please try again in a moment.";
+  }
+  const rawMessage = (error && (error.message || error.details)) ? String(error.message || error.details) : "";
+  if (rawMessage) {
+    return `Active Stats save failed: ${rawMessage}`;
+  }
+  return "We couldn't save this session to Active Stats. Please try again.";
+}
+
 async function recordSessionCompletion({ selectedSession, elapsedSeconds, completed, metadata = {} }) {
   if (!selectedSession) {
     return { ok: false, message: "No session was selected, so nothing was saved." };
@@ -564,7 +582,7 @@ async function recordSessionCompletion({ selectedSession, elapsedSeconds, comple
     return { ok: true, message: "Saved to Active Stats." };
   } catch (error) {
     console.warn("Failed to record session tracking data", error);
-    return { ok: false, message: "We couldn't save this session to Active Stats. Please try again." };
+    return { ok: false, message: getFirebaseTrackingErrorMessage(error) };
   }
 }
 
