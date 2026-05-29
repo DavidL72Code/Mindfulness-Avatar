@@ -2806,10 +2806,19 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
         act.setLoop(THREE.LoopRepeat,Infinity); act.play();
       }
       document.getElementById('lov').classList.add('hidden');
-      setSt(
-        SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?'thinking':'idle',
-        SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?avT('preparingWelcome'):HOST_KEY==='home-dock'?avT('listening'):avT('readyStart')
-      );
+      const restoredAfterLoad = restoreTranscript();
+      if(restoredAfterLoad){
+        setUi(true);
+        setSt('idle',avT('listening'));
+      }else{
+        setSt(
+          SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?'thinking':'idle',
+          SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?avT('preparingWelcome'):HOST_KEY==='home-dock'?avT('listening'):avT('readyStart')
+        );
+        if(SHOULD_AUTOSTART&&HOST_KEY==='home-dock'){
+          setTimeout(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});},40);
+        }
+      }
     },(err)=>{
       window.createImageBitmap=_cib; unpatchImageLoader();
       sub.textContent='Parse error: '+(err.message||err);
@@ -3170,13 +3179,7 @@ window.addEventListener('message',event=>{
 bsend.addEventListener('click',()=>{unlockCtx();handleSend();});
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();unlockCtx();handleSend();}});
 ttschk.addEventListener('change',()=>{unlockCtx();if(ttschk.checked)audioState.prime().catch(()=>{});else stopSpeech(avT('listening'));});
-const hasStoredTranscript=restoreTranscript();
-if(hasStoredTranscript){
-  setUi(true);
-  setSt('idle',avT('listening'));
-}
 window.addEventListener('load',()=>{postHostMessage({type:'avatar-ready'});},{once:true});
-if(SHOULD_AUTOSTART&&!hasStoredTranscript){window.addEventListener('load',()=>{setTimeout(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});},40);},{once:true});}
 </script>
 </body>
 </html>
