@@ -240,6 +240,7 @@ const translations = {
     card3Title: "Recent Updates", card3Text: "We improved the processing features recently.",
     card4Title: "Quick Settings", card4Text: "Customize your interface and accessibility options here.",
     supportBtn: "Support Ticket", language: "Language", start: "Start",
+    miniGuide: "Mini Guide", miniGuideTitle: "Mindfulness guide", hide: "Hide", hideMiniGuide: "Hide mini guide",
     profileTitle: "Profile", personalInformation: "Personal Information",
     settings: "Settings", support: "Support", logOut: "Log Out",
     firstName: "First Name", lastName: "Last Name", dateOfBirth: "Date of Birth",
@@ -261,6 +262,7 @@ const translations = {
     card3Title: "최신 업데이트", card3Text: "최근 처리 기능을 개선했습니다.",
     card4Title: "빠른 설정", card4Text: "여기에서 인터페이스와 접근성 설정을 사용자 정의하십시오.",
     supportBtn: "지원 티켓", language: "언어", start: "시작",
+    miniGuide: "미니 가이드", miniGuideTitle: "마음챙김 가이드", hide: "숨기기", hideMiniGuide: "미니 가이드 숨기기",
     profileTitle: "프로필", personalInformation: "개인 정보",
     settings: "설정", support: "지원", logOut: "로그아웃",
     firstName: "이름", lastName: "성", dateOfBirth: "생년월일",
@@ -277,6 +279,7 @@ const translations = {
     card3Title: "Actualizaciones recientes", card3Text: "Recientemente mejoramos las funciones de procesamiento.",
     card4Title: "Ajustes rápidos", card4Text: "Personaliza tu interfaz y opciones de accesibilidad aquí.",
     supportBtn: "Ticket de soporte", language: "Idioma", start: "Comenzar",
+    miniGuide: "Mini guía", miniGuideTitle: "Guía de mindfulness", hide: "Ocultar", hideMiniGuide: "Ocultar mini guía",
     profileTitle: "Perfil", personalInformation: "Información personal",
     settings: "Configuración", support: "Soporte", logOut: "Cerrar sesión",
     firstName: "Nombre", lastName: "Apellido", dateOfBirth: "Fecha de nacimiento",
@@ -293,6 +296,7 @@ const translations = {
     card3Title: "Mises à jour récentes", card3Text: "Nous avons récemment amélioré les fonctionnalités.",
     card4Title: "Paramètres rapides", card4Text: "Personnalisez votre interface et options d'accessibilité ici.",
     supportBtn: "Ticket de support", language: "Langue", start: "Commencer",
+    miniGuide: "Mini guide", miniGuideTitle: "Guide de pleine conscience", hide: "Masquer", hideMiniGuide: "Masquer le mini guide",
     profileTitle: "Profil", personalInformation: "Informations personnelles",
     settings: "Paramètres", support: "Support", logOut: "Se déconnecter",
     firstName: "Prénom", lastName: "Nom de famille", dateOfBirth: "Date de naissance",
@@ -309,6 +313,7 @@ const translations = {
     card3Title: "最近の更新", card3Text: "最近、処理機能を改善しました。",
     card4Title: "クイック設定", card4Text: "インターフェースとアクセシビリティのオプションをカスタマイズしてください。",
     supportBtn: "サポートチケット", language: "言語", start: "開始",
+    miniGuide: "ミニガイド", miniGuideTitle: "マインドフルネスガイド", hide: "非表示", hideMiniGuide: "ミニガイドを非表示",
     profileTitle: "プロフィール", personalInformation: "個人情報",
     settings: "設定", support: "サポート", logOut: "ログアウト",
     firstName: "名", lastName: "姓", dateOfBirth: "生年月日",
@@ -325,6 +330,7 @@ const translations = {
     card3Title: "最近更新", card3Text: "我们最近改进了处理功能。",
     card4Title: "快速设置", card4Text: "在此自定义您的界面和辅助功能选项。",
     supportBtn: "支持工单", language: "语言", start: "开始",
+    miniGuide: "迷你指南", miniGuideTitle: "正念指南", hide: "隐藏", hideMiniGuide: "隐藏迷你指南",
     profileTitle: "个人资料", personalInformation: "个人信息",
     settings: "设置", support: "支持", logOut: "退出登录",
     firstName: "名字", lastName: "姓氏", dateOfBirth: "出生日期",
@@ -341,6 +347,7 @@ const translations = {
     card3Title: "التحديثات الأخيرة", card3Text: "قمنا مؤخراً بتحسين ميزات المعالجة.",
     card4Title: "الإعدادات السريعة", card4Text: "خصّص واجهتك وخيارات إمكانية الوصول هنا.",
     supportBtn: "تذكرة الدعم", language: "اللغة", start: "ابدأ",
+    miniGuide: "الدليل المصغر", miniGuideTitle: "دليل اليقظة", hide: "إخفاء", hideMiniGuide: "إخفاء الدليل المصغر",
     profileTitle: "الملف الشخصي", personalInformation: "المعلومات الشخصية",
     settings: "الإعدادات", support: "الدعم", logOut: "تسجيل الخروج",
     firstName: "الاسم الأول", lastName: "اسم العائلة", dateOfBirth: "تاريخ الميلاد",
@@ -357,6 +364,7 @@ const translations = {
     card3Title: "Atualizações recentes", card3Text: "Melhoramos recentemente os recursos de processamento.",
     card4Title: "Configurações rápidas", card4Text: "Personalize sua interface e opções de acessibilidade aqui.",
     supportBtn: "Ticket de suporte", language: "Idioma", start: "Começar",
+    miniGuide: "Mini guia", miniGuideTitle: "Guia de mindfulness", hide: "Ocultar", hideMiniGuide: "Ocultar mini guia",
     profileTitle: "Perfil", personalInformation: "Informações pessoais",
     settings: "Configurações", support: "Suporte", logOut: "Sair",
     firstName: "Nome", lastName: "Sobrenome", dateOfBirth: "Data de nascimento",
@@ -373,6 +381,7 @@ const translations = {
     card3Title: "हालिया अपडेट", card3Text: "हमने हाल ही में प्रोसेसिंग सुविधाओं में सुधार किया है।",
     card4Title: "त्वरित सेटिंग्स", card4Text: "यहां अपना इंटरफेस और एक्सेसिबिलिटी विकल्प कस्टमाइज़ करें।",
     supportBtn: "सपोर्ट टिकट", language: "भाषा", start: "शुरू करें",
+    miniGuide: "मिनी गाइड", miniGuideTitle: "माइंडफुलनेस गाइड", hide: "छिपाएं", hideMiniGuide: "मिनी गाइड छिपाएं",
     profileTitle: "प्रोफ़ाइल", personalInformation: "व्यक्तिगत जानकारी",
     settings: "सेटिंग्स", support: "सहायता", logOut: "लॉग आउट",
     firstName: "पहला नाम", lastName: "अंतिम नाम", dateOfBirth: "जन्म तिथि",
@@ -389,6 +398,7 @@ const translations = {
     card3Title: "Aktuelle Updates", card3Text: "Wir haben die Verarbeitungsfunktionen kürzlich verbessert.",
     card4Title: "Schnelleinstellungen", card4Text: "Passen Sie hier Ihre Oberfläche und Zugänglichkeitsoptionen an.",
     supportBtn: "Support-Ticket", language: "Sprache", start: "Starten",
+    miniGuide: "Mini-Guide", miniGuideTitle: "Achtsamkeitsguide", hide: "Ausblenden", hideMiniGuide: "Mini-Guide ausblenden",
     profileTitle: "Profil", personalInformation: "Persönliche Informationen",
     settings: "Einstellungen", support: "Support", logOut: "Abmelden",
     firstName: "Vorname", lastName: "Nachname", dateOfBirth: "Geburtsdatum",
@@ -405,6 +415,7 @@ const translations = {
     card3Title: "Cập nhật gần đây", card3Text: "Chúng tôi đã cải thiện các tính năng xử lý gần đây.",
     card4Title: "Cài đặt nhanh", card4Text: "Tùy chỉnh giao diện và tùy chọn trợ năng của bạn tại đây.",
     supportBtn: "Phiếu hỗ trợ", language: "Ngôn ngữ", start: "Bắt đầu",
+    miniGuide: "Hướng dẫn nhỏ", miniGuideTitle: "Hướng dẫn chánh niệm", hide: "Ẩn", hideMiniGuide: "Ẩn hướng dẫn nhỏ",
     profileTitle: "Hồ sơ", personalInformation: "Thông tin cá nhân",
     settings: "Cài đặt", support: "Hỗ trợ", logOut: "Đăng xuất",
     firstName: "Tên", lastName: "Họ", dateOfBirth: "Ngày sinh",
@@ -804,7 +815,9 @@ function clearExerciseState() {
 let avatarDockEl = null;
 let avatarDockHeaderEl = null;
 let avatarDockIframeEl = null;
+let avatarDockKickerEl = null;
 let avatarDockTitleEl = null;
+let avatarDockCloseEl = null;
 let avatarDockDrag = null;
 let avatarDockResize = null;
 let avatarSessionEl = null;
@@ -1047,12 +1060,12 @@ function ensureAvatarDock() {
   avatarDockEl = document.createElement("section");
   avatarDockEl.className = "avatar-dock hidden";
   avatarDockEl.innerHTML = `
-    <div class="avatar-dock-header">
+    <div class="avatar-dock-header notranslate" translate="no">
       <div class="avatar-dock-copy">
-        <p class="avatar-dock-kicker">Mini Guide</p>
+        <p class="avatar-dock-kicker"></p>
         <p class="avatar-dock-title"></p>
       </div>
-      <button class="avatar-dock-close" type="button" aria-label="Hide mini guide">Hide</button>
+      <button class="avatar-dock-close" type="button"></button>
     </div>
     <div class="avatar-dock-frame-wrap">
       <iframe
@@ -1069,15 +1082,15 @@ function ensureAvatarDock() {
 
   avatarDockHeaderEl = avatarDockEl.querySelector(".avatar-dock-header");
   avatarDockIframeEl = avatarDockEl.querySelector(".avatar-dock-frame");
+  avatarDockKickerEl = avatarDockEl.querySelector(".avatar-dock-kicker");
   avatarDockTitleEl = avatarDockEl.querySelector(".avatar-dock-title");
+  avatarDockCloseEl = avatarDockEl.querySelector(".avatar-dock-close");
 
 
-  avatarDockEl
-    .querySelector(".avatar-dock-close")
-    .addEventListener("click", () => {
-      state.avatarDockVisible = false;
-      render();
-    });
+  avatarDockCloseEl.addEventListener("click", () => {
+    state.avatarDockVisible = false;
+    render();
+  });
 
   avatarDockHeaderEl.addEventListener("pointerdown", (event) => {
     if (event.target.closest(".avatar-dock-close")) {
@@ -1122,7 +1135,10 @@ function syncAvatarDock() {
     return;
   }
 
-  avatarDockTitleEl.textContent = "Mindfulness guide";
+  avatarDockKickerEl.textContent = t("miniGuide");
+  avatarDockTitleEl.textContent = t("miniGuideTitle");
+  avatarDockCloseEl.textContent = t("hide");
+  avatarDockCloseEl.setAttribute("aria-label", t("hideMiniGuide"));
 
   applyAvatarDockSize();
   applyAvatarDockPosition();
