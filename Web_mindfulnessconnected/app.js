@@ -568,11 +568,13 @@ function applyLocaleToDocument(locale) {
 }
 
 let _gtTimer = null;
+let _lastGoogleTranslateLocale = "en";
 function scheduleGoogleRetranslate() {
   if (state.locale === "en") {
     resetGoogleTranslate();
     return;
   }
+  _lastGoogleTranslateLocale = state.locale;
   clearTimeout(_gtTimer);
   _gtTimer = setTimeout(_doGoogleRetranslate, 150);
 }
@@ -584,6 +586,8 @@ function clearGoogleTranslateCookie(name, domain) {
 
 function resetGoogleTranslate() {
   clearTimeout(_gtTimer);
+  const previousLocale = _lastGoogleTranslateLocale;
+  _lastGoogleTranslateLocale = "en";
   clearGoogleTranslateCookie("googtrans");
   clearGoogleTranslateCookie("googtrans", window.location.hostname);
   const parts = window.location.hostname.split(".");
@@ -594,6 +598,13 @@ function resetGoogleTranslate() {
   if (sel && sel.value) {
     sel.value = "";
     sel.dispatchEvent(new Event("change"));
+  }
+  if (previousLocale !== "en") {
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      try {
+        iframe.contentWindow?.postMessage({ source: "mindfulness-host", type: "host-reset-translation" }, getAvatarTargetOrigin());
+      } catch {}
+    });
   }
 }
 
@@ -606,6 +617,7 @@ function _doGoogleRetranslate() {
     sel.value = lang.gtLang;
     sel.dispatchEvent(new Event("change"));
   }
+  _lastGoogleTranslateLocale = state.locale;
 }
 
 function getSelectedSession() {
@@ -767,6 +779,7 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
     compact: "1",
     controlled: "1",
     host,
+    locale: state.locale,
     v: "2"
   });
 
@@ -3236,8 +3249,13 @@ loadLocalSettings();
                 persistLocalSettings();
               }
               if (data && LANGUAGES.some(l => l.code === data.locale)) {
+                const localeChanged = state.locale !== data.locale;
                 state.locale = data.locale;
                 applyLocaleToDocument(data.locale);
+                if (localeChanged) {
+                  scheduleGoogleRetranslate();
+                  render();
+                }
               }
               if (state.screen === "stats" || state.screen === "settings" || state.screen === "personal-info") render();
             },

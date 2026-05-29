@@ -2193,6 +2193,11 @@ const SESSION_KEY = queryParams.get('session') || '';
 const HOST_KEY = queryParams.get('host') || 'standalone';
 const SHARED_CHAT_ID = queryParams.get('chat_id') || '';
 const TTS_BASE_URL = queryParams.get('tts_base') || '';
+const SUPPORTED_LOCALES = new Set(['en','ko','es','fr','ja','zh','ar','pt','hi','de','vi']);
+const AVATAR_LOCALE = SUPPORTED_LOCALES.has(queryParams.get('locale')) ? queryParams.get('locale') : 'en';
+const AVATAR_SESSION_ID = SHARED_CHAT_ID ? `${SHARED_CHAT_ID}:${AVATAR_LOCALE}` : '';
+
+document.documentElement.lang = AVATAR_LOCALE;
 
 function formatSessionName(value){
   return value
@@ -2757,7 +2762,7 @@ async function fetchFromCandidates(path, options={}, preferredBases=SERVER_CANDI
   }
   throw lastError||new Error(`Request failed for ${path}`);
 }
-let sid=SHARED_CHAT_ID||null;
+let sid=AVATAR_SESSION_ID||null;
 let messageLog=[];
 function getTranscriptStorageKey(){return sid?`mindfulness-avatar-transcript:${sid}`:'';}
 function shouldKeepStoredMessage(entry){
@@ -2799,13 +2804,13 @@ function restoreTranscript(){
     return false;
   }
 }
-async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:sid})});return(await r.json()).reply;}
+async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:sid,lang:AVATAR_LOCALE})});return(await r.json()).reply;}
 async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
 
 async function* streamChat(prompt){
   const res=await fetchFromCandidates('/chat/stream',{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:prompt,session_id:sid}),
+    body:JSON.stringify({message:prompt,session_id:sid,lang:AVATAR_LOCALE}),
   });
   const reader=res.body.getReader();
   const dec=new TextDecoder();
@@ -2981,6 +2986,11 @@ window.addEventListener('message',event=>{
 
   if(data.type==='host-pause-session'){
     hostPauseSession();
+    return;
+  }
+
+  if(data.type==='host-reset-translation'){
+    document.documentElement.lang = 'en';
     return;
   }
 

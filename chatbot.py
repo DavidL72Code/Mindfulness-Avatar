@@ -397,12 +397,13 @@ def build_activity_step_message(activity, step_index):
 def build_chat_prompt(user_message, history=None, summary="", activity_context=None, language="en"):
     history = history or []
     lang_map = {
+        "en": "English",
         "ko": "Korean", "es": "Spanish", "fr": "French", "ja": "Japanese",
         "zh": "Chinese (Simplified)", "ar": "Arabic", "pt": "Portuguese",
         "hi": "Hindi", "de": "German", "vi": "Vietnamese",
     }
     sections = [SYSTEM_PROMPT]
-    if language and language != "en" and language in lang_map:
+    if language and language in lang_map:
         sections.append(f"Always respond in {lang_map[language]}. Do not switch languages.")
 
     if summary:
