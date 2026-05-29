@@ -14,6 +14,7 @@ import { ThemeColor, ThemeRadius } from '../theme/appTheme';
 
 function formatMinutes(seconds) {
   if (!seconds || seconds <= 0) return '0 min';
+  if (seconds < 60) return '<1 min';
   const totalMinutes = Math.floor(seconds / 60);
   if (totalMinutes < 60) return `${totalMinutes} min`;
   const hours = Math.floor(totalMinutes / 60);

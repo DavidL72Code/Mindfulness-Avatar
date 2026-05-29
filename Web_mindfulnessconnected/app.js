@@ -461,6 +461,7 @@ const state = {
   summaryModalVisible: false,
   sessionSummary: "",
   sessionDuration: "",
+  sessionTrackingMessage: "",
   avatarConversationId: createSessionId(),
   homeAvatarAutostarted: false,
   scriptSlideIndex: 0,
@@ -508,6 +509,7 @@ function formatDuration(totalSeconds) {
 
 function formatMinutes(seconds) {
   if (!seconds || seconds <= 0) return "0 min";
+  if (seconds < 60) return "<1 min";
   const totalMinutes = Math.floor(seconds / 60);
   if (totalMinutes < 60) return `${totalMinutes} min`;
   const hours = Math.floor(totalMinutes / 60);
@@ -539,7 +541,18 @@ function roundSessionMinutes(seconds) {
 }
 
 async function recordSessionCompletion({ selectedSession, elapsedSeconds, completed, metadata = {} }) {
-  if (!window._fb || !selectedSession || elapsedSeconds <= 0) return;
+  if (!selectedSession) {
+    return { ok: false, message: "No session was selected, so nothing was saved." };
+  }
+  if (elapsedSeconds <= 0) {
+    return { ok: false, message: "This session ended before any time elapsed, so it was not added to your stats." };
+  }
+  if (!window._fb) {
+    return { ok: false, message: "Session tracking is not ready yet. Please wait a moment and try again." };
+  }
+  if (!state.currentUser) {
+    return { ok: false, message: "Sign in before starting a session if you want it saved to Active Stats." };
+  }
   try {
     await window._fb.recordCompletedSession({
       sessionId: selectedSession.id,
@@ -548,8 +561,10 @@ async function recordSessionCompletion({ selectedSession, elapsedSeconds, comple
       completed,
       metadata,
     });
+    return { ok: true, message: "Saved to Active Stats." };
   } catch (error) {
     console.warn("Failed to record session tracking data", error);
+    return { ok: false, message: "We couldn't save this session to Active Stats. Please try again." };
   }
 }
 
@@ -1753,6 +1768,7 @@ function startSelectedSession() {
   state.summaryModalVisible = false;
   state.sessionSummary = "";
   state.sessionDuration = "";
+  state.sessionTrackingMessage = "";
   state.sessionStartTime = Date.now();
   state.sessionActive = true;
   state.sessionStatus = "Session active";
@@ -1806,16 +1822,20 @@ function endSelectedSession() {
     state.sessionSummary = `${selectedSession.title} ended. This session page is still empty for now, but the layout is ready for future guided content.`;
   }
 
+  state.sessionTrackingMessage = "Saving to Active Stats...";
+  state.summaryModalVisible = true;
+  clearExerciseState();
+  render();
+
   void recordSessionCompletion({
     selectedSession,
     elapsedSeconds,
     completed,
     metadata: { ...trackingMetadata, summary: state.sessionSummary },
+  }).then((trackingResult) => {
+    state.sessionTrackingMessage = trackingResult?.message || "";
+    if (state.summaryModalVisible) render();
   });
-
-  state.summaryModalVisible = true;
-  clearExerciseState();
-  render();
 }
 
 async function handleWebSignIn() {
@@ -2824,6 +2844,7 @@ function renderSummaryModal() {
         <h2 class="modal-title">Session Complete</h2>
         <div class="modal-duration">Session length: ${escapeHtml(state.sessionDuration)}</div>
         <div class="modal-summary">${escapeHtml(state.sessionSummary)}</div>
+        ${state.sessionTrackingMessage ? `<div class="modal-summary">${escapeHtml(state.sessionTrackingMessage)}</div>` : ""}
         <button class="summary-close" data-action="close-summary">Close</button>
       </section>
     </div>
@@ -3101,6 +3122,7 @@ appEl.addEventListener("click", (event) => {
       break;
     case "close-summary":
       state.summaryModalVisible = false;
+      state.sessionTrackingMessage = "";
       render();
       break;
     default:
