@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, onIdTokenChanged, signOut } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
@@ -618,6 +618,14 @@ function ChatModal({ visible, onClose, sessionContext }) {
   const [status, setStatus]     = useState('Ready');
   const chatSessionId           = useRef(createSessionId()).current;
   const scrollRef               = useRef(null);
+  const getAuthorizedHeaders    = useCallback(async () => {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  }, []);
 
   useEffect(() => {
     if (visible) setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
@@ -631,9 +639,10 @@ function ChatModal({ visible, onClose, sessionContext }) {
     setBusy(true);
     setStatus('Thinking…');
     try {
+      const headers = await getAuthorizedHeaders();
       const res = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ message: buildChatPrompt(trimmed, sessionContext), session_id: chatSessionId }),
       });
       if (!res.ok) throw new Error(await res.text() || 'Request failed');
@@ -646,7 +655,7 @@ function ChatModal({ visible, onClose, sessionContext }) {
     } finally {
       setBusy(false);
     }
-  }, [draft, busy, chatSessionId, sessionContext]);
+  }, [draft, busy, chatSessionId, sessionContext, getAuthorizedHeaders]);
 
   return (
     <Modal visible={visible} transparent animationType="slide">
@@ -728,6 +737,7 @@ export default function HomeScreen({ navigation }) {
   const avatarConversationId                      = useRef(createSessionId()).current;
   const [avatarHtmlBase, setAvatarHtmlBase]       = useState(null);
   const [avatarLoadError, setAvatarLoadError]     = useState('');
+  const [apiAuthToken, setApiAuthToken]           = useState('');
   const [dockExpanded, setDockExpanded]           = useState(true);
   const sessionWebViewRef                         = useRef(null);
   const homeDockWebViewRef                        = useRef(null);
@@ -789,6 +799,15 @@ export default function HomeScreen({ navigation }) {
     : null;
   const avatarBackendUri = useMemo(() => buildLocalBackendUri(avatarHtmlBase), [avatarHtmlBase]);
 
+  const getAuthorizedHeaders = useCallback(async () => {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  }, []);
+
   // ── Avatar URIs — same chat_id for shared server-side conversation thread ──
   const homeDockUri = useMemo(() => buildAvatarUri(avatarHtmlBase, {
     compact: '1', host: 'home-dock', autostart: '1', chat_id: avatarConversationId, tts_base: avatarBackendUri,
@@ -833,6 +852,21 @@ export default function HomeScreen({ navigation }) {
     };
   }, []);
 
+  useEffect(() => {
+    return onIdTokenChanged(auth, async (user) => {
+      if (!user) {
+        setApiAuthToken('');
+        return;
+      }
+      try {
+        const token = await user.getIdToken();
+        setApiAuthToken(token || '');
+      } catch {
+        setApiAuthToken('');
+      }
+    });
+  }, []);
+
   const handleAvatarWebViewError = useCallback((event) => {
     const native = event?.nativeEvent;
     const detail =
@@ -858,13 +892,24 @@ export default function HomeScreen({ navigation }) {
   // ── Pre-warm TTS cache for all static script texts ──
   // Fires once on mount so script segments are cached before the user starts a session.
   useEffect(() => {
-    const texts = Object.values(SESSION_SCRIPTS).flat().map((s) => s.text);
-    fetch(`${API_BASE_URL}/tts/prewarm`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texts }),
-    }).catch(() => {});
-  }, []);
+    let cancelled = false;
+    (async () => {
+      if (!auth.currentUser) return;
+      const texts = Object.values(SESSION_SCRIPTS).flat().map((s) => s.text);
+      try {
+        const headers = await getAuthorizedHeaders();
+        if (cancelled) return;
+        fetch(`${API_BASE_URL}/tts/prewarm`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ texts }),
+        }).catch(() => {});
+      } catch {}
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [getAuthorizedHeaders]);
 
   // ── Handle messages sent from avatar.html via ReactNativeWebView.postMessage ──
   const handleWebViewMessage = useCallback((event) => {
@@ -909,6 +954,13 @@ export default function HomeScreen({ navigation }) {
     );
   }, []);
 
+  const injectHomeDockCommand = useCallback((command) => {
+    const payload = JSON.stringify({ source: 'mindfulness-host', ...command });
+    homeDockWebViewRef.current?.injectJavaScript(
+      `(function(){try{window._nativeHostCommand(${payload});}catch(e){}})();true;`
+    );
+  }, []);
+
   // ── Called after the session WebView finishes loading ──
   // Always hides the avatar's built-in Start/End buttons.
   // Only re-injects context when returning to an already-active session (resume).
@@ -916,6 +968,11 @@ export default function HomeScreen({ navigation }) {
     setTimeout(() => {
       sessionWebViewRef.current?.injectJavaScript(HIDE_CONTROLS_JS);
     }, 300);
+    if (apiAuthToken) {
+      setTimeout(() => {
+        injectAvatarCommand({ type: 'host-auth-token', token: apiAuthToken });
+      }, 380);
+    }
     if (sessionActive) {
       setTimeout(() => {
         const session  = sessionCatalog.find((s) => s.id === selectedSessionId) || sessionCatalog[0];
@@ -931,12 +988,17 @@ export default function HomeScreen({ navigation }) {
         injectAvatarCommand({ type: 'host-start-session', prompt, announce: false });
       }, 700);
     }
-  }, [selectedSessionId, sessionActive, scriptSlideIndex, injectAvatarCommand]);
+  }, [apiAuthToken, selectedSessionId, sessionActive, scriptSlideIndex, injectAvatarCommand]);
 
   const handleHomeDockLoad = useCallback(() => {
     setTimeout(() => {
       homeDockWebViewRef.current?.injectJavaScript(HIDE_CONTROLS_JS);
     }, 300);
+    if (apiAuthToken) {
+      setTimeout(() => {
+        injectHomeDockCommand({ type: 'host-auth-token', token: apiAuthToken });
+      }, 380);
+    }
     homeDockLoadCount.current += 1;
     if (homeDockLoadCount.current === 1) {
       // First load only — send the welcome prompt via host-start-session
@@ -950,7 +1012,12 @@ export default function HomeScreen({ navigation }) {
         );
       }, 600);
     }
-  }, []);
+  }, [apiAuthToken, injectHomeDockCommand]);
+
+  useEffect(() => {
+    injectAvatarCommand({ type: 'host-auth-token', token: apiAuthToken });
+    injectHomeDockCommand({ type: 'host-auth-token', token: apiAuthToken });
+  }, [apiAuthToken, injectAvatarCommand, injectHomeDockCommand]);
 
   // ── Navigation guards ──
   useLayoutEffect(() => {

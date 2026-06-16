@@ -2816,7 +2816,7 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
           SHOULD_AUTOSTART&&HOST_KEY==='home-dock'?avT('preparingWelcome'):HOST_KEY==='home-dock'?avT('listening'):avT('readyStart')
         );
         if(SHOULD_AUTOSTART&&HOST_KEY==='home-dock'){
-          setTimeout(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});},40);
+          setTimeout(()=>{waitForAuthToken().finally(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});});},40);
         }
       }
     },(err)=>{
@@ -2833,15 +2833,27 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
 const ttschk=document.getElementById('ttschk');
 const TTS_VOICE='en-US-AndrewMultilingualNeural';
 let speechToken=0;
+let avatarAuthToken='';
 function b64ToArrayBuffer(b64){
   const bin=atob(b64),bytes=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
   return bytes.buffer;
 }
+function withAuthHeaders(headers){
+  const next={...(headers||{})};
+  if(avatarAuthToken)next.Authorization=`Bearer ${avatarAuthToken}`;
+  return next;
+}
+async function waitForAuthToken(timeoutMs=1500){
+  const start=Date.now();
+  while(!avatarAuthToken&&Date.now()-start<timeoutMs){
+    await new Promise(resolve=>setTimeout(resolve,50));
+  }
+}
 async function apiTts(text){
   const r=await fetchFromCandidates('/tts',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:withAuthHeaders({'Content-Type':'application/json'}),
     body:JSON.stringify({text,voice_name:TTS_VOICE,lipsync_metadata:true})
   },TTS_SERVER_CANDIDATES);
   const contentType=r.headers.get('content-type')||'';
@@ -2935,7 +2947,7 @@ function shouldKeepStoredMessage(entry){
 function persistTranscript(){
   const key=getTranscriptStorageKey();
   if(!key)return;
-  try{localStorage.setItem(key,JSON.stringify(messageLog));}catch{}
+  try{sessionStorage.setItem(key,JSON.stringify(messageLog));}catch{}
 }
 function renderTranscript(){
   msgsEl.innerHTML='';
@@ -2951,7 +2963,7 @@ function restoreTranscript(){
   const key=getTranscriptStorageKey();
   if(!key)return false;
   try{
-    const raw=localStorage.getItem(key);
+    const raw=sessionStorage.getItem(key);
     const parsed=raw?JSON.parse(raw):[];
     if(!Array.isArray(parsed))return false;
     messageLog=parsed.filter(shouldKeepStoredMessage);
@@ -2962,12 +2974,12 @@ function restoreTranscript(){
     return false;
   }
 }
-async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:sid,lang:AVATAR_LOCALE})});return(await r.json()).reply;}
-async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
+async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({message:msg,session_id:sid,lang:AVATAR_LOCALE})});return(await r.json()).reply;}
+async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
 
 async function* streamChat(prompt){
   const res=await fetchFromCandidates('/chat/stream',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+    method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),
     body:JSON.stringify({message:prompt,session_id:sid,lang:AVATAR_LOCALE}),
   });
   const reader=res.body.getReader();
@@ -3119,6 +3131,11 @@ window.addEventListener('message',event=>{
 
   if(data.type==='host-start-session'){
     startAvatarSession({promptOverride:data.prompt||null,announce:data.announce!==false});
+    return;
+  }
+
+  if(data.type==='host-auth-token'){
+    avatarAuthToken=typeof data.token==='string'?data.token:'';
     return;
   }
 

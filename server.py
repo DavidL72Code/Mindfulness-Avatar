@@ -3,9 +3,14 @@ import json
 import os
 import queue
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Thread
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import parse_qs, urlparse
+
+from google.auth.transport.requests import Request as GoogleAuthRequest
+from google.oauth2 import id_token as google_id_token
 
 from chatbot import (
     build_activity_step_message,
@@ -46,10 +51,42 @@ WEB_DIR = os.getenv(
 )
 MAX_HISTORY_MESSAGES = 20
 SUMMARY_BATCH_SIZE = 10
-ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
+FIREBASE_PROJECT_ID = os.getenv("EXPO_PUBLIC_FIREBASE_PROJECT_ID", "").strip()
 MINDFULNESS_ACTIVITIES = load_mindfulness_activities()
 SESSIONS = {}
 SESSIONS_LOCK = Lock()
+RATE_LIMITS = {}
+RATE_LIMITS_LOCK = Lock()
+TOKEN_CACHE = {}
+TOKEN_CACHE_LOCK = Lock()
+GOOGLE_AUTH_REQUEST = GoogleAuthRequest()
+MAX_CHAT_MESSAGE_LENGTH = 4000
+MAX_TTS_TEXT_LENGTH = 1200
+MAX_PREWARM_ITEMS = 100
+MAX_PREWARM_TEXT_LENGTH = 500
+MAX_PREWARM_TOTAL_CHARS = 12000
+TOKEN_CACHE_TTL_SECONDS = 300
+
+RATE_LIMIT_POLICIES = {
+    "activities": (60, 60),
+    "chat": (12, 60),
+    "chat_stream": (12, 60),
+    "tts": (20, 60),
+    "tts_prewarm": (2, 300),
+    "session_end": (10, 60),
+    "activity_select": (20, 60),
+    "activity_step": (30, 60),
+}
+
+DEFAULT_ALLOWED_ORIGINS = {
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://mindfulness-avatar.vercel.app",
+    "https://multilingual-virtual-assistant.onrender.com",
+    "https://mindfulness-avatar.onrender.com",
+}
 
 _SENTENCE_SPLIT = re.compile(r'(?<=[.!?:;])\s+')
 
@@ -65,23 +102,29 @@ def extract_speakable_chunks(buf):
     return complete, parts[-1]
 
 
-def get_or_create_session(session_id):
+def _session_key(user_id, session_id):
+    return f"{user_id}:{session_id}"
+
+
+def get_or_create_session(user_id, session_id):
+    session_key = _session_key(user_id, session_id)
     with SESSIONS_LOCK:
-        session = SESSIONS.get(session_id)
+        session = SESSIONS.get(session_key)
         if session is None:
             session = {
+                "user_id": user_id,
                 "history": [],
                 "summary": "",
                 "completed_activities": [],
                 "active_activity_id": None,
                 "current_step_index": None,
             }
-            SESSIONS[session_id] = session
+            SESSIONS[session_key] = session
         return session
 
 
-def get_session_snapshot(session_id):
-    session = get_or_create_session(session_id)
+def get_session_snapshot(user_id, session_id):
+    session = get_or_create_session(user_id, session_id)
     with SESSIONS_LOCK:
         return {
             "history": list(session["history"]),
@@ -92,9 +135,9 @@ def get_session_snapshot(session_id):
         }
 
 
-def remove_session(session_id):
+def remove_session(user_id, session_id):
     with SESSIONS_LOCK:
-        return SESSIONS.pop(session_id, None)
+        return SESSIONS.pop(_session_key(user_id, session_id), None)
 
 
 def update_session_memory(session, user_message, assistant_message):
@@ -161,6 +204,10 @@ def send_json(handler, payload, status=200):
     handler.wfile.write(response)
 
 
+def send_error_json(handler, status, message):
+    send_json(handler, {"error": message}, status=status)
+
+
 def send_bytes(handler, payload, content_type, status=200):
     handler.send_response(status)
     handler.send_header("Content-Type", content_type)
@@ -169,17 +216,160 @@ def send_bytes(handler, payload, content_type, status=200):
     handler.wfile.write(payload)
 
 
+def load_allowed_origins():
+    configured = []
+    for env_key in ("ALLOWED_ORIGINS", "ALLOWED_ORIGIN"):
+        raw = os.getenv(env_key, "")
+        if not raw:
+            continue
+        configured.extend(
+            value.strip().rstrip("/")
+            for value in raw.split(",")
+            if value.strip() and value.strip() != "*"
+        )
+
+    if configured:
+        return set(configured)
+    return set(DEFAULT_ALLOWED_ORIGINS)
+
+
+ALLOWED_ORIGINS = load_allowed_origins()
+CSP_HEADER = "; ".join(
+    [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'self'",
+        "form-action 'self'",
+        "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://translate.google.com https://translate.googleapis.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com data:",
+        "img-src 'self' data: blob: https:",
+        "media-src 'self' data: blob: https:",
+        "connect-src 'self' https: wss:",
+        "frame-src 'self' https://translate.google.com https://translate.googleapis.com",
+    ]
+)
+
+
 class ChatHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=WEB_DIR, **kwargs)
 
+    def get_request_origin(self):
+        origin = (self.headers.get("Origin") or "").strip()
+        return origin.rstrip("/") if origin else ""
+
+    def get_request_host_origin(self):
+        host = (self.headers.get("X-Forwarded-Host") or self.headers.get("Host") or "").strip()
+        if not host:
+            return ""
+        proto = (self.headers.get("X-Forwarded-Proto") or "http").strip()
+        return f"{proto}://{host}".rstrip("/")
+
+    def is_origin_allowed(self, origin):
+        if not origin:
+            return True
+        return origin in ALLOWED_ORIGINS or origin == self.get_request_host_origin()
+
+    def require_allowed_origin(self):
+        origin = self.get_request_origin()
+        if self.is_origin_allowed(origin):
+            return True
+        send_error_json(self, 403, "Origin is not allowed.")
+        return False
+
     def end_headers(self):
-        self.send_header("Access-Control-Allow-Origin", ALLOWED_ORIGIN)
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        origin = self.get_request_origin()
+        if origin and self.is_origin_allowed(origin):
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header("Content-Security-Policy", CSP_HEADER)
+        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "SAMEORIGIN")
+        self.send_header(
+            "Permissions-Policy",
+            "camera=(), geolocation=(), microphone=(self), browsing-topics=()",
+        )
         super().end_headers()
 
+    def get_client_ip(self):
+        forwarded_for = self.headers.get("X-Forwarded-For", "")
+        if forwarded_for:
+            return forwarded_for.split(",")[0].strip()
+        return self.client_address[0]
+
+    def require_rate_limit(self, scope, identity):
+        limit, window_seconds = RATE_LIMIT_POLICIES[scope]
+        now = time.time()
+        key = (scope, identity)
+        with RATE_LIMITS_LOCK:
+            timestamps = RATE_LIMITS.get(key, [])
+            timestamps = [ts for ts in timestamps if now - ts < window_seconds]
+            if len(timestamps) >= limit:
+                retry_after = max(1, int(window_seconds - (now - timestamps[0])))
+                self.send_response(429)
+                self.send_header("Retry-After", str(retry_after))
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Rate limit exceeded."}).encode("utf-8"))
+                RATE_LIMITS[key] = timestamps
+                return False
+            timestamps.append(now)
+            RATE_LIMITS[key] = timestamps
+        return True
+
+    def require_auth(self):
+        if not FIREBASE_PROJECT_ID:
+            send_error_json(self, 500, "Server auth is not configured.")
+            return None
+
+        header = self.headers.get("Authorization", "")
+        if not header.startswith("Bearer "):
+            send_error_json(self, 401, "Missing bearer token.")
+            return None
+
+        token = header[7:].strip()
+        if not token:
+            send_error_json(self, 401, "Missing bearer token.")
+            return None
+
+        now = time.time()
+        with TOKEN_CACHE_LOCK:
+            cached = TOKEN_CACHE.get(token)
+            if cached and now - cached["verified_at"] < TOKEN_CACHE_TTL_SECONDS:
+                return cached["claims"]
+
+        try:
+            claims = google_id_token.verify_firebase_token(
+                token,
+                GOOGLE_AUTH_REQUEST,
+                FIREBASE_PROJECT_ID,
+            )
+        except Exception:
+            send_error_json(self, 401, "Invalid or expired bearer token.")
+            return None
+
+        user_id = (
+            (claims or {}).get("uid")
+            or (claims or {}).get("user_id")
+            or (claims or {}).get("sub")
+        )
+        if not claims or not user_id:
+            send_error_json(self, 401, "Invalid bearer token.")
+            return None
+        claims["uid"] = user_id
+
+        with TOKEN_CACHE_LOCK:
+            TOKEN_CACHE[token] = {"claims": claims, "verified_at": now}
+        return claims
+
     def do_OPTIONS(self):
+        if not self.require_allowed_origin():
+            return
         self.send_response(204)
         self.end_headers()
 
@@ -189,10 +379,14 @@ class ChatHandler(SimpleHTTPRequestHandler):
             return
 
         if self.path == "/firebase-config":
+            if not self.require_allowed_origin():
+                return
             self.handle_firebase_config()
             return
 
         if self.path.startswith("/activities"):
+            if not self.require_allowed_origin():
+                return
             self.handle_activities()
             return
 
@@ -211,6 +405,9 @@ class ChatHandler(SimpleHTTPRequestHandler):
         send_json(self, {"firebaseConfig": config})
 
     def do_POST(self):
+        if not self.require_allowed_origin():
+            return
+
         if self.path == "/chat":
             self.handle_chat()
             return
@@ -242,17 +439,16 @@ class ChatHandler(SimpleHTTPRequestHandler):
         self.send_error(404)
 
     def handle_activities(self):
-        query = self.path.partition("?")[2]
-        session_id = ""
-        if query:
-            for part in query.split("&"):
-                key, _, value = part.partition("=")
-                if key == "session_id":
-                    session_id = value
-                    break
+        params = parse_qs(urlparse(self.path).query)
+        session_id = (params.get("session_id") or [""])[0].strip()
 
         if session_id:
-            session = get_or_create_session(session_id)
+            claims = self.require_auth()
+            if not claims:
+                return
+            if not self.require_rate_limit("activities", claims["uid"]):
+                return
+            session = get_or_create_session(claims["uid"], session_id)
             payload = {
                 "activities": serialize_activities(session),
                 "active_step": build_step_payload(session),
@@ -274,6 +470,12 @@ class ChatHandler(SimpleHTTPRequestHandler):
         send_json(self, payload)
 
     def handle_chat(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("chat", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
@@ -282,19 +484,23 @@ class ChatHandler(SimpleHTTPRequestHandler):
             session_id = payload.get("session_id", "").strip()
             lang = payload.get("lang", "en").strip()
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not user_message:
-            self.send_error(400, "Missing message")
+            send_error_json(self, 400, "Missing message")
             return
 
         if not session_id:
-            self.send_error(400, "Missing session_id")
+            send_error_json(self, 400, "Missing session_id")
             return
 
-        session = get_or_create_session(session_id)
-        session_snapshot = get_session_snapshot(session_id)
+        if len(user_message) > MAX_CHAT_MESSAGE_LENGTH:
+            send_error_json(self, 413, "Message is too long.")
+            return
+
+        session = get_or_create_session(claims["uid"], session_id)
+        session_snapshot = get_session_snapshot(claims["uid"], session_id)
         activity_context = None
         if session_snapshot["active_activity_id"] and session_snapshot["current_step_index"] is not None:
             activity_context = find_activity(session_snapshot["active_activity_id"])
@@ -318,10 +524,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
             content = result["choices"][0]["message"]["content"]
             update_session_memory(session, user_message, content)
         except Exception as exc:
-            self.send_error(500, f"Model error: {exc}")
+            send_error_json(self, 500, f"Model error: {exc}")
             return
 
-        updated_snapshot = get_session_snapshot(session_id)
+        updated_snapshot = get_session_snapshot(claims["uid"], session_id)
         send_json(
             self,
             {
@@ -335,6 +541,12 @@ class ChatHandler(SimpleHTTPRequestHandler):
         )
 
     def handle_tts(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("tts", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
@@ -343,11 +555,15 @@ class ChatHandler(SimpleHTTPRequestHandler):
             voice_name = payload.get("voice_name", "").strip() or None
             include_lipsync = bool(payload.get("lipsync_metadata"))
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not text:
-            self.send_error(400, "Missing text")
+            send_error_json(self, 400, "Missing text")
+            return
+
+        if len(text) > MAX_TTS_TEXT_LENGTH:
+            send_error_json(self, 413, "Text is too long for synthesis.")
             return
 
         try:
@@ -357,7 +573,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 else synthesize_edge_tts(text=text, voice=voice_name)
             )
         except Exception as exc:
-            self.send_error(500, f"TTS error: {exc}")
+            send_error_json(self, 500, f"TTS error: {exc}")
             return
 
         if include_lipsync:
@@ -378,31 +594,67 @@ class ChatHandler(SimpleHTTPRequestHandler):
         )
 
     def handle_tts_prewarm(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("tts_prewarm", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
             payload = json.loads(body.decode("utf-8"))
             texts = payload.get("texts", [])
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not isinstance(texts, list):
-            self.send_error(400, "texts must be an array")
+            send_error_json(self, 400, "texts must be an array")
+            return
+
+        if len(texts) > MAX_PREWARM_ITEMS:
+            send_error_json(self, 413, "Too many prewarm items.")
+            return
+
+        cleaned_texts = []
+        total_chars = 0
+        for item in texts:
+            if not isinstance(item, str):
+                continue
+            value = item.strip()
+            if not value:
+                continue
+            if len(value) > MAX_PREWARM_TEXT_LENGTH:
+                send_error_json(self, 413, "A prewarm text is too long.")
+                return
+            cleaned_texts.append(value)
+            total_chars += len(value)
+            if total_chars > MAX_PREWARM_TOTAL_CHARS:
+                send_error_json(self, 413, "Prewarm payload is too large.")
+                return
+
+        if not cleaned_texts:
+            send_json(self, {"ok": True, "queued": 0})
             return
 
         def _warm():
-            for t in texts:
-                if isinstance(t, str) and t.strip():
-                    try:
-                        synthesize_edge_tts(text=t.strip())
-                    except Exception:
-                        pass
+            for text_value in cleaned_texts:
+                try:
+                    synthesize_edge_tts(text=text_value)
+                except Exception:
+                    pass
 
         Thread(target=_warm, daemon=True).start()
-        send_json(self, {"ok": True, "queued": len(texts)})
+        send_json(self, {"ok": True, "queued": len(cleaned_texts)})
 
     def handle_activity_select(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("activity_select", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
@@ -410,19 +662,19 @@ class ChatHandler(SimpleHTTPRequestHandler):
             session_id = payload.get("session_id", "").strip()
             activity_id = payload.get("activity_id", "").strip()
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not session_id or not activity_id:
-            self.send_error(400, "Missing session_id or activity_id")
+            send_error_json(self, 400, "Missing session_id or activity_id")
             return
 
         activity = find_activity(activity_id)
         if not activity:
-            self.send_error(404, "Unknown activity")
+            send_error_json(self, 404, "Unknown activity")
             return
 
-        session = get_or_create_session(session_id)
+        session = get_or_create_session(claims["uid"], session_id)
         with SESSIONS_LOCK:
             session["active_activity_id"] = activity_id
             session["current_step_index"] = 0
@@ -444,29 +696,35 @@ class ChatHandler(SimpleHTTPRequestHandler):
         )
 
     def handle_complete_step(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("activity_step", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
             payload = json.loads(body.decode("utf-8"))
             session_id = payload.get("session_id", "").strip()
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not session_id:
-            self.send_error(400, "Missing session_id")
+            send_error_json(self, 400, "Missing session_id")
             return
 
-        session = get_or_create_session(session_id)
+        session = get_or_create_session(claims["uid"], session_id)
         activity_id = session["active_activity_id"]
         current_step_index = session["current_step_index"]
         if not activity_id or current_step_index is None:
-            self.send_error(400, "No active activity")
+            send_error_json(self, 400, "No active activity")
             return
 
         activity = find_activity(activity_id)
         if not activity:
-            self.send_error(404, "Unknown activity")
+            send_error_json(self, 404, "Unknown activity")
             return
 
         completed_step_message = (
@@ -518,6 +776,12 @@ class ChatHandler(SimpleHTTPRequestHandler):
             raise _ClientDisconnected()
 
     def handle_chat_stream(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("chat_stream", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
@@ -526,18 +790,22 @@ class ChatHandler(SimpleHTTPRequestHandler):
             session_id = payload.get("session_id", "").strip()
             lang = payload.get("lang", "en").strip()
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not user_message:
-            self.send_error(400, "Missing message")
+            send_error_json(self, 400, "Missing message")
             return
         if not session_id:
-            self.send_error(400, "Missing session_id")
+            send_error_json(self, 400, "Missing session_id")
             return
 
-        session = get_or_create_session(session_id)
-        session_snapshot = get_session_snapshot(session_id)
+        if len(user_message) > MAX_CHAT_MESSAGE_LENGTH:
+            send_error_json(self, 413, "Message is too long.")
+            return
+
+        session = get_or_create_session(claims["uid"], session_id)
+        session_snapshot = get_session_snapshot(claims["uid"], session_id)
         activity_context = None
         if session_snapshot["active_activity_id"] and session_snapshot["current_step_index"] is not None:
             activity_context = find_activity(session_snapshot["active_activity_id"])
@@ -645,22 +913,28 @@ class ChatHandler(SimpleHTTPRequestHandler):
             pass
 
     def handle_end_session(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("session_end", claims["uid"]):
+            return
+
         content_length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(content_length)
         try:
             payload = json.loads(body.decode("utf-8"))
             session_id = payload.get("session_id", "").strip()
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON")
+            send_error_json(self, 400, "Invalid JSON")
             return
 
         if not session_id:
-            self.send_error(400, "Missing session_id")
+            send_error_json(self, 400, "Missing session_id")
             return
 
-        session_snapshot = get_session_snapshot(session_id)
+        session_snapshot = get_session_snapshot(claims["uid"], session_id)
         if not session_snapshot["history"] and not session_snapshot["summary"]:
-            remove_session(session_id)
+            remove_session(claims["uid"], session_id)
             send_json(self, {"summary": "This session ended before any messages were sent."})
             return
 
@@ -670,10 +944,10 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 history=session_snapshot["history"],
             )
         except Exception as exc:
-            self.send_error(500, f"Model error: {exc}")
+            send_error_json(self, 500, f"Model error: {exc}")
             return
 
-        remove_session(session_id)
+        remove_session(claims["uid"], session_id)
         send_json(self, {"summary": recap})
 
 

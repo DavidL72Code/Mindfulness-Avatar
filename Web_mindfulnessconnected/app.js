@@ -745,6 +745,28 @@ function createSessionId() {
   return `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+async function getCurrentUserIdToken() {
+  const user = window._fb?.getCurrentUser?.();
+  if (!user || typeof user.getIdToken !== "function") {
+    return "";
+  }
+
+  try {
+    return await user.getIdToken();
+  } catch {
+    return "";
+  }
+}
+
+async function getApiHeaders(baseHeaders = {}) {
+  const headers = { ...baseHeaders };
+  const token = await getCurrentUserIdToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 function formatDuration(totalSeconds) {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -1166,6 +1188,37 @@ function flushAvatarCommands(host) {
       getAvatarTargetOrigin()
     );
   }
+}
+
+function postAvatarCommand(host, command) {
+  const iframe = getAvatarIframe(host);
+  if (!iframe || !iframe.contentWindow || !avatarReadyState[host]) {
+    return false;
+  }
+
+  iframe.contentWindow.postMessage(
+    {
+      source: "mindfulness-host",
+      ...command
+    },
+    getAvatarTargetOrigin()
+  );
+  return true;
+}
+
+async function syncAvatarAuthState(host = null) {
+  const command = {
+    type: "host-auth-token",
+    token: await getCurrentUserIdToken()
+  };
+
+  if (host) {
+    postAvatarCommand(host, command);
+    return;
+  }
+
+  postAvatarCommand(AVATAR_HOST_HOME, command);
+  postAvatarCommand(AVATAR_HOST_SESSION, command);
 }
 
 function buildSessionAvatarWelcomePrompt(sessionTitle) {
@@ -1853,6 +1906,7 @@ async function sendChatMessage() {
     session_id: state.chatSessionId,
     lang: state.locale,
   });
+  const headers = await getApiHeaders({ "Content-Type": "application/json" });
 
   // Streaming audio: MSE for Chrome/Firefox (plays at first chunk, ~300 ms latency),
   // blob-URL fallback for Safari (plays when sentence completes, same as before).
@@ -1945,7 +1999,7 @@ async function sendChatMessage() {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/stream`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1988,7 +2042,7 @@ async function sendChatMessage() {
       // Stream unavailable — fall back to full response
       const response = await fetch(`${API_BASE_URL}/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body
       });
       if (!response.ok) {
@@ -3404,6 +3458,7 @@ window.addEventListener("message", (event) => {
       avatarReadyState[data.host] = true;
     }
     flushAvatarCommands(data.host);
+    void syncAvatarAuthState(data.host);
     if (data.host === AVATAR_HOST_SESSION) {
       syncSessionAvatarProgress();
     }
@@ -3481,6 +3536,7 @@ loadLocalSettings();
         signIn:           (email, pw) => auth.signInWithEmailAndPassword(email, pw),
         signUp:           (email, pw) => auth.createUserWithEmailAndPassword(email, pw),
         signOut:          ()          => auth.signOut(),
+        getCurrentUser:   ()          => auth.currentUser,
         sendPasswordResetEmail: (email) => auth.sendPasswordResetEmail(email),
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
         subscribeToUserDoc: (uid, onData, onError) =>
@@ -3577,6 +3633,7 @@ loadLocalSettings();
         state.authenticated = !!user;
         state.currentUser = user || null;
         if (user) state.authScreen = "signin";
+        void syncAvatarAuthState();
         if (typeof state.userStatsUnsubscribe === "function") {
           state.userStatsUnsubscribe();
           state.userStatsUnsubscribe = null;

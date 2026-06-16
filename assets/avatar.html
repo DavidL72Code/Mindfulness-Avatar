@@ -2595,10 +2595,22 @@ function b64ToAB(b64){const bin=atob(b64),buf=new Uint8Array(bin.length);for(let
 const ttschk=document.getElementById('ttschk');
 const TTS_VOICE='en-US-AndrewMultilingualNeural';
 let speechToken=0;
+let avatarAuthToken='';
+function withAuthHeaders(headers){
+  const next={...(headers||{})};
+  if(avatarAuthToken)next.Authorization=`Bearer ${avatarAuthToken}`;
+  return next;
+}
+async function waitForAuthToken(timeoutMs=1500){
+  const start=Date.now();
+  while(!avatarAuthToken&&Date.now()-start<timeoutMs){
+    await new Promise(resolve=>setTimeout(resolve,50));
+  }
+}
 async function apiTts(text){
   const r=await fetchFromCandidates('/tts',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:withAuthHeaders({'Content-Type':'application/json'}),
     body:JSON.stringify({text,voice_name:TTS_VOICE})
   },TTS_SERVER_CANDIDATES);
   return await r.arrayBuffer();
@@ -2684,7 +2696,7 @@ function shouldKeepStoredMessage(entry){
 function persistTranscript(){
   const key=getTranscriptStorageKey();
   if(!key)return;
-  try{localStorage.setItem(key,JSON.stringify(messageLog));}catch{}
+  try{sessionStorage.setItem(key,JSON.stringify(messageLog));}catch{}
 }
 function renderTranscript(){
   msgsEl.innerHTML='';
@@ -2700,7 +2712,7 @@ function restoreTranscript(){
   const key=getTranscriptStorageKey();
   if(!key)return false;
   try{
-    const raw=localStorage.getItem(key);
+    const raw=sessionStorage.getItem(key);
     const parsed=raw?JSON.parse(raw):[];
     if(!Array.isArray(parsed))return false;
     messageLog=parsed.filter(shouldKeepStoredMessage);
@@ -2711,12 +2723,12 @@ function restoreTranscript(){
     return false;
   }
 }
-async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:sid})});return(await r.json()).reply;}
-async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
+async function apiChat(msg){const r=await fetchFromCandidates('/chat',{method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({message:msg,session_id:sid})});return(await r.json()).reply;}
+async function apiEnd(){if(!sid)return null;try{const r=await fetchFromCandidates('/session/end',{method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),body:JSON.stringify({session_id:sid})});return(await r.json()).summary;}catch{return null;}}
 
 async function* streamChat(prompt){
   const res=await fetchFromCandidates('/chat/stream',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+    method:'POST',headers:withAuthHeaders({'Content-Type':'application/json'}),
     body:JSON.stringify({message:prompt,session_id:sid}),
   });
   const reader=res.body.getReader();
@@ -2851,6 +2863,11 @@ window.addEventListener('message',event=>{
     return;
   }
 
+  if(data.type==='host-auth-token'){
+    avatarAuthToken=typeof data.token==='string'?data.token:'';
+    return;
+  }
+
   if(data.type==='host-send-text'){
     if(!sid&&data.text){
       startAvatarSession({promptOverride:data.text,announce:false});
@@ -2881,6 +2898,7 @@ window.addEventListener('message',event=>{
 window._nativeHostCommand=function(cmd){
   if(!cmd||cmd.source!=='mindfulness-host')return;
   if(cmd.type==='host-start-session'){startAvatarSession({promptOverride:cmd.prompt||null,announce:cmd.announce!==false});return;}
+  if(cmd.type==='host-auth-token'){avatarAuthToken=typeof cmd.token==='string'?cmd.token:'';return;}
   if(cmd.type==='host-send-text'){if(!sid&&cmd.text){startAvatarSession({promptOverride:cmd.text,announce:false});return;}inp.value=cmd.text||'';handleSend();return;}
   if(cmd.type==='host-speak-script'){speakScriptLine(cmd.text||'');return;}
   if(cmd.type==='host-end-session'){hostEndSession();return;}
@@ -2896,7 +2914,7 @@ if(hasStoredTranscript){
   setSt('idle','Listening…');
 }
 window.addEventListener('load',()=>{postHostMessage({type:'avatar-ready'});},{once:true});
-if(SHOULD_AUTOSTART&&!hasStoredTranscript){window.addEventListener('load',()=>{setTimeout(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});},40);},{once:true});}
+if(SHOULD_AUTOSTART&&!hasStoredTranscript){window.addEventListener('load',()=>{setTimeout(()=>{waitForAuthToken().finally(()=>{startAvatarSession({promptOverride:getInitialWelcomePrompt(),announce:false});});},40);},{once:true});}
 </script>
 </body>
 </html>
