@@ -2998,3 +2998,29 @@ html[data-theme="dark"] {
 }
 .session-avatar-shell::after { box-shadow: none; }
 .session-avatar-host { border-radius: 26px; overflow: hidden; }
+
+
+/* Fortune reveal: the reel is a single clipped line, so the message itself
+   gets its own surface where it can actually be read. */
+.fortune-overlay { align-items: center; justify-content: center; padding: 20px; }
+.fortune-reveal {
+  width: min(420px, 100%); padding: 30px 28px 24px; border-radius: 24px;
+  background: var(--atlas-surface); box-shadow: var(--atlas-shadow);
+  text-align: center; animation: atlas-rise .22s ease both;
+}
+.fortune-reveal-kicker {
+  margin: 0 0 14px; font-size: 10px; font-weight: 800; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--brand);
+}
+.fortune-reveal-text {
+  margin: 0 0 24px; font-size: 19px; line-height: 1.5; font-style: italic;
+  color: var(--atlas-ink); overflow-wrap: anywhere;
+}
+.fortune-reveal-close {
+  min-height: 44px; padding: 0 26px; border-radius: 22px;
+  background: var(--atlas-ink); color: #fff; font-size: 13px; font-weight: 800;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.fortune-reveal-close:hover { opacity: .88; transform: translateY(-1px); }
+/* the settled reel invites a second look */
+.fortune-machine-window[data-action="show-fortune"] { cursor: pointer; }

@@ -823,6 +823,7 @@ const state = {
   moodTodayKey: "",
   moodStorageKey: "",
   dailyFortune: "",
+  fortuneModalVisible: false,
   fortuneSpinning: false,
   settings: {
     notifications: false,
@@ -977,6 +978,11 @@ function spinDailyFortune() {
       button.disabled = false;
       button.innerHTML = restoreLabel;
     }
+    // The reel is one nowrap line, so anything longer than the window was cut
+    // off mid-sentence. Show the whole thing once it lands. Rendering here is
+    // safe: the animation has already finished.
+    state.fortuneModalVisible = true;
+    render();
   };
   animation.finished.then(settle, settle);
 }
@@ -1017,7 +1023,7 @@ function renderMoodPulse() {
         <div class="fortune-row ${state.fortuneSpinning ? "is-spinning" : ""}">
           <div class="fortune-machine" aria-live="polite" aria-label="${escapeHtml(lt("fortuneMachine"))}">
             <div class="fortune-slot-marquee"><span>FORTUNE MACHINE</span><i aria-hidden="true"></i></div>
-            <div class="fortune-machine-window"><div class="fortune-machine-reel">${state.dailyFortune && !state.fortuneSpinning ? `<span>${escapeHtml(state.dailyFortune)}</span>` : fortunes.slice(0, 4).map((fortune) => `<span>${escapeHtml(fortune)}</span>`).join("")}</div></div>
+            <div class="fortune-machine-window" ${state.dailyFortune && !state.fortuneSpinning ? `data-action="show-fortune" title="${escapeHtml(lt("yourMessageToday"))}"` : ""}><div class="fortune-machine-reel">${state.dailyFortune && !state.fortuneSpinning ? `<span>${escapeHtml(state.dailyFortune)}</span>` : fortunes.slice(0, 4).map((fortune) => `<span>${escapeHtml(fortune)}</span>`).join("")}</div></div>
             <button class="fortune-button" data-action="spin-fortune" type="button" ${state.fortuneSpinning ? "disabled" : ""}><span aria-hidden="true">✦</span> ${state.fortuneSpinning ? escapeHtml(lt("spinning")) : escapeHtml(lt("spinFortune"))}</button>
             <div class="fortune-slot-base"><span>${escapeHtml(lt("yourMessageToday"))}</span><i aria-hidden="true"></i></div>
             <span class="fortune-slot-lever" aria-hidden="true"><i></i></span>
@@ -4149,6 +4155,19 @@ function renderSummaryModal() {
   `;
 }
 
+function renderFortuneModal() {
+  if (!state.fortuneModalVisible || !state.dailyFortune) return "";
+  return `
+    <div class="overlay fortune-overlay" data-action="close-fortune">
+      <section class="fortune-reveal" role="dialog" aria-modal="true" aria-labelledby="fortune-reveal-title">
+        <p class="fortune-reveal-kicker" id="fortune-reveal-title">${escapeHtml(lt("yourMessageToday"))}</p>
+        <p class="fortune-reveal-text">${escapeHtml(state.dailyFortune)}</p>
+        <button class="fortune-reveal-close" data-action="close-fortune" type="button">Close</button>
+      </section>
+    </div>
+  `;
+}
+
 function renderLeaveWarning() {
   if (!state.leaveWarningVisible) return "";
   const elapsed = getElapsedSessionSeconds();
@@ -4232,6 +4251,7 @@ function render() {
     }
     ${renderSummaryModal()}
     ${renderLeaveWarning()}
+    ${renderFortuneModal()}
   `;
 
   attachInputHandlers();
@@ -4352,7 +4372,7 @@ appEl.addEventListener("click", (event) => {
   const { action } = actionEl.dataset;
   const isOverlay = actionEl.classList.contains("overlay");
 
-  if ((action === "close-chat" || action === "close-summary" || action === "dismiss-leave-warning") && isOverlay && event.target !== actionEl) {
+  if ((action === "close-chat" || action === "close-summary" || action === "dismiss-leave-warning" || action === "close-fortune") && isOverlay && event.target !== actionEl) {
     return;
   }
 
@@ -4405,6 +4425,16 @@ appEl.addEventListener("click", (event) => {
       break;
     case "record-mood":
       recordMood(actionEl.dataset.mood);
+      break;
+    case "close-fortune":
+      state.fortuneModalVisible = false;
+      render();
+      break;
+    case "show-fortune":
+      if (state.dailyFortune) {
+        state.fortuneModalVisible = true;
+        render();
+      }
       break;
     case "spin-fortune":
       spinDailyFortune();
@@ -4564,6 +4594,9 @@ window.addEventListener("keydown", (event) => {
     }
     if (state.leaveWarningVisible) {
       state.leaveWarningVisible = false;
+    }
+    if (state.fortuneModalVisible) {
+      state.fortuneModalVisible = false;
     }
     render();
   }
