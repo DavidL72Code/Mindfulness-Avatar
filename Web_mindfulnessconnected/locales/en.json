@@ -1,0 +1,1514 @@
+{
+  "locale": "en",
+  "name": "English",
+  "direction": "ltr",
+  "ui": {
+    "signUpHeader": "Create account",
+    "createAccountTitle": "Create account",
+    "fullName": "Full name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "dateOfBirth": "Date of Birth",
+    "languageLabel": "Language preference",
+    "langEnglish": "English",
+    "langKorean": "Korean",
+    "createAccountButton": "Create Account",
+    "alreadyHaveAccount": "Already have an account? Sign in",
+    "errorTitle": "Error",
+    "errorFillAll": "Please fill in all fields.",
+    "signUpFailed": "Sign Up Failed",
+    "emailInUse": "That email address is already in use.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordTooShort": "Use at least 8 characters for your password.",
+    "signUpGenericError": "We could not create your account. Check your details and try again.",
+    "homeTitle": "Hi, {name}!",
+    "homeSubtitle": "Mindfulness Virtual Assistant",
+    "homeTodaysSession": "Today's session",
+    "homeSessionOfTheDay": "Session of the day",
+    "homeAllSessions": "All sessions",
+    "homeSession": "Session",
+    "chatPlaceholder": "Ask about mindfulness, app features, or this session…",
+    "cardAboutTitle": "About the Assistant",
+    "cardAboutText": "Our AI is trained to guide you through mindfulness exercises.",
+    "cardUsageTitle": "Usage Instructions",
+    "cardUsageText": "Find a quiet space and follow the breathing prompts.",
+    "cardUpdatesTitle": "Recent Updates",
+    "cardUpdatesText": "Korean language handling was recently improved.",
+    "cardSettingsTitle": "Quick Settings",
+    "cardSettingsText": "Customize your interface and accessibility options here.",
+    "aboutAssistantSection": "About the Assistant",
+    "languageHeading": "Language",
+    "sessionTimeHeading": "Your time",
+    "sessionTimeValue": "Total session time",
+    "logOut": "Log out",
+    "homeTab": "Home",
+    "homeSelectionIntro": "Choose a practice that meets you where you are.",
+    "homeReadyCount": "{total} sessions available",
+    "homeFeaturedLabel": "Suggested for today",
+    "homeOpenPractice": "Open practice",
+    "homeComingSoonHint": "This practice is coming soon.",
+    "homeTapToChoose": "Tap to choose",
+    "myStatsTab": "My Stats",
+    "profileTab": "Profile",
+    "signInWelcome": "Welcome",
+    "signInSubtitle": "Sign in to continue",
+    "signInButton": "Sign In",
+    "signInErrorBothFields": "Please enter both email and password.",
+    "signInFailedTitle": "Sign In Failed",
+    "signInFailedBody": "Invalid email or password. Please try again.",
+    "signUpPrompt": "Need an account? Sign up",
+    "signInFooter": "Internal preview — University of Massachusetts Boston. Not for public distribution.",
+    "profileTitle": "Profile",
+    "personalInformation": "Personal Information",
+    "personalInfoBack": "Back",
+    "personalInfoSave": "Save changes",
+    "personalInfoSaving": "Saving…",
+    "personalInfoSavedTitle": "Saved",
+    "personalInfoSavedBody": "Your personal information was updated.",
+    "personalInfoSaveFailedTitle": "Could not save",
+    "personalInfoSaveFailedBody": "Something went wrong. Please try again.",
+    "personalInfoInvalidDob": "Enter a valid date of birth in YYYY-MM-DD format.",
+    "personalInfoEmailNotUpdatedTitle": "Email not changed",
+    "personalInfoEmailNotUpdatedBody": "Your profile was saved, but changing your sign-in email may require signing in again. Try signing out and back in, or contact support.",
+    "settings": "Settings",
+    "support": "Support",
+    "supportFirstName": "First name",
+    "supportLastName": "Last name",
+    "supportEmail": "Email",
+    "supportMessage": "Message",
+    "supportMessagePlaceholder": "How can we help?",
+    "supportSend": "Send message",
+    "supportSending": "Sending…",
+    "supportMissingTitle": "Missing information",
+    "supportMissingBody": "Complete every field before sending.",
+    "supportInvalidEmailTitle": "Check your email",
+    "supportInvalidEmailBody": "Enter a valid email address.",
+    "supportUnavailableTitle": "Support is not configured",
+    "supportUnavailableBody": "Contact the app administrator to enable support messages.",
+    "supportSentTitle": "Message sent",
+    "supportSentBody": "We received your message and will follow up by email.",
+    "supportErrorTitle": "Message not sent",
+    "supportErrorBody": "Check your connection and try again.",
+    "accountEyebrow": "ACCOUNT",
+    "signedInAccount": "Signed-in account",
+    "privateToAccount": "Private to your account",
+    "accountDataScope": "Your data is linked to your signed-in account. Other accounts cannot read it.",
+    "accountSection": "Your account",
+    "privacySection": "Privacy",
+    "personalInfoDetail": "Name, birth date, email, and language",
+    "supportDetail": "Get help or send feedback",
+    "signOutDetail": "Clear this device’s active account session",
+    "signOutTitle": "Sign out?",
+    "signOutBody": "Your account stays safe. This device will forget the current chat.",
+    "cancel": "Cancel",
+    "signOutConfirm": "Sign out",
+    "privacyPolicy": "Privacy policy",
+    "privacyPolicyDetail": "Read how your information is handled",
+    "accountDeletionInfo": "Account deletion information",
+    "deleteAccountEyebrow": "PERMANENT ACTION",
+    "deleteAccountTitle": "Delete account",
+    "deleteAccountDetail": "Permanently remove your account and activity",
+    "deleteAccountIntro": "We will send a secure confirmation link to the email on your account. Nothing is deleted until you confirm from that email.",
+    "deleteAccountRemoves": "This permanently removes",
+    "deleteAccountProfileData": "Your profile and personal information",
+    "deleteAccountActivityData": "Session history, streaks, and activity statistics",
+    "deleteAccountMoodData": "Mood check-ins saved on this device",
+    "deleteAccountEmailDestination": "Confirmation will be sent to",
+    "deleteAccountSendEmail": "Send deletion confirmation email",
+    "deleteAccountLinkExpiry": "For your security, the confirmation link expires in 30 minutes.",
+    "deleteAccountEmailSentEyebrow": "CHECK YOUR EMAIL",
+    "deleteAccountEmailSentTitle": "Confirmation sent",
+    "deleteAccountEmailSentBody": "We sent a secure deletion link to {email}. Open it and confirm to permanently delete your account.",
+    "deleteAccountNextSteps": "What happens next",
+    "deleteAccountNextStepsBody": "Opening the email does not delete anything. Review the details on the secure page, then choose the final delete button.",
+    "deleteAccountResend": "Send another email",
+    "deleteAccountNeedHelp": "Need help? Contact support",
+    "deleteAccountTooManyAttempts": "Too many attempts. Wait a few minutes, then try again.",
+    "deleteAccountNetworkError": "Check your connection and try again.",
+    "deleteAccountRecentLogin": "For security, sign out, sign back in, and try again.",
+    "deleteAccountEmailUnavailable": "The confirmation email service is not available right now. Try again shortly.",
+    "deleteAccountGenericError": "The confirmation email could not be sent. Try again or contact support.",
+    "statsEyebrow": "YOUR PRACTICE",
+    "statsTitle": "A quieter kind of progress",
+    "statsLoading": "Loading your activity…",
+    "statsSignedOut": "Sign in to see your activity.",
+    "statsSubtitle": "Your mindfulness activity across all sessions.",
+    "currentRhythm": "Current rhythm",
+    "dayCountOne": "{count} day",
+    "dayCountMany": "{count} days",
+    "keepReturning": "Keep returning when it helps.",
+    "startPractice": "Start with one short practice today.",
+    "statsNumbers": "Your numbers",
+    "dayStreak": "Day streak",
+    "longestStreak": "Longest: {count} day{suffix}",
+    "daysActive": "Days active",
+    "totalUniqueDays": "Total unique days",
+    "timeInSessions": "Time in sessions",
+    "sessionsCompleted": "Sessions completed",
+    "recentPractice": "Recent practice",
+    "noRecentPractice": "Your completed practices will appear here.",
+    "activityCalendar": "Activity calendar",
+    "activityCalendarSummary": "{days} active days across {weeks} weeks",
+    "weekdaySun": "S",
+    "weekdayMon": "M",
+    "weekdayTue": "T",
+    "weekdayWed": "W",
+    "weekdayThu": "T",
+    "weekdayFri": "F",
+    "weekdaySat": "S",
+    "calendarWeek": "Week {week}",
+    "lessActivity": "Less",
+    "moreActivity": "More",
+    "calendarPrevious": "View {month}",
+    "calendarNext": "View {month}",
+    "activityTooltip": "{date} · {count} session{suffix}",
+    "syncErrorTitle": "Activity is unavailable",
+    "syncErrorBody": "Check your connection and try again.",
+    "retry": "Try again",
+    "welcomeBackNamed": "Welcome back, {name}.",
+    "welcomeBack": "Welcome back.",
+    "homeWelcomeBody": "Settle in and choose a practice. Your guide is ready to assist you.",
+    "homeWelcomeQuestion": "How are you feeling today?",
+    "beginPractice": "Begin {title}",
+    "askGuide": "Ask the guide",
+    "dayStreakValue": "{count} day streak",
+    "activeDaysValue": "{count} active days",
+    "quickCheckIn": "Quick check-in",
+    "sevenDayAverage": "7-day average",
+    "fortuneMachine": "Fortune machine",
+    "fortuneDescription": "Spin for a small thought to carry into your day.",
+    "spinFortune": "Spin a fortune",
+    "yourMessageToday": "Your message for today",
+    "yourActivity": "Your activity",
+    "recommendedStartingPoint": "Recommended starting point",
+    "exploreAllPractices": "Explore all practices",
+    "availableCount": "{count} available",
+    "start": "Start",
+    "endSession": "End session",
+    "statusNotStarted": "Not started",
+    "sessionActive": "Session active",
+    "next": "Next",
+    "finish": "Finish",
+    "passageProgress": "Passage {current} of {total}",
+    "welcomeGuideNamed": "Welcome back, {name}. Settle in and choose a practice. Your guide is ready to assist you. How are you feeling today?",
+    "welcomeGuide": "Welcome back. Settle in and choose a practice. Your guide is ready to assist you. How are you feeling today?",
+    "assistantWelcome": "Hello, I’m your mindfulness assistant. I’m here to support you. How are you doing today?",
+    "assistantReady": "Your mindfulness guide is here.",
+    "moodLow": "Low",
+    "moodTender": "Tender",
+    "moodSteady": "Steady",
+    "moodGood": "Good",
+    "moodBright": "Bright",
+    "moodSaved": "Saved for today.",
+    "loadingTranslations": "Loading your language…",
+    "translationFallback": "This content is not available in your language yet. Showing English.",
+    "guideButton": "Guide",
+    "mindfulnessAssistant": "Mindfulness assistant",
+    "hideGuide": "Hide guide",
+    "sessionCompleteTitle": "You made space for yourself",
+    "sessionLength": "Session length: {duration}",
+    "sessionReflection": "Notice what feels different before you move on.",
+    "returnHome": "Return home",
+    "mindfulnessChat": "Mindfulness chat",
+    "assistantStatus": "Assistant: {status}",
+    "typeMessage": "Type a message…",
+    "send": "Send",
+    "completed": "Completed",
+    "continuePractice": "Continue your practice",
+    "practiceStillActive": "{title} is still active.",
+    "guideFollowUpReady": "Your guide is ready with a follow-up.",
+    "tapFeeling": "Tap a feeling to check in with your guide.",
+    "guidePreparingFollowUp": "Your guide is preparing a follow-up.",
+    "chooseClosestFeeling": "Choose the feeling that is closest to where you are right now.",
+    "spinning": "Spinning…",
+    "voicePlayback": "Voice playback",
+    "enterSendHint": "Enter to send · Shift+Enter for a new line",
+    "listening": "Listening…",
+    "generatingVoice": "Generating voice…",
+    "speaking": "Speaking…",
+    "voiceUnavailable": "Voice unavailable. Try again.",
+    "preparingVoice": "Preparing voice…",
+    "typing": "Typing…",
+    "preparingWelcome": "Preparing welcome…",
+    "tapToTalk": "Tap to talk",
+    "loadingTexture": "Loading avatar texture {current} of {total}…",
+    "cachingGeometry": "Caching avatar geometry…",
+    "loadError": "The avatar could not load.",
+    "compactGuideSubtitle": "A compact avatar guide with voice and quick chat.",
+    "viewActivity": "View your activity",
+    "backToSessions": "Back to sessions",
+    "sessions": "Sessions",
+    "templateReserved": "Template reserved",
+    "closeLanguageSelector": "Close language selector",
+    "dailyMindfulnessTools": "Daily mindfulness tools",
+    "chooseFeeling": "Choose how you feel today",
+    "feelingLabel": "Feeling {feeling}",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "calendarLabel": "{month} activity calendar",
+    "toggleTheme": "Toggle theme",
+    "toggleNotifications": "Toggle notifications",
+    "stopRecording": "Stop recording",
+    "startVoiceInput": "Start voice input",
+    "openMindfulnessChat": "Open mindfulness chat",
+    "chat": "Chat",
+    "loadingAvatar": "Loading avatar…",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "ready": "Ready",
+    "thinking": "Thinking…",
+    "offlineFallback": "Offline fallback",
+    "contextSession": "Context: {title}",
+    "contextGeneral": "Context: general app help",
+    "guidedSession": "Guided session",
+    "assistantLedSession": "Assistant-led session",
+    "finishSession": "Finish session",
+    "nextPassage": "Next passage",
+    "startNamed": "Start {title}",
+    "personMeditating": "Person meditating",
+    "brandLogo": "Multi-Language Wellness",
+    "useLanguageOption": "Use {language}",
+    "languageCurrent": "Language: {language}",
+    "opensLanguageSelector": "Opens the language selector",
+    "moodPromptLow": "What’s weighing on you today? You don’t have to solve it all at once.",
+    "moodPromptTender": "What feels a little harder than usual today?",
+    "moodPromptSteady": "Steady is enough. What would help you stay grounded today?",
+    "moodPromptGood": "What’s one thing that helped you feel good today?",
+    "moodPromptBright": "What happened that you want to remember from today?"
+  },
+  "catalog": {
+    "caregiver-fatigue": {
+      "title": "Caregiver Fatigue",
+      "description": "A compassion meditation to recharge when caring for others.",
+      "previewDescription": "Set down the responsibility you have been carrying for a few minutes. This gentle practice helps you soften self-criticism, restore steadiness, and make room for your own needs.",
+      "zodiac": "Aries",
+      "kind": "scripted",
+      "duration": "~4 min · 6 segments"
+    },
+    "body-scan": {
+      "title": "Body Scan",
+      "description": "A guided check-in from head to toe.",
+      "previewDescription": "Bring your attention slowly through the body, noticing pressure, warmth, tension, and ease without needing to change anything. A grounding choice when your mind feels busy or disconnected.",
+      "zodiac": "Taurus",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "five-senses": {
+      "title": "Five Senses Grounding",
+      "description": "A grounding exercise to reconnect with the present moment.",
+      "previewDescription": "Use sight, sound, touch, smell, and taste to return to what is happening right now. This short sensory reset can help interrupt spiraling thoughts and settle an overwhelmed nervous system.",
+      "zodiac": "Gemini",
+      "kind": "scripted",
+      "duration": "~6 min · 24 steps"
+    },
+    "mindful-breathing": {
+      "title": "Mindful Breathing",
+      "description": "A foundational breath awareness practice you can use anywhere.",
+      "previewDescription": "Follow the natural rhythm of your inhale and exhale without forcing it into a pattern. A simple practice for creating a little space before a meeting, conversation, or difficult moment.",
+      "zodiac": "Cancer",
+      "kind": "scripted",
+      "duration": "~5 min · 5 segments"
+    },
+    "loving-kindness": {
+      "title": "Loving Kindness",
+      "description": "A compassion-focused mindfulness practice.",
+      "previewDescription": "Repeat quiet wishes of safety, ease, and care for yourself and the people in your life. Use it when you feel hardened, lonely, or in need of a kinder inner voice.",
+      "zodiac": "Leo",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "mindful-walking": {
+      "title": "Mindful Walking",
+      "description": "A light movement practice with full attention on each step.",
+      "previewDescription": "Let the pace of your steps become an anchor as you notice balance, movement, and the space around you. A good reset when sitting still feels difficult or restless energy needs somewhere to go.",
+      "zodiac": "Virgo",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "seated-stretch": {
+      "title": "Seated Stretch Reset",
+      "description": "Gentle seated stretches to release tension.",
+      "previewDescription": "Ease common tension in the shoulders, neck, back, and hips with movements that can be done from a chair. Designed for a quiet desk break or a low-energy afternoon reset.",
+      "zodiac": "Libra",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "mindful-listening": {
+      "title": "Mindful Listening",
+      "description": "A practice that centers attention through sound.",
+      "previewDescription": "Notice near and distant sounds without judging or chasing them. This listening practice can help widen your attention when thoughts feel loud and bring you back into your surroundings.",
+      "zodiac": "Scorpio",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "affirmation-breath": {
+      "title": "Affirmation Breath",
+      "description": "Pair a calming phrase with your breath.",
+      "previewDescription": "Match a steady breath with a phrase that gives you support, such as ‘I can take this one moment at a time.’ A small ritual for building reassurance before the day gathers speed.",
+      "zodiac": "Sagittarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "stress-release": {
+      "title": "Stress Release Check-In",
+      "description": "Notice, name, and soften what you are carrying.",
+      "previewDescription": "Pause long enough to identify what is asking for your attention instead of holding it as one undifferentiated weight. This reflective reset helps you name the pressure and choose a gentler next step.",
+      "zodiac": "Capricorn",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "morning-intention": {
+      "title": "Morning Intention",
+      "description": "A simple intention-setting practice for the day.",
+      "previewDescription": "Start with a quality you want to bring into the next few hours—patience, focus, openness, or care. This is a brief way to choose how you want to meet the day rather than rush straight into it.",
+      "zodiac": "Aquarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "sleep-wind-down": {
+      "title": "Sleep Wind Down",
+      "description": "A quiet practice to prepare your body for rest.",
+      "previewDescription": "Slow the transition from a full day into a softer, quieter state. Gentle body awareness and unhurried breathing help you release the urge to solve anything before sleep.",
+      "zodiac": "Pisces",
+      "kind": "scripted",
+      "duration": "~7 min · 24 steps"
+    }
+  },
+  "sessions": {
+    "caregiver-fatigue": [
+      {
+        "key": "cf1",
+        "text": "Thanks for joining me for this short meditation."
+      },
+      {
+        "key": "cf2",
+        "text": "In this brief practice, we'll explore some simple steps to recharge when we're feeling burnt out or overwhelmed by our efforts to help others."
+      },
+      {
+        "key": "cf3",
+        "text": "Go ahead and get comfortable. You can close your eyes if you like, or keep them gently open with a soft, relaxed gaze."
+      },
+      {
+        "key": "cf4",
+        "text": "As you settle in, take a few slow, calming breaths. And notice how it feels to breathe."
+      },
+      {
+        "key": "cf5",
+        "text": "Now let your breath return to its normal pace. Give yourself a few moments to rest and recharge as you bring yourself fully into the here and now."
+      },
+      {
+        "key": "cf6",
+        "text": "Great. Now we'll shift gears and tap into our ability to hold the suffering of others in a healthy way."
+      },
+      {
+        "key": "cf7",
+        "text": "Empathy can be a bridge to care and compassion, but it can also lead us into a state of overwhelm — what scientists call empathic distress."
+      },
+      {
+        "key": "cf8",
+        "text": "One simple way to avoid this overwhelm is to ground yourself in a caring motivation. Let's give this a try."
+      },
+      {
+        "key": "cf9",
+        "text": "Start by bringing to mind someone you care about. It could be your care recipient or anyone you care about."
+      },
+      {
+        "key": "cf10",
+        "text": "Take a moment to imagine that they're actually here with you, and see if you can sense the deep connection you share with them."
+      },
+      {
+        "key": "cf11",
+        "text": "As you tap into this sense of connection, see if you could notice your impulse to care for this individual, or perhaps your natural wish for them to be happy and free from suffering."
+      },
+      {
+        "key": "cf12",
+        "text": "If it helps, you can give voice to this in your mind. You may think to yourself: May you be free from suffering and hardship. May you have all the happiness in the world."
+      },
+      {
+        "key": "cf13",
+        "text": "Feel free to make up your own compassionate phrases and imagine sharing them with this person that you care about."
+      },
+      {
+        "key": "cf14",
+        "text": "Now bring others to mind — or perhaps groups of people, or even the Earth itself."
+      },
+      {
+        "key": "cf15",
+        "text": "Acknowledge their pain and suffering, and also the tremendous resilience that we all have."
+      },
+      {
+        "key": "cf16",
+        "text": "Imagine a world where they are free from suffering and free from adversity. See if you can picture them happy, at ease, healthy, and balanced."
+      },
+      {
+        "key": "cf17",
+        "text": "Let your mind roam here and continue to send kind, caring thoughts and phrases out into the world."
+      },
+      {
+        "key": "cf18",
+        "text": "Next, include yourself in this circle of compassion."
+      },
+      {
+        "key": "cf19",
+        "text": "Imagine the people in your life who care for you, or even strangers who are sending love and compassion out into the world, just like you are."
+      },
+      {
+        "key": "cf20",
+        "text": "Imagine that all this caring energy is flowing into you, and see if you can be open to receiving it."
+      },
+      {
+        "key": "cf21",
+        "text": "For these last few moments, notice how you feel right now without any judgment."
+      },
+      {
+        "key": "cf22",
+        "text": "Bring a sense of openness, curiosity, and care to your own thoughts and feelings, whatever they may be."
+      },
+      {
+        "key": "cf23",
+        "text": "When we feel the suffering of others and the suffering of the world in a very direct way, our own feelings and reactions can easily overwhelm us."
+      },
+      {
+        "key": "cf24",
+        "text": "Here we practice the skill of grounding ourselves in a caring motivation. With this motivation, we get a little more space to be with our feelings and reactions without getting swept away by them."
+      },
+      {
+        "key": "cf25",
+        "text": "Hopefully you found this helpful. If you did, see if you can keep practicing for short moments over the next day or two. Take care and good luck with your practice."
+      }
+    ],
+    "mindful-breathing": [
+      {
+        "key": "mb1",
+        "text": "Hello and welcome back. Today we are going to focus on a fundamental practice: mindful breathing."
+      },
+      {
+        "key": "mb2",
+        "text": "This is a tool you can use anywhere, at any time, to ground yourself and find a moment of calm."
+      },
+      {
+        "key": "mb3",
+        "text": "Start by finding a comfortable seat. Allow your back to be straight but not stiff."
+      },
+      {
+        "key": "mb4",
+        "text": "Let your hands rest gently in your lap or on your knees. If it feels okay, go ahead and close your eyes, or simply lower your gaze and let it soften."
+      },
+      {
+        "key": "mb5",
+        "text": "Now, take a deep breath in through your nose, feeling your lungs expand. And exhale slowly through your mouth."
+      },
+      {
+        "key": "mb6",
+        "text": "Do that one more time — deep breath in... and a long breath out."
+      },
+      {
+        "key": "mb7",
+        "text": "Now, let your breath settle into its natural rhythm. You don't need to change it or control it. Just observe it."
+      },
+      {
+        "key": "mb8",
+        "text": "Notice where you feel the breath most clearly. It might be the cool air at the tip of your nose, the rise and fall of your chest, or the expansion and contraction of your belly."
+      },
+      {
+        "key": "mb9",
+        "text": "As you sit here, you may notice your mind starting to wander. This is perfectly normal. That's just what minds do."
+      },
+      {
+        "key": "mb10",
+        "text": "When you realize your thoughts have drifted to the past, the future, or a to-do list, simply acknowledge the thought without judgment."
+      },
+      {
+        "key": "mb11",
+        "text": "Think of it like a cloud passing through the sky. Then, gently and kindly, escort your attention back to the physical sensation of your breath."
+      },
+      {
+        "key": "mb12",
+        "text": "Back to the inhale... and the exhale."
+      },
+      {
+        "key": "mb13",
+        "text": "Let's stay with this for a few moments in silence. Following each breath from the beginning of the inhalation, through the brief pause, to the end of the exhalation."
+      },
+      {
+        "key": "mb14",
+        "text": "If you get distracted ten times, just bring yourself back ten times. Every time you return to the breath, you are strengthening your mindfulness muscle."
+      },
+      {
+        "key": "mb15",
+        "text": "As we bring this practice to a close, take a moment to notice how you feel. Is there a sense of stillness? A bit more space in your mind?"
+      },
+      {
+        "key": "mb16",
+        "text": "Know that this breath is always available to you as an anchor."
+      },
+      {
+        "key": "mb17",
+        "text": "When you're ready, gently wiggle your fingers and toes, and slowly open your eyes."
+      },
+      {
+        "key": "mb18",
+        "text": "Thank you for practicing with me today. Take this sense of presence with you as you move into the rest of your day."
+      }
+    ],
+    "body-scan": [
+      {
+        "key": "bs1",
+        "text": "Welcome. Find a comfortable position — lying down if possible, or seated with your back gently supported."
+      },
+      {
+        "key": "bs2",
+        "text": "Allow your eyes to close, or let your gaze rest softly downward. Give yourself permission to arrive here."
+      },
+      {
+        "key": "bs3",
+        "text": "Take a deep breath in through your nose... and release it slowly through your mouth. Begin to let go."
+      },
+      {
+        "key": "bs4",
+        "text": "Let your breath return to its natural rhythm. In this practice, we will move attention slowly through the body — simply noticing, without trying to fix or change anything."
+      },
+      {
+        "key": "bs5",
+        "text": "Bring your awareness all the way down to your feet. Notice the soles of your feet — any warmth, coolness, tingling, or pressure. Just observe."
+      },
+      {
+        "key": "bs6",
+        "text": "Move your attention up to your ankles and calves. Are they holding any tension? You don't need to change it — simply be aware of it."
+      },
+      {
+        "key": "bs7",
+        "text": "Now bring your awareness to your knees and thighs. Feel the weight of your legs. Notice where they make contact with the surface beneath you."
+      },
+      {
+        "key": "bs8",
+        "text": "Let your attention travel to your hips and lower back. This area holds a lot for many of us. Breathe here for a moment."
+      },
+      {
+        "key": "bs9",
+        "text": "Notice your belly. With each breath in, feel it rise. With each breath out, feel it fall. Let it be soft and easy."
+      },
+      {
+        "key": "bs10",
+        "text": "Bring awareness to your chest and the area around your heart. Notice the gentle rise and fall of your breathing. Feel your heartbeat if you can."
+      },
+      {
+        "key": "bs11",
+        "text": "Shift your attention to your upper back and shoulders. Imagine any held tension beginning to ease and dissolve with each exhale."
+      },
+      {
+        "key": "bs12",
+        "text": "Let awareness flow down through your arms — your elbows, forearms, wrists — all the way to your hands and fingertips. Notice any warmth or pulse here."
+      },
+      {
+        "key": "bs13",
+        "text": "Now bring your attention to your neck and throat. Notice if there is any tightness. Breathe into it gently, and let it soften."
+      },
+      {
+        "key": "bs14",
+        "text": "Shift your awareness to your jaw. Let it unclench. Let your tongue rest softly in your mouth, your lips part slightly."
+      },
+      {
+        "key": "bs15",
+        "text": "Notice the muscles around your eyes and across your forehead. Allow them to smooth and relax, as if a gentle hand were resting there."
+      },
+      {
+        "key": "bs16",
+        "text": "Now expand your awareness to take in your whole body at once — from the top of your head to the tips of your toes."
+      },
+      {
+        "key": "bs17",
+        "text": "Your whole body, breathing. Resting. Alive."
+      },
+      {
+        "key": "bs18",
+        "text": "If you noticed any areas of tension or discomfort, that is completely natural. The practice is to notice with kindness — not to judge."
+      },
+      {
+        "key": "bs19",
+        "text": "Stay here in this whole-body awareness for a moment. Let your breath be easy. Let your body be held by whatever surface you are resting on."
+      },
+      {
+        "key": "bs20",
+        "text": "You are exactly where you need to be, right now."
+      },
+      {
+        "key": "bs21",
+        "text": "Take a slow, deep breath in... and let it all go."
+      },
+      {
+        "key": "bs22",
+        "text": "Begin to gently deepen your breathing. Wiggle your fingers and toes to start reawakening the body."
+      },
+      {
+        "key": "bs23",
+        "text": "Slowly roll your neck from side to side if it feels comfortable. Take your time."
+      },
+      {
+        "key": "bs24",
+        "text": "When you are ready, gently open your eyes. There is no need to rush."
+      },
+      {
+        "key": "bs25",
+        "text": "Thank you for taking this time to listen to your body. Carry this sense of ease with you into the rest of your day."
+      }
+    ],
+    "five-senses": [
+      {
+        "key": "fs1",
+        "text": "Welcome to this grounding practice. Whenever your mind feels scattered or anxious, this exercise can bring you back to the present moment."
+      },
+      {
+        "key": "fs2",
+        "text": "Find a comfortable position — seated, standing, or lying down. Feel your feet make contact with the floor."
+      },
+      {
+        "key": "fs3",
+        "text": "Take one slow breath in through your nose... and a long exhale out. Good. Let's begin."
+      },
+      {
+        "key": "fs4",
+        "text": "We are going to work through your five senses, one by one. Each one is an anchor to the present moment — to right here, right now."
+      },
+      {
+        "key": "fs5",
+        "text": "Begin with sight. Look around your environment and notice five things you can see. Take your time — really look at each one."
+      },
+      {
+        "key": "fs6",
+        "text": "Notice colors, textures, shadows, shapes. Let your eyes rest on each thing for a moment. One... Two... Three... Four... Five."
+      },
+      {
+        "key": "fs7",
+        "text": "Now bring your attention to touch. Notice four sensations you can physically feel — in your body or through your skin."
+      },
+      {
+        "key": "fs8",
+        "text": "Perhaps the weight of your hands in your lap. The temperature of the air. The pressure of the chair beneath you. A texture of fabric against your skin. Notice four."
+      },
+      {
+        "key": "fs9",
+        "text": "Now tune your attention to sound. Notice three sounds in your environment right now."
+      },
+      {
+        "key": "fs10",
+        "text": "Let your hearing open up — near sounds and distant ones, loud and quiet. Simply notice three of them without judgment."
+      },
+      {
+        "key": "fs11",
+        "text": "Now shift to smell. Bring your awareness to what you can smell — or simply to the quality of the air as you breathe in."
+      },
+      {
+        "key": "fs12",
+        "text": "Take a slow inhale. Maybe you notice something faint — a scent in the room, the freshness of the air, or simply the warmth of your breath. Notice two things."
+      },
+      {
+        "key": "fs13",
+        "text": "And finally, notice one thing you can taste. Perhaps a lingering flavor, or simply the neutral sensation of your mouth and tongue."
+      },
+      {
+        "key": "fs14",
+        "text": "Now take a moment to bring all five senses together. You are seeing, feeling, hearing, smelling, and tasting — all at once."
+      },
+      {
+        "key": "fs15",
+        "text": "You are fully, completely here. Right in this moment."
+      },
+      {
+        "key": "fs16",
+        "text": "Notice how different this feels from when we started. That slight sense of steadiness, of being grounded — that is real."
+      },
+      {
+        "key": "fs17",
+        "text": "This technique works by redirecting your nervous system from a stress response toward present-moment awareness."
+      },
+      {
+        "key": "fs18",
+        "text": "You can use this anywhere — before a difficult meeting, in a moment of panic, or simply as a daily reset."
+      },
+      {
+        "key": "fs19",
+        "text": "Let's close with three slow, intentional breaths. Breathe in through your nose... and out through your mouth."
+      },
+      {
+        "key": "fs20",
+        "text": "Again. In through the nose... and slowly out."
+      },
+      {
+        "key": "fs21",
+        "text": "One more. A long inhale... and a complete exhale."
+      },
+      {
+        "key": "fs22",
+        "text": "When you feel unsteady, return to your senses. Five things you see, four you feel, three you hear, two you smell, one you taste."
+      },
+      {
+        "key": "fs23",
+        "text": "The present moment is always here, waiting for you."
+      },
+      {
+        "key": "fs24",
+        "text": "Well done. Thank you for practicing today."
+      }
+    ],
+    "loving-kindness": [
+      {
+        "key": "lk1",
+        "text": "Welcome to this loving kindness meditation, sometimes called Metta practice."
+      },
+      {
+        "key": "lk2",
+        "text": "In this practice, we gently cultivate feelings of warmth and goodwill — toward ourselves first, and then outward toward others."
+      },
+      {
+        "key": "lk3",
+        "text": "Find a comfortable seat. Let your hands rest in your lap, and allow your eyes to close."
+      },
+      {
+        "key": "lk4",
+        "text": "Take a few slow, natural breaths. Let each exhale release a little of whatever you are carrying today."
+      },
+      {
+        "key": "lk5",
+        "text": "We begin with ourselves — not out of selfishness, but because genuine compassion must include ourselves to be whole."
+      },
+      {
+        "key": "lk6",
+        "text": "Picture yourself as you are right now. You may find this easy, or it may feel a little uncomfortable. Either is fine."
+      },
+      {
+        "key": "lk7",
+        "text": "Silently repeat these phrases for yourself: May I be safe. May I be healthy. May I be happy. May I live with ease."
+      },
+      {
+        "key": "lk8",
+        "text": "Allow the words to settle without forcing any particular feeling. Simply planting the intention is enough."
+      },
+      {
+        "key": "lk9",
+        "text": "Once more: May I be safe. May I be healthy. May I be happy. May I live with ease."
+      },
+      {
+        "key": "lk10",
+        "text": "Now bring to mind someone you love easily — a close friend, a family member, a child, or a pet whose presence fills you with warmth."
+      },
+      {
+        "key": "lk11",
+        "text": "Picture them clearly. Let yourself feel the natural affection you have for them."
+      },
+      {
+        "key": "lk12",
+        "text": "Send them these same wishes: May you be safe. May you be healthy. May you be happy. May you live with ease."
+      },
+      {
+        "key": "lk13",
+        "text": "Feel that warmth flowing from your heart toward them, like a gentle light reaching across the distance between you."
+      },
+      {
+        "key": "lk14",
+        "text": "Now bring to mind a neutral person — someone you encounter in daily life but don't know well. A neighbor, a cashier, a stranger on the street."
+      },
+      {
+        "key": "lk15",
+        "text": "This person, like you, has a full inner life — joys and sorrows, hopes and fears. Offer them the same kindness: May you be safe. May you be healthy. May you be happy. May you live with ease."
+      },
+      {
+        "key": "lk16",
+        "text": "Now, if you feel ready, bring to mind someone who has been difficult for you. You don't need to condone anything they have done."
+      },
+      {
+        "key": "lk17",
+        "text": "Simply recognize that they too carry suffering. They too wish to be free from pain. As best you can, offer: May you be safe. May you be healthy. May you be happy. May you live with ease."
+      },
+      {
+        "key": "lk18",
+        "text": "If this feels too hard today, simply return to yourself. Compassion is a practice, not a test."
+      },
+      {
+        "key": "lk19",
+        "text": "Finally, let your awareness expand to include all beings everywhere — every person, every creature on this Earth."
+      },
+      {
+        "key": "lk20",
+        "text": "May all beings be safe. May all beings be healthy. May all beings be happy. May all beings live with ease."
+      },
+      {
+        "key": "lk21",
+        "text": "Feel the full circle of this compassion — beginning with your own heart, rippling outward to all of life."
+      },
+      {
+        "key": "lk22",
+        "text": "Rest in this for a moment. Breathing. Open. Kind."
+      },
+      {
+        "key": "lk23",
+        "text": "Notice how you feel. Perhaps there is a gentle warmth, or a sense of openness, or simply quiet."
+      },
+      {
+        "key": "lk24",
+        "text": "Take a slow, full breath in... and release it softly."
+      },
+      {
+        "key": "lk25",
+        "text": "The kindness you offered today is real. Carry it with you. Thank you for practicing."
+      }
+    ],
+    "mindful-walking": [
+      {
+        "key": "mw1",
+        "text": "Welcome to this mindful walking practice. You will need a quiet space to walk slowly — even just a few steps back and forth is enough."
+      },
+      {
+        "key": "mw2",
+        "text": "Before you begin moving, stand still for a moment. Feel your feet firmly on the ground."
+      },
+      {
+        "key": "mw3",
+        "text": "Take a slow breath in... and release. Let your body arrive here."
+      },
+      {
+        "key": "mw4",
+        "text": "Become aware of your posture. Stand gently tall, with your shoulders relaxed and your gaze soft — looking slightly ahead and downward."
+      },
+      {
+        "key": "mw5",
+        "text": "Now bring your full attention to your feet. Notice the weight of your body flowing down through your legs and into the ground beneath you."
+      },
+      {
+        "key": "mw6",
+        "text": "Begin to walk very slowly. Much slower than you normally would. With each step, notice the subtle movements involved."
+      },
+      {
+        "key": "mw7",
+        "text": "As you lift your foot — feel the heel rise, then the ball of the foot, then the toes."
+      },
+      {
+        "key": "mw8",
+        "text": "As you place your foot down — feel the heel make contact first, then the arch, then the toes settling."
+      },
+      {
+        "key": "mw9",
+        "text": "Lift. Move. Place. That is all. Lift. Move. Place."
+      },
+      {
+        "key": "mw10",
+        "text": "If your mind wanders — to tasks, to worries, to the feeling of awkwardness — simply notice, and gently bring your attention back to your feet."
+      },
+      {
+        "key": "mw11",
+        "text": "Now begin to coordinate your breathing with your steps. Breathe in for two or three steps... and out for two or three steps."
+      },
+      {
+        "key": "mw12",
+        "text": "Let your arms hang naturally at your sides. You don't need to do anything with them. Simply walk."
+      },
+      {
+        "key": "mw13",
+        "text": "Notice the ground beneath you. Hard or soft. Warm or cool. Steady."
+      },
+      {
+        "key": "mw14",
+        "text": "Notice your surroundings without getting pulled into them. Let them simply be the backdrop to your movement."
+      },
+      {
+        "key": "mw15",
+        "text": "Continue walking slowly. Each step is complete in itself. Each step is an arrival."
+      },
+      {
+        "key": "mw16",
+        "text": "If you feel restless or silly, that is perfectly natural. Just notice the feeling, and keep walking."
+      },
+      {
+        "key": "mw17",
+        "text": "This practice is about noticing what is always happening but usually ignored — the miracle of movement, the gift of a body that carries you through the world."
+      },
+      {
+        "key": "mw18",
+        "text": "Begin to let your pace slow even further. Take one final slow walk across your space, with complete attention."
+      },
+      {
+        "key": "mw19",
+        "text": "Now come to a gentle stop. Stand still once more. Feel your feet on the ground."
+      },
+      {
+        "key": "mw20",
+        "text": "Take a slow breath in... and a long breath out."
+      },
+      {
+        "key": "mw21",
+        "text": "Notice how you feel in this moment compared to when you began. Even a short period of mindful movement can shift something."
+      },
+      {
+        "key": "mw22",
+        "text": "Thank you for moving with intention today. You can carry this quality of attention into any walk you take."
+      }
+    ],
+    "seated-stretch": [
+      {
+        "key": "ss1",
+        "text": "Welcome to this seated stretch reset. This practice releases tension held in the body — no equipment needed, just your chair."
+      },
+      {
+        "key": "ss2",
+        "text": "Sit toward the front edge of your seat so your feet are flat on the floor, hip-width apart."
+      },
+      {
+        "key": "ss3",
+        "text": "Take a slow breath in... and release. Let your shoulders drop away from your ears."
+      },
+      {
+        "key": "ss4",
+        "text": "Let's begin with your shoulders. Breathe in and raise them toward your ears... then roll them back and down on the exhale. Repeat this a few times at your own pace."
+      },
+      {
+        "key": "ss5",
+        "text": "Now roll them forward — up, forward, and down. Let any tightness begin to ease."
+      },
+      {
+        "key": "ss6",
+        "text": "Gently turn your head to the right, as if looking over your shoulder. Hold for a breath or two. Then slowly return to center."
+      },
+      {
+        "key": "ss7",
+        "text": "Now turn your head to the left. Hold. Return to center."
+      },
+      {
+        "key": "ss8",
+        "text": "Lower your right ear gently toward your right shoulder, stretching the left side of your neck. Keep your left shoulder relaxed. Breathe into the stretch."
+      },
+      {
+        "key": "ss9",
+        "text": "Slowly return to center, then lower your left ear toward your left shoulder. Breathe into the right side of your neck."
+      },
+      {
+        "key": "ss10",
+        "text": "Come back to center. Take a breath."
+      },
+      {
+        "key": "ss11",
+        "text": "Interlace your fingers and stretch your arms out in front of you, palms facing away. Feel the stretch across your upper back and shoulders."
+      },
+      {
+        "key": "ss12",
+        "text": "Then reach your arms above your head, palms facing up. Take a full breath in as you stretch upward... and release your arms down on the exhale."
+      },
+      {
+        "key": "ss13",
+        "text": "Twist gently to the right, placing your left hand on your right knee and your right hand on the back of the chair. Breathe into the twist."
+      },
+      {
+        "key": "ss14",
+        "text": "Slowly unwind and repeat on the other side — twist to the left, right hand on left knee, left hand behind. Breathe."
+      },
+      {
+        "key": "ss15",
+        "text": "Come back to center."
+      },
+      {
+        "key": "ss16",
+        "text": "Extend your right leg straight out in front of you, flexing and pointing your foot a few times to wake up the ankle and calf. Then place it back down."
+      },
+      {
+        "key": "ss17",
+        "text": "Now the left leg — extend, flex, point. Then return."
+      },
+      {
+        "key": "ss18",
+        "text": "Interlace your fingers behind your lower back if that is comfortable, and gently open the chest, drawing the shoulder blades together. Take a breath here."
+      },
+      {
+        "key": "ss19",
+        "text": "Release. Let your hands rest in your lap. Round your spine gently, tucking your chin — like you are hugging yourself from the inside. Take a breath."
+      },
+      {
+        "key": "ss20",
+        "text": "Slowly come back to a neutral, tall seat."
+      },
+      {
+        "key": "ss21",
+        "text": "Take one final, full breath in through your nose — letting your belly expand, then your chest — and a long, slow exhale."
+      },
+      {
+        "key": "ss22",
+        "text": "Well done. You have given your body a reset. Carry this sense of ease into whatever comes next."
+      }
+    ],
+    "mindful-listening": [
+      {
+        "key": "ml1",
+        "text": "Welcome to this mindful listening practice. Sound is always present, but we rarely give it our full attention."
+      },
+      {
+        "key": "ml2",
+        "text": "Find a comfortable seated position. You can close your eyes for this practice, which will help you focus more deeply on what you hear."
+      },
+      {
+        "key": "ml3",
+        "text": "Take a slow breath in... and out. Let your body settle."
+      },
+      {
+        "key": "ml4",
+        "text": "For a moment, simply notice that there is sound in your environment. You don't need to identify or analyze it — just notice that sound exists."
+      },
+      {
+        "key": "ml5",
+        "text": "Now expand your awareness to the full soundscape around you. Like opening a window, let all sounds in — near and far, loud and soft."
+      },
+      {
+        "key": "ml6",
+        "text": "Notice the nearest sound to you. What is its quality? Is it sharp or soft? Constant or intermittent? Simply observe."
+      },
+      {
+        "key": "ml7",
+        "text": "Now let your awareness travel to the farthest sound you can detect. Perhaps a distant car, the wind, or voices from another room. Notice it without chasing it."
+      },
+      {
+        "key": "ml8",
+        "text": "Let your hearing move fluidly between near and far — like a wide-angle lens, taking in the whole field of sound."
+      },
+      {
+        "key": "ml9",
+        "text": "Rather than focusing on what something IS, try to notice the pure qualities of the sounds. High or low. Smooth or jagged. Loud or quiet."
+      },
+      {
+        "key": "ml10",
+        "text": "Notice that sounds arise... and pass away. Each sound has a beginning, a duration, and an end."
+      },
+      {
+        "key": "ml11",
+        "text": "If you find yourself labeling sounds — 'that's a car, that's a bird' — simply notice the label and return to the raw experience of hearing."
+      },
+      {
+        "key": "ml12",
+        "text": "You may notice silence between sounds. Rest in that silence too. It is a kind of sound in its own right."
+      },
+      {
+        "key": "ml13",
+        "text": "Now bring your attention to the sound of your own breathing. The subtle rush of air on the inhale. The softer release of the exhale."
+      },
+      {
+        "key": "ml14",
+        "text": "Notice the rhythm of your breath as a sound. Steady. Alive."
+      },
+      {
+        "key": "ml15",
+        "text": "Expand again to the full soundscape — your breath and the environment together."
+      },
+      {
+        "key": "ml16",
+        "text": "Notice that all of these sounds are happening at once, and your awareness can hold all of them without effort."
+      },
+      {
+        "key": "ml17",
+        "text": "For a moment, let go of all effort. Simply sit, and let sound wash over you without grasping or pushing anything away."
+      },
+      {
+        "key": "ml18",
+        "text": "This is the nature of mindful listening — open, receptive, effortless."
+      },
+      {
+        "key": "ml19",
+        "text": "Slowly bring your attention back to the room. Take a breath."
+      },
+      {
+        "key": "ml20",
+        "text": "Notice how different sound feels when you listen with full attention rather than half an ear."
+      },
+      {
+        "key": "ml21",
+        "text": "This quality of listening — spacious, open, without judgment — can also be offered to the people in your life."
+      },
+      {
+        "key": "ml22",
+        "text": "When you are ready, gently open your eyes. Thank you for listening today."
+      }
+    ],
+    "affirmation-breath": [
+      {
+        "key": "ab1",
+        "text": "Welcome to this affirmation breath practice. We will pair a calming phrase with the natural rhythm of your breath."
+      },
+      {
+        "key": "ab2",
+        "text": "Find a comfortable, upright position. Let your hands rest gently in your lap."
+      },
+      {
+        "key": "ab3",
+        "text": "Close your eyes and take a few natural breaths. Simply arrive here."
+      },
+      {
+        "key": "ab4",
+        "text": "In this practice, we use a short phrase — an affirmation — as a focus for each inhale and exhale. The words ride on the breath."
+      },
+      {
+        "key": "ab5",
+        "text": "Let's begin. As you breathe in, silently say: 'I am breathing in calm.' As you breathe out: 'I am releasing tension.'"
+      },
+      {
+        "key": "ab6",
+        "text": "Breathe in calm... and breathe out tension. Let the words ride gently on the breath."
+      },
+      {
+        "key": "ab7",
+        "text": "Again. Breathe in calm... breathe out tension."
+      },
+      {
+        "key": "ab8",
+        "text": "Now let's shift the phrase. Breathe in and silently say: 'I am present.' Breathe out: 'I let go.'"
+      },
+      {
+        "key": "ab9",
+        "text": "I am present... I let go."
+      },
+      {
+        "key": "ab10",
+        "text": "I am present... I let go."
+      },
+      {
+        "key": "ab11",
+        "text": "Now try: 'I am enough.' Breathe those words in. And on the exhale: 'Everything is okay.'"
+      },
+      {
+        "key": "ab12",
+        "text": "I am enough... Everything is okay."
+      },
+      {
+        "key": "ab13",
+        "text": "I am enough... Everything is okay."
+      },
+      {
+        "key": "ab14",
+        "text": "One more pairing. Breathe in: 'I choose peace.' Breathe out: 'I release what I cannot control.'"
+      },
+      {
+        "key": "ab15",
+        "text": "I choose peace... I release what I cannot control."
+      },
+      {
+        "key": "ab16",
+        "text": "I choose peace... I release what I cannot control."
+      },
+      {
+        "key": "ab17",
+        "text": "Now let go of any specific phrases. Simply breathe — naturally, easily — and let your body feel the truth of those words."
+      },
+      {
+        "key": "ab18",
+        "text": "You are calm. You are present. You are enough. You are at peace."
+      },
+      {
+        "key": "ab19",
+        "text": "Take one final, deep breath — breathing in everything you need... and releasing on the exhale everything you do not."
+      },
+      {
+        "key": "ab20",
+        "text": "Well done. These affirmations are yours to carry. Return to them whenever you need a moment of steadiness."
+      }
+    ],
+    "stress-release": [
+      {
+        "key": "sr1",
+        "text": "Welcome to this stress release check-in. We are going to take a few minutes to notice, name, and soften what you are carrying right now."
+      },
+      {
+        "key": "sr2",
+        "text": "Find a comfortable position. You don't need to prepare or fix anything — simply arrive as you are."
+      },
+      {
+        "key": "sr3",
+        "text": "Take a slow breath in through your nose... and release it fully through your mouth. Let that be a signal to yourself that it is okay to pause."
+      },
+      {
+        "key": "sr4",
+        "text": "Let's start by checking in with your body. Scan from your shoulders down to your stomach. Where are you holding tension right now?"
+      },
+      {
+        "key": "sr5",
+        "text": "Maybe your jaw is tight, or your shoulders are raised. Maybe there is a knot in your chest or a heaviness in your gut. Simply notice."
+      },
+      {
+        "key": "sr6",
+        "text": "Whatever you find, allow it to be there. You don't have to make it go away. Simply acknowledge: 'I notice tension here.'"
+      },
+      {
+        "key": "sr7",
+        "text": "Now check in with your thoughts. What has been occupying your mind today? Without analyzing, notice the general tone — busy, worried, scattered, numb?"
+      },
+      {
+        "key": "sr8",
+        "text": "Name it. 'My mind feels __.' Naming an experience loosens its grip on us."
+      },
+      {
+        "key": "sr9",
+        "text": "Now check in with your emotions. Not what you think you should be feeling, but what is actually here. Frustration? Sadness? Anxiety? Exhaustion?"
+      },
+      {
+        "key": "sr10",
+        "text": "Name that too. 'Right now, I feel __.' There is no wrong answer."
+      },
+      {
+        "key": "sr11",
+        "text": "Take a breath. You have just done something important — you looked honestly at your own inner experience."
+      },
+      {
+        "key": "sr12",
+        "text": "Now let's begin to soften. On your next exhale, imagine releasing a little of the tension in your body. Not all of it — just a little."
+      },
+      {
+        "key": "sr13",
+        "text": "And another exhale — let a little more go."
+      },
+      {
+        "key": "sr14",
+        "text": "Breathe in steadiness... and breathe out what you no longer need."
+      },
+      {
+        "key": "sr15",
+        "text": "Place one hand on your chest and one on your belly. Feel both rise and fall as you breathe."
+      },
+      {
+        "key": "sr16",
+        "text": "This contact — your own hand on your own body — is an act of self-compassion. Notice how it feels."
+      },
+      {
+        "key": "sr17",
+        "text": "Take three slow breaths here, at your own pace. There is no rush."
+      },
+      {
+        "key": "sr18",
+        "text": "The stress you are carrying is real. The challenges are real. And you, right now, are handling them."
+      },
+      {
+        "key": "sr19",
+        "text": "You are more capable than you realize. You have gotten through difficult days before. You will get through this too."
+      },
+      {
+        "key": "sr20",
+        "text": "Take one more breath — full and slow — and let your hands return to your lap."
+      },
+      {
+        "key": "sr21",
+        "text": "Whenever you feel overwhelmed today, return to this: three slow breaths, a hand on your heart, and the knowledge that this moment will pass."
+      },
+      {
+        "key": "sr22",
+        "text": "Thank you for checking in with yourself. That act of awareness is the foundation of everything."
+      }
+    ],
+    "morning-intention": [
+      {
+        "key": "mi1",
+        "text": "Good morning. Welcome to this intention-setting practice. A few mindful minutes at the start of the day can set a completely different tone for everything that follows."
+      },
+      {
+        "key": "mi2",
+        "text": "Find a comfortable seated position. If you can, do this before looking at your phone or starting any tasks."
+      },
+      {
+        "key": "mi3",
+        "text": "Take a slow breath in through your nose... and a full exhale out. Let your body wake up gently."
+      },
+      {
+        "key": "mi4",
+        "text": "For a moment, simply notice that a new day has begun. Whatever happened yesterday is in the past. This moment is fresh."
+      },
+      {
+        "key": "mi5",
+        "text": "Check in briefly with your body. How are you feeling this morning — physically? Rested, tired, somewhere in between? Simply notice without judgment."
+      },
+      {
+        "key": "mi6",
+        "text": "Now check in with your mood. What is the emotional tone of your morning? Again, just notice — no need to change anything."
+      },
+      {
+        "key": "mi7",
+        "text": "Now let's turn to intention. An intention is different from a goal. A goal is something you achieve. An intention is a quality you want to bring to your day."
+      },
+      {
+        "key": "mi8",
+        "text": "Ask yourself: How do I want to show up today? What quality do I most want to bring to my actions and interactions?"
+      },
+      {
+        "key": "mi9",
+        "text": "Perhaps it is patience. Or presence. Or courage. Or kindness. Or simply ease."
+      },
+      {
+        "key": "mi10",
+        "text": "Let one word or phrase come to you. Don't overthink it. Trust what arises."
+      },
+      {
+        "key": "mi11",
+        "text": "Hold that intention gently in your mind. Say it to yourself once: 'Today, I intend to be __.' Make it yours."
+      },
+      {
+        "key": "mi12",
+        "text": "Take a breath and let that intention settle into your body. Where do you feel it? In your chest? Your shoulders? Your breath?"
+      },
+      {
+        "key": "mi13",
+        "text": "Now think of one small, concrete action you can take this morning that aligns with that intention. Just one small thing."
+      },
+      {
+        "key": "mi14",
+        "text": "You don't need to change the whole day. You only need to take the next step."
+      },
+      {
+        "key": "mi15",
+        "text": "Take another breath. Feel the quiet readiness in your body — the natural alertness of a new morning."
+      },
+      {
+        "key": "mi16",
+        "text": "Whatever this day brings, you have already begun it with awareness and intention. That changes things."
+      },
+      {
+        "key": "mi17",
+        "text": "Take a final deep breath in, filling your lungs completely... and a long, releasing exhale."
+      },
+      {
+        "key": "mi18",
+        "text": "Gently open your eyes. The day is waiting."
+      },
+      {
+        "key": "mi19",
+        "text": "Return to your intention whenever you need it — write it down, say it aloud, or simply hold it in your heart."
+      },
+      {
+        "key": "mi20",
+        "text": "Good morning. May today be exactly what you need it to be."
+      }
+    ],
+    "sleep-wind-down": [
+      {
+        "key": "sw1",
+        "text": "Welcome to this sleep wind-down practice. You have made it through another day. It is time to let the day go and prepare your body and mind for rest."
+      },
+      {
+        "key": "sw2",
+        "text": "Find a comfortable position in bed, lying on your back if possible. Let your legs uncross, and let your arms rest at your sides."
+      },
+      {
+        "key": "sw3",
+        "text": "Allow your eyes to close. There is nothing you need to do right now. Nothing to check. Nowhere to be."
+      },
+      {
+        "key": "sw4",
+        "text": "Take a slow breath in through your nose, letting your belly rise... and a long, slow exhale through slightly parted lips. Let the day begin to fade."
+      },
+      {
+        "key": "sw5",
+        "text": "Again. Breathe in... and all the way out."
+      },
+      {
+        "key": "sw6",
+        "text": "Let's briefly release any tension from the body. Begin with your face — let your jaw unclench, your forehead smooth, your eyes soften."
+      },
+      {
+        "key": "sw7",
+        "text": "Feel your head sink heavily into the pillow. Let your neck release."
+      },
+      {
+        "key": "sw8",
+        "text": "Relax your shoulders. Feel them drop toward the mattress. Let your arms be heavy."
+      },
+      {
+        "key": "sw9",
+        "text": "Your chest and belly — soft. Rising and falling with each breath, without effort."
+      },
+      {
+        "key": "sw10",
+        "text": "Your lower back — let it release any tightness and sink into the bed."
+      },
+      {
+        "key": "sw11",
+        "text": "Your legs — heavy, warm, completely relaxed. Your feet — still."
+      },
+      {
+        "key": "sw12",
+        "text": "Your whole body, heavy and at rest."
+      },
+      {
+        "key": "sw13",
+        "text": "Now let's quiet the mind. If thoughts arise — worries, to-do lists, replays of the day — simply notice them, and gently let them go. You can return to them tomorrow."
+      },
+      {
+        "key": "sw14",
+        "text": "Imagine each thought as a cloud drifting slowly across a night sky. You watch it pass, and the sky clears again."
+      },
+      {
+        "key": "sw15",
+        "text": "Let your breathing become even slower and softer. You are safe. You are warm. You are taken care of."
+      },
+      {
+        "key": "sw16",
+        "text": "With each exhale, feel yourself sinking a little deeper into relaxation."
+      },
+      {
+        "key": "sw17",
+        "text": "There is nowhere to go. Nothing to solve. You have done enough today."
+      },
+      {
+        "key": "sw18",
+        "text": "Let your awareness become soft and diffuse — like the moment just before sleep, when thoughts begin to blur."
+      },
+      {
+        "key": "sw19",
+        "text": "Simply breathe. In... and out. In... and out."
+      },
+      {
+        "key": "sw20",
+        "text": "You are drifting. The day is behind you. Rest is here."
+      },
+      {
+        "key": "sw21",
+        "text": "Let go of any effort to fall asleep. Simply be here, comfortable and still."
+      },
+      {
+        "key": "sw22",
+        "text": "In... and out."
+      },
+      {
+        "key": "sw23",
+        "text": "Let sleep come to you naturally, in its own time. You are already resting."
+      },
+      {
+        "key": "sw24",
+        "text": "Good night. You did well today."
+      }
+    ]
+  },
+  "fortunes": [
+    "A small pause will reveal the next right step.",
+    "Your attention is a form of care—place it somewhere gentle today.",
+    "Something ordinary will feel quietly meaningful when you slow down for it.",
+    "You do not need a perfect day to make room for one good moment.",
+    "Let ease be useful. You are allowed to move at a kinder pace.",
+    "The feeling you make space for today will have less power over you tomorrow.",
+    "A conversation today may be kinder than you expect.",
+    "The answer may arrive after you stop forcing it.",
+    "Protecting your energy is also a form of progress.",
+    "One honest breath can change the tone of the next hour.",
+    "Leave a little room in your plans for something delightful.",
+    "A task you have been avoiding may be lighter once you begin.",
+    "Someone will appreciate the care you bring to a small moment.",
+    "Your quiet effort is building something you cannot see yet.",
+    "Choose the next kind step, not the entire staircase.",
+    "A clear boundary will create room for something better.",
+    "Today favors curiosity over certainty.",
+    "The ordinary path may hold the surprise you need.",
+    "Rest will return more to you than rushing will.",
+    "A simple choice made calmly will carry you forward.",
+    "Notice what becomes easier when you stop judging the moment.",
+    "You may already know what deserves your attention first.",
+    "A familiar place will offer a new perspective today.",
+    "Let one unfinished thing remain unfinished without guilt.",
+    "A sincere question can open a door that effort cannot.",
+    "Give today one small memory worth keeping.",
+    "Your pace does not need to match anyone else’s.",
+    "Something you release will make the rest feel lighter.",
+    "Trust the progress that looks quiet from the outside.",
+    "A moment of play may restore more than another hour of work."
+  ]
+}

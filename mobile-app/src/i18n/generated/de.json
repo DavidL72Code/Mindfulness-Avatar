@@ -1,0 +1,1514 @@
+{
+  "locale": "de",
+  "name": "German",
+  "direction": "ltr",
+  "ui": {
+    "signUpHeader": "Konto erstellen",
+    "createAccountTitle": "Konto erstellen",
+    "fullName": "Vollständiger Name",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "dateOfBirth": "Geburtsdatum",
+    "languageLabel": "Spracheinstellung",
+    "langEnglish": "Englisch",
+    "langKorean": "Koreanisch",
+    "createAccountButton": "Konto erstellen",
+    "alreadyHaveAccount": "Bereits ein Konto? Anmelden",
+    "errorTitle": "Fehler",
+    "errorFillAll": "Bitte füllen Sie alle Felder aus.",
+    "signUpFailed": "Registrierung fehlgeschlagen",
+    "emailInUse": "Diese E-Mail-Adresse wird bereits verwendet.",
+    "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
+    "passwordTooShort": "Verwenden Sie mindestens 8 Zeichen für Ihr Passwort.",
+    "signUpGenericError": "Wir konnten Ihr Konto nicht erstellen. Überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "homeTitle": "Hallo, {name}!",
+    "homeSubtitle": "Virtueller Achtsamkeitsassistent",
+    "homeTodaysSession": "Heutige Sitzung",
+    "homeSessionOfTheDay": "Sitzung des Tages",
+    "homeAllSessions": "Alle Sitzungen",
+    "homeSession": "Sitzung",
+    "chatPlaceholder": "Fragen Sie nach Achtsamkeit, App-Funktionen oder dieser Sitzung…",
+    "cardAboutTitle": "Über den Assistenten",
+    "cardAboutText": "Unsere KI wurde trainiert, um Sie durch Achtsamkeitsübungen zu führen.",
+    "cardUsageTitle": "Anwendungshinweise",
+    "cardUsageText": "Finden Sie einen ruhigen Ort und folgen Sie den Atemanweisungen.",
+    "cardUpdatesTitle": "Aktuelle Updates",
+    "cardUpdatesText": "Die Handhabung der koreanischen Sprache wurde kürzlich verbessert.",
+    "cardSettingsTitle": "Schnelleinstellungen",
+    "cardSettingsText": "Passen Sie hier Ihre Benutzeroberfläche und Barrierefreiheitsoptionen an.",
+    "aboutAssistantSection": "Über den Assistenten",
+    "languageHeading": "Sprache",
+    "sessionTimeHeading": "Ihre Zeit",
+    "sessionTimeValue": "Gesamte Sitzungszeit",
+    "logOut": "Abmelden",
+    "homeTab": "Start",
+    "homeSelectionIntro": "Wählen Sie eine Übung, die dort ansetzt, wo Sie gerade stehen.",
+    "homeReadyCount": "{total} Sitzungen verfügbar",
+    "homeFeaturedLabel": "Für heute empfohlen",
+    "homeOpenPractice": "Offene Übung",
+    "homeComingSoonHint": "Diese Übung folgt in Kürze.",
+    "homeTapToChoose": "Tippen zur Auswahl",
+    "myStatsTab": "Meine Statistiken",
+    "profileTab": "Profil",
+    "signInWelcome": "Willkommen",
+    "signInSubtitle": "Melden Sie sich an, um fortzufahren",
+    "signInButton": "Anmelden",
+    "signInErrorBothFields": "Bitte geben Sie sowohl E-Mail als auch Passwort ein.",
+    "signInFailedTitle": "Anmeldung fehlgeschlagen",
+    "signInFailedBody": "Ungültige E-Mail oder ungültiges Passwort. Bitte versuchen Sie es erneut.",
+    "signUpPrompt": "Benötigen Sie ein Konto? Registrieren",
+    "signInFooter": "Interne Vorschau — University of Massachusetts Boston. Nicht für die öffentliche Verbreitung bestimmt.",
+    "profileTitle": "Profil",
+    "personalInformation": "Persönliche Informationen",
+    "personalInfoBack": "Zurück",
+    "personalInfoSave": "Änderungen speichern",
+    "personalInfoSaving": "Speichern…",
+    "personalInfoSavedTitle": "Gespeichert",
+    "personalInfoSavedBody": "Ihre persönlichen Informationen wurden aktualisiert.",
+    "personalInfoSaveFailedTitle": "Speichern fehlgeschlagen",
+    "personalInfoSaveFailedBody": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "personalInfoInvalidDob": "Geben Sie ein gültiges Geburtsdatum im Format JJJJ-MM-TT ein.",
+    "personalInfoEmailNotUpdatedTitle": "E-Mail nicht geändert",
+    "personalInfoEmailNotUpdatedBody": "Ihr Profil wurde gespeichert, aber das Ändern Ihrer Anmelde-E-Mail erfordert möglicherweise eine erneute Anmeldung. Versuchen Sie, sich ab- und wieder anzumelden, oder kontaktieren Sie den Support.",
+    "settings": "Einstellungen",
+    "support": "Support",
+    "supportFirstName": "Vorname",
+    "supportLastName": "Nachname",
+    "supportEmail": "E-Mail",
+    "supportMessage": "Nachricht",
+    "supportMessagePlaceholder": "Wie können wir helfen?",
+    "supportSend": "Nachricht senden",
+    "supportSending": "Senden…",
+    "supportMissingTitle": "Fehlende Informationen",
+    "supportMissingBody": "Füllen Sie alle Felder aus, bevor Sie senden.",
+    "supportInvalidEmailTitle": "Überprüfen Sie Ihre E-Mail",
+    "supportInvalidEmailBody": "Geben Sie eine gültige E-Mail-Adresse ein.",
+    "supportUnavailableTitle": "Support ist nicht konfiguriert",
+    "supportUnavailableBody": "Kontaktieren Sie den App-Administrator, um Support-Nachrichten zu aktivieren.",
+    "supportSentTitle": "Nachricht gesendet",
+    "supportSentBody": "Wir haben Ihre Nachricht erhalten und werden uns per E-Mail bei Ihnen melden.",
+    "supportErrorTitle": "Nachricht nicht gesendet",
+    "supportErrorBody": "Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "accountEyebrow": "KONTO",
+    "signedInAccount": "Angemeldetes Konto",
+    "privateToAccount": "Privat für Ihr Konto",
+    "accountDataScope": "Ihre Daten sind mit Ihrem angemeldeten Konto verknüpft. Andere Konten können sie nicht lesen.",
+    "accountSection": "Ihr Konto",
+    "privacySection": "Datenschutz",
+    "personalInfoDetail": "Name, Geburtsdatum, E-Mail und Sprache",
+    "supportDetail": "Hilfe erhalten oder Feedback senden",
+    "signOutDetail": "Aktive Kontositzung auf diesem Gerät löschen",
+    "signOutTitle": "Abmelden?",
+    "signOutBody": "Ihr Konto bleibt sicher. Dieses Gerät vergisst den aktuellen Chat.",
+    "cancel": "Abbrechen",
+    "signOutConfirm": "Abmelden",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "privacyPolicyDetail": "Lesen Sie, wie mit Ihren Informationen umgegangen wird",
+    "accountDeletionInfo": "Informationen zur Kontolöschung",
+    "deleteAccountEyebrow": "DAUERHAFTE AKTION",
+    "deleteAccountTitle": "Konto löschen",
+    "deleteAccountDetail": "Entfernen Sie dauerhaft Ihr Konto und Ihre Aktivitäten",
+    "deleteAccountIntro": "Wir senden einen sicheren Bestätigungslink an die E-Mail-Adresse Ihres Kontos. Nichts wird gelöscht, bevor Sie dies über diese E-Mail bestätigen.",
+    "deleteAccountRemoves": "Dies entfernt dauerhaft",
+    "deleteAccountProfileData": "Ihr Profil und Ihre persönlichen Informationen",
+    "deleteAccountActivityData": "Sitzungsverlauf, Serien und Aktivitätsstatistiken",
+    "deleteAccountMoodData": "Auf diesem Gerät gespeicherte Stimmungs-Check-ins",
+    "deleteAccountEmailDestination": "Die Bestätigung wird gesendet an",
+    "deleteAccountSendEmail": "Bestätigungs-E-Mail zur Löschung senden",
+    "deleteAccountLinkExpiry": "Zu Ihrer Sicherheit läuft der Bestätigungslink in 30 Minuten ab.",
+    "deleteAccountEmailSentEyebrow": "ÜBERPRÜFEN SIE IHRE E-MAIL",
+    "deleteAccountEmailSentTitle": "Bestätigung gesendet",
+    "deleteAccountEmailSentBody": "Wir haben einen sicheren Löschlink an {email} gesendet. Öffnen Sie ihn und bestätigen Sie, um Ihr Konto dauerhaft zu löschen.",
+    "deleteAccountNextSteps": "Was passiert als Nächstes",
+    "deleteAccountNextStepsBody": "Das Öffnen der E-Mail löscht noch nichts. Überprüfen Sie die Details auf der sicheren Seite und wählen Sie dann die endgültige Löschtaste.",
+    "deleteAccountResend": "Weitere E-Mail senden",
+    "deleteAccountNeedHelp": "Benötigen Sie Hilfe? Kontaktieren Sie den Support",
+    "deleteAccountTooManyAttempts": "Zu viele Versuche. Warten Sie einige Minuten und versuchen Sie es dann erneut.",
+    "deleteAccountNetworkError": "Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "deleteAccountRecentLogin": "Aus Sicherheitsgründen abmelden, wieder anmelden und erneut versuchen.",
+    "deleteAccountEmailUnavailable": "Der Bestätigungs-E-Mail-Dienst ist derzeit nicht verfügbar. Versuchen Sie es in Kürze erneut.",
+    "deleteAccountGenericError": "Die Bestätigungs-E-Mail konnte nicht gesendet werden. Versuchen Sie es erneut oder kontaktieren Sie den Support.",
+    "statsEyebrow": "IHRE PRAXIS",
+    "statsTitle": "Eine ruhigere Art des Fortschritts",
+    "statsLoading": "Lade Ihre Aktivität…",
+    "statsSignedOut": "Melden Sie sich an, um Ihre Aktivität zu sehen.",
+    "statsSubtitle": "Ihre Achtsamkeitsaktivität über alle Sitzungen hinweg.",
+    "currentRhythm": "Aktueller Rhythmus",
+    "dayCountOne": "{count} Tag",
+    "dayCountMany": "{count} Tage",
+    "keepReturning": "Kehren Sie immer wieder zurück, wenn es Ihnen hilft.",
+    "startPractice": "Beginnen Sie heute mit einer kurzen Übung.",
+    "statsNumbers": "Ihre Zahlen",
+    "dayStreak": "Tages-Serie",
+    "longestStreak": "Längste: {count} Tag{suffix}",
+    "daysActive": "Aktive Tage",
+    "totalUniqueDays": "Gesamte eindeutige Tage",
+    "timeInSessions": "Zeit in Sitzungen",
+    "sessionsCompleted": "Abgeschlossene Sitzungen",
+    "recentPractice": "Kürzliche Praxis",
+    "noRecentPractice": "Ihre abgeschlossenen Übungen erscheinen hier.",
+    "activityCalendar": "Aktivitätskalender",
+    "activityCalendarSummary": "{days} aktive Tage über {weeks} Wochen",
+    "weekdaySun": "S",
+    "weekdayMon": "M",
+    "weekdayTue": "D",
+    "weekdayWed": "M",
+    "weekdayThu": "D",
+    "weekdayFri": "F",
+    "weekdaySat": "S",
+    "calendarWeek": "Woche {week}",
+    "lessActivity": "Weniger",
+    "moreActivity": "Mehr",
+    "calendarPrevious": "{month} anzeigen",
+    "calendarNext": "{month} anzeigen",
+    "activityTooltip": "{date} · {count} Sitzung{suffix}",
+    "syncErrorTitle": "Aktivität ist nicht verfügbar",
+    "syncErrorBody": "Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "retry": "Erneut versuchen",
+    "welcomeBackNamed": "Willkommen zurück, {name}.",
+    "welcomeBack": "Willkommen zurück.",
+    "homeWelcomeBody": "Machen Sie es sich bequem und wählen Sie eine Übung. Ihr Assistent ist bereit, Sie zu unterstützen.",
+    "homeWelcomeQuestion": "Wie fühlen Sie sich heute?",
+    "beginPractice": "{title} beginnen",
+    "askGuide": "Den Assistenten fragen",
+    "dayStreakValue": "{count} Tage-Serie",
+    "activeDaysValue": "{count} aktive Tage",
+    "quickCheckIn": "Kurzer Check-in",
+    "sevenDayAverage": "7-Tage-Durchschnitt",
+    "fortuneMachine": "Glückskeks-Maschine",
+    "fortuneDescription": "Drehen Sie für einen kleinen Gedanken, den Sie durch den Tag tragen können.",
+    "spinFortune": "Ein Glücksrad drehen",
+    "yourMessageToday": "Ihre Nachricht für heute",
+    "yourActivity": "Ihre Aktivität",
+    "recommendedStartingPoint": "Empfohlener Startpunkt",
+    "exploreAllPractices": "Alle Übungen erkunden",
+    "availableCount": "{count} verfügbar",
+    "start": "Start",
+    "endSession": "Sitzung beenden",
+    "statusNotStarted": "Nicht gestartet",
+    "sessionActive": "Sitzung aktiv",
+    "next": "Weiter",
+    "finish": "Abschließen",
+    "passageProgress": "Abschnitt {current} von {total}",
+    "welcomeGuideNamed": "Willkommen zurück, {name}. Machen Sie es sich bequem und wählen Sie eine Übung. Ihr Assistent ist bereit, Sie zu unterstützen. Wie fühlen Sie sich heute?",
+    "welcomeGuide": "Willkommen zurück. Machen Sie es sich bequem und wählen Sie eine Übung. Ihr Assistent ist bereit, Sie zu unterstützen. Wie fühlen Sie sich heute?",
+    "assistantWelcome": "Hallo, ich bin Ihr Achtsamkeitsassistent. Ich bin hier, um Sie zu unterstützen. Wie geht es Ihnen heute?",
+    "assistantReady": "Ihr Achtsamkeitsassistent ist hier.",
+    "moodLow": "Niedergeschlagen",
+    "moodTender": "Empfindlich",
+    "moodSteady": "Ausgeglichen",
+    "moodGood": "Gut",
+    "moodBright": "Strahlend",
+    "moodSaved": "Für heute gespeichert.",
+    "loadingTranslations": "Lade Ihre Sprache…",
+    "translationFallback": "Dieser Inhalt ist in Ihrer Sprache noch nicht verfügbar. Englisch wird angezeigt.",
+    "guideButton": "Assistent",
+    "mindfulnessAssistant": "Achtsamkeitsassistent",
+    "hideGuide": "Assistent ausblenden",
+    "sessionCompleteTitle": "Sie haben sich Raum für sich selbst geschaffen",
+    "sessionLength": "Sitzungsdauer: {duration}",
+    "sessionReflection": "Beachten Sie, was sich anders anfühlt, bevor Sie fortfahren.",
+    "returnHome": "Zurück zur Startseite",
+    "mindfulnessChat": "Achtsamkeits-Chat",
+    "assistantStatus": "Assistent: {status}",
+    "typeMessage": "Nachricht eingeben…",
+    "send": "Senden",
+    "completed": "Abgeschlossen",
+    "continuePractice": "Setzen Sie Ihre Praxis fort",
+    "practiceStillActive": "{title} ist noch aktiv.",
+    "guideFollowUpReady": "Ihr Assistent ist bereit mit einem Follow-up.",
+    "tapFeeling": "Tippen Sie auf ein Gefühl, um mit Ihrem Assistenten einzuchecken.",
+    "guidePreparingFollowUp": "Ihr Assistent bereitet ein Follow-up vor.",
+    "chooseClosestFeeling": "Wählen Sie das Gefühl, das dem am nächsten kommt, wo Sie gerade stehen.",
+    "spinning": "Dreht…",
+    "voicePlayback": "Sprachwiedergabe",
+    "enterSendHint": "Eingabe zum Senden · Umschalt+Eingabe für eine neue Zeile",
+    "listening": "Hört zu…",
+    "generatingVoice": "Generiere Stimme…",
+    "speaking": "Spricht…",
+    "voiceUnavailable": "Stimme nicht verfügbar. Versuchen Sie es erneut.",
+    "preparingVoice": "Bereite Stimme vor…",
+    "typing": "Schreibt…",
+    "preparingWelcome": "Bereite Willkommensnachricht vor…",
+    "tapToTalk": "Tippen zum Sprechen",
+    "loadingTexture": "Lade Avatar-Textur {current} von {total}…",
+    "cachingGeometry": "Cache Avatar-Geometrie…",
+    "loadError": "Der Avatar konnte nicht geladen werden.",
+    "compactGuideSubtitle": "Ein kompakter Avatar-Assistent mit Stimme und schnellem Chat.",
+    "viewActivity": "Ihre Aktivität ansehen",
+    "backToSessions": "Zurück zu den Sitzungen",
+    "sessions": "Sitzungen",
+    "templateReserved": "Vorlage reserviert",
+    "closeLanguageSelector": "Sprachauswahl schließen",
+    "dailyMindfulnessTools": "Tägliche Achtsamkeitswerkzeuge",
+    "chooseFeeling": "Wählen Sie, wie Sie sich heute fühlen",
+    "feelingLabel": "Gefühl {feeling}",
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "calendarLabel": "{month} Aktivitätskalender",
+    "toggleTheme": "Design umschalten",
+    "toggleNotifications": "Benachrichtigungen umschalten",
+    "stopRecording": "Aufnahme stoppen",
+    "startVoiceInput": "Spracheingabe starten",
+    "openMindfulnessChat": "Achtsamkeits-Chat öffnen",
+    "chat": "Chat",
+    "loadingAvatar": "Lade Avatar…",
+    "collapse": "Einklappen",
+    "expand": "Ausklappen",
+    "ready": "Bereit",
+    "thinking": "Denkt nach…",
+    "offlineFallback": "Offline-Fallback",
+    "contextSession": "Kontext: {title}",
+    "contextGeneral": "Kontext: allgemeine App-Hilfe",
+    "guidedSession": "Geführte Sitzung",
+    "assistantLedSession": "Assistentengeführte Sitzung",
+    "finishSession": "Sitzung beenden",
+    "nextPassage": "Nächster Abschnitt",
+    "startNamed": "{title} starten",
+    "personMeditating": "Meditierende Person",
+    "brandLogo": "Multi-Language Wellness",
+    "useLanguageOption": "{language} verwenden",
+    "languageCurrent": "Sprache: {language}",
+    "opensLanguageSelector": "Öffnet die Sprachauswahl",
+    "moodPromptLow": "Was bedrückt Sie heute? Sie müssen nicht alles auf einmal lösen.",
+    "moodPromptTender": "Was fühlt sich heute etwas schwieriger an als sonst?",
+    "moodPromptSteady": "Ausgeglichenheit reicht aus. Was würde Ihnen heute helfen, geerdet zu bleiben?",
+    "moodPromptGood": "Was ist eine Sache, die Ihnen heute geholfen hat, sich gut zu fühlen?",
+    "moodPromptBright": "Was ist heute passiert, an das Sie sich erinnern möchten?"
+  },
+  "catalog": {
+    "caregiver-fatigue": {
+      "title": "Erschöpfung bei der Pflege",
+      "description": "Eine Mitgefühlsmeditation zum Auftanken, wenn man für andere sorgt.",
+      "previewDescription": "Legen Sie die Verantwortung, die Sie getragen haben, für ein paar Minuten ab. Diese sanfte Übung hilft Ihnen, Selbstkritik zu mildern, innere Stabilität wiederherzustellen und Raum für Ihre eigenen Bedürfnisse zu schaffen.",
+      "zodiac": "Aries",
+      "kind": "scripted",
+      "duration": "~4 min · 6 segments"
+    },
+    "body-scan": {
+      "title": "Bodyscan",
+      "description": "Ein geführter Check-in von Kopf bis Fuß.",
+      "previewDescription": "Lenken Sie Ihre Aufmerksamkeit langsam durch den Körper und nehmen Sie Druck, Wärme, Anspannung und Entspannung wahr, ohne etwas verändern zu müssen. Eine erdende Wahl, wenn sich Ihr Geist beschäftigt oder unverbunden anfühlt.",
+      "zodiac": "Taurus",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "five-senses": {
+      "title": "Fünf-Sinne-Erdung",
+      "description": "Eine Erdungsübung, um sich wieder mit dem gegenwärtigen Moment zu verbinden.",
+      "previewDescription": "Nutzen Sie Sehen, Hören, Tasten, Riechen und Schmecken, um zu dem zurückzukehren, was gerade geschieht. Dieser kurze sensorische Reset kann helfen, Gedankenkarusselle zu unterbrechen und ein überreiztes Nervensystem zu beruhigen.",
+      "zodiac": "Gemini",
+      "kind": "scripted",
+      "duration": "~6 min · 24 steps"
+    },
+    "mindful-breathing": {
+      "title": "Achtsames Atmen",
+      "description": "Eine grundlegende Atemübung, die Sie überall anwenden können.",
+      "previewDescription": "Folgen Sie dem natürlichen Rhythmus Ihres Ein- und Ausatmens, ohne ihn in ein Muster zu zwingen. Eine einfache Übung, um vor einem Meeting, einem Gespräch oder einem schwierigen Moment ein wenig Raum zu schaffen.",
+      "zodiac": "Cancer",
+      "kind": "scripted",
+      "duration": "~5 min · 5 segments"
+    },
+    "loving-kindness": {
+      "title": "Liebevolle Güte",
+      "description": "Eine auf Mitgefühl ausgerichtete Achtsamkeitspraxis.",
+      "previewDescription": "Wiederholen Sie leise Wünsche für Sicherheit, Leichtigkeit und Fürsorge für sich selbst und die Menschen in Ihrem Leben. Nutzen Sie diese Übung, wenn Sie sich verhärtet oder einsam fühlen oder eine freundlichere innere Stimme brauchen.",
+      "zodiac": "Leo",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "mindful-walking": {
+      "title": "Achtsames Gehen",
+      "description": "Eine leichte Bewegungsübung mit voller Aufmerksamkeit auf jeden Schritt.",
+      "previewDescription": "Lassen Sie das Tempo Ihrer Schritte zu einem Anker werden, während Sie Gleichgewicht, Bewegung und den Raum um sich herum wahrnehmen. Ein guter Reset, wenn Stillsitzen schwerfällt oder unruhige Energie einen Ausweg braucht.",
+      "zodiac": "Virgo",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "seated-stretch": {
+      "title": "Sitzender Dehnungs-Reset",
+      "description": "Sanfte Dehnübungen im Sitzen, um Verspannungen zu lösen.",
+      "previewDescription": "Lösen Sie alltägliche Verspannungen in Schultern, Nacken, Rücken und Hüften mit Bewegungen, die vom Stuhl aus ausgeführt werden können. Entwickelt für eine ruhige Schreibtischpause oder einen Reset am Nachmittag bei wenig Energie.",
+      "zodiac": "Libra",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "mindful-listening": {
+      "title": "Achtsames Zuhören",
+      "description": "Eine Übung, die die Aufmerksamkeit durch Klang zentriert.",
+      "previewDescription": "Nehmen Sie nahe und ferne Geräusche wahr, ohne sie zu bewerten oder ihnen nachzujagen. Diese Hörübung kann helfen, Ihre Aufmerksamkeit zu weiten, wenn Gedanken laut erscheinen, und Sie zurück in Ihre Umgebung zu bringen.",
+      "zodiac": "Scorpio",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "affirmation-breath": {
+      "title": "Affirmationsatmung",
+      "description": "Verbinden Sie einen beruhigenden Satz mit Ihrem Atem.",
+      "previewDescription": "Kombinieren Sie einen gleichmäßigen Atemzug mit einem Satz, der Ihnen Unterstützung gibt, wie zum Beispiel: „Ich kann diesen Moment so nehmen, wie er ist.“ Ein kleines Ritual, um Zuversicht aufzubauen, bevor der Tag an Fahrt gewinnt.",
+      "zodiac": "Sagittarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "stress-release": {
+      "title": "Stressabbau-Check-in",
+      "description": "Erkennen, benennen und mildern, was Sie gerade tragen.",
+      "previewDescription": "Halten Sie inne, um zu identifizieren, was Ihre Aufmerksamkeit fordert, anstatt es als eine einzige, unbestimmte Last zu halten. Dieser reflektierende Reset hilft Ihnen, den Druck zu benennen und einen sanfteren nächsten Schritt zu wählen.",
+      "zodiac": "Capricorn",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "morning-intention": {
+      "title": "Morgendliche Intention",
+      "description": "Eine einfache Übung zur Intentionseinstellung für den Tag.",
+      "previewDescription": "Beginnen Sie mit einer Eigenschaft, die Sie in die nächsten Stunden einbringen möchten – Geduld, Fokus, Offenheit oder Fürsorge. Dies ist eine kurze Möglichkeit zu wählen, wie Sie dem Tag begegnen möchten, anstatt direkt hineinzustürzen.",
+      "zodiac": "Aquarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "sleep-wind-down": {
+      "title": "Einschlaf-Ritual",
+      "description": "Eine ruhige Übung, um Ihren Körper auf die Ruhe vorzubereiten.",
+      "previewDescription": "Verlangsamen Sie den Übergang von einem vollen Tag in einen sanfteren, ruhigeren Zustand. Sanfte Körperwahrnehmung und ruhiges Atmen helfen Ihnen, den Drang loszulassen, vor dem Schlafengehen noch etwas lösen zu müssen.",
+      "zodiac": "Pisces",
+      "kind": "scripted",
+      "duration": "~7 min · 24 steps"
+    }
+  },
+  "sessions": {
+    "caregiver-fatigue": [
+      {
+        "key": "cf1",
+        "text": "Danke, dass du bei dieser kurzen Meditation dabei bist."
+      },
+      {
+        "key": "cf2",
+        "text": "In dieser kurzen Übung werden wir einige einfache Schritte erkunden, um neue Energie zu tanken, wenn wir uns ausgebrannt oder von unseren Bemühungen, anderen zu helfen, überfordert fühlen."
+      },
+      {
+        "key": "cf3",
+        "text": "Mach es dir bequem. Du kannst deine Augen schließen, wenn du möchtest, oder sie mit einem sanften, entspannten Blick leicht geöffnet lassen."
+      },
+      {
+        "key": "cf4",
+        "text": "Während du zur Ruhe kommst, nimm ein paar langsame, beruhigende Atemzüge. Und nimm wahr, wie es sich anfühlt zu atmen."
+      },
+      {
+        "key": "cf5",
+        "text": "Lass deinen Atem nun wieder in seinen normalen Rhythmus zurückkehren. Gönn dir ein paar Momente, um auszuruhen und neue Kraft zu schöpfen, während du ganz im Hier und Jetzt ankommst."
+      },
+      {
+        "key": "cf6",
+        "text": "Großartig. Jetzt schalten wir einen Gang zurück und nutzen unsere Fähigkeit, das Leid anderer auf eine gesunde Weise zu halten."
+      },
+      {
+        "key": "cf7",
+        "text": "Empathie kann eine Brücke zu Fürsorge und Mitgefühl sein, aber sie kann uns auch in einen Zustand der Überforderung führen – was Wissenschaftler als empathischen Stress bezeichnen."
+      },
+      {
+        "key": "cf8",
+        "text": "Ein einfacher Weg, diese Überforderung zu vermeiden, ist es, sich in einer fürsorglichen Motivation zu erden. Lass uns das versuchen."
+      },
+      {
+        "key": "cf9",
+        "text": "Beginne damit, an jemanden zu denken, der dir am Herzen liegt. Das könnte die Person sein, die du pflegst, oder jeder andere, der dir wichtig ist."
+      },
+      {
+        "key": "cf10",
+        "text": "Nimm dir einen Moment Zeit, um dir vorzustellen, dass diese Person tatsächlich bei dir ist, und schau, ob du die tiefe Verbindung spüren kannst, die ihr teilt."
+      },
+      {
+        "key": "cf11",
+        "text": "Während du dich auf dieses Gefühl der Verbundenheit einlässt, achte darauf, ob du deinen Impuls wahrnehmen kannst, für diese Person zu sorgen, oder vielleicht deinen natürlichen Wunsch, dass sie glücklich und frei von Leid ist."
+      },
+      {
+        "key": "cf12",
+        "text": "Wenn es hilft, kannst du dies in Gedanken aussprechen. Du kannst dir sagen: Mögest du frei von Leid und Not sein. Mögest du all das Glück der Welt haben."
+      },
+      {
+        "key": "cf13",
+        "text": "Fühle dich frei, deine eigenen mitfühlenden Sätze zu formulieren und dir vorzustellen, wie du sie mit dieser Person teilst, die dir am Herzen liegt."
+      },
+      {
+        "key": "cf14",
+        "text": "Denke nun an andere – vielleicht an Gruppen von Menschen oder sogar an die Erde selbst."
+      },
+      {
+        "key": "cf15",
+        "text": "Erkenne ihren Schmerz und ihr Leid an, aber auch die enorme Widerstandsfähigkeit, die wir alle besitzen."
+      },
+      {
+        "key": "cf16",
+        "text": "Stell dir eine Welt vor, in der sie frei von Leid und Widrigkeiten sind. Versuche, sie glücklich, entspannt, gesund und ausgeglichen zu sehen."
+      },
+      {
+        "key": "cf17",
+        "text": "Lass deine Gedanken hier schweifen und sende weiterhin freundliche, fürsorgliche Gedanken und Sätze in die Welt hinaus."
+      },
+      {
+        "key": "cf18",
+        "text": "Schließe nun dich selbst in diesen Kreis des Mitgefühls ein."
+      },
+      {
+        "key": "cf19",
+        "text": "Stell dir die Menschen in deinem Leben vor, die sich um dich sorgen, oder sogar Fremde, die Liebe und Mitgefühl in die Welt senden, genau wie du."
+      },
+      {
+        "key": "cf20",
+        "text": "Stell dir vor, dass all diese fürsorgliche Energie in dich hineinfließt, und schau, ob du offen dafür sein kannst, sie zu empfangen."
+      },
+      {
+        "key": "cf21",
+        "text": "Nimm für diese letzten Momente wahr, wie du dich gerade fühlst, ganz ohne Bewertung."
+      },
+      {
+        "key": "cf22",
+        "text": "Begegne deinen eigenen Gedanken und Gefühlen mit Offenheit, Neugier und Fürsorge, was auch immer sie sein mögen."
+      },
+      {
+        "key": "cf23",
+        "text": "Wenn wir das Leid anderer und das Leid der Welt sehr direkt spüren, können uns unsere eigenen Gefühle und Reaktionen leicht überwältigen."
+      },
+      {
+        "key": "cf24",
+        "text": "Hier üben wir die Fähigkeit, uns in einer fürsorglichen Motivation zu erden. Mit dieser Motivation gewinnen wir etwas mehr Raum, um bei unseren Gefühlen und Reaktionen zu sein, ohne von ihnen mitgerissen zu werden."
+      },
+      {
+        "key": "cf25",
+        "text": "Ich hoffe, das war hilfreich für dich. Wenn ja, versuche, in den nächsten ein oder zwei Tagen immer wieder für kurze Momente zu üben. Pass auf dich auf und viel Erfolg bei deiner Praxis."
+      }
+    ],
+    "mindful-breathing": [
+      {
+        "key": "mb1",
+        "text": "Hallo und willkommen zurück. Heute konzentrieren wir uns auf eine grundlegende Praxis: achtsames Atmen."
+      },
+      {
+        "key": "mb2",
+        "text": "Dies ist ein Werkzeug, das du überall und jederzeit nutzen kannst, um dich zu erden und einen Moment der Ruhe zu finden."
+      },
+      {
+        "key": "mb3",
+        "text": "Beginne damit, eine bequeme Sitzposition zu finden. Dein Rücken sollte gerade, aber nicht steif sein."
+      },
+      {
+        "key": "mb4",
+        "text": "Lass deine Hände sanft auf deinem Schoß oder auf deinen Knien ruhen. Wenn es sich gut anfühlt, schließe deine Augen oder senke einfach deinen Blick und lass ihn weich werden."
+      },
+      {
+        "key": "mb5",
+        "text": "Atme nun tief durch die Nase ein und spüre, wie sich deine Lungen weiten. Und atme langsam durch den Mund aus."
+      },
+      {
+        "key": "mb6",
+        "text": "Mach das noch einmal – tief einatmen... und lang ausatmen."
+      },
+      {
+        "key": "mb7",
+        "text": "Lass deinen Atem nun in seinen natürlichen Rhythmus zurückkehren. Du musst ihn nicht verändern oder kontrollieren. Beobachte ihn einfach nur."
+      },
+      {
+        "key": "mb8",
+        "text": "Nimm wahr, wo du den Atem am deutlichsten spürst. Es könnte die kühle Luft an deiner Nasenspitze sein, das Heben und Senken deines Brustkorbs oder das Ausdehnen und Zusammenziehen deines Bauches."
+      },
+      {
+        "key": "mb9",
+        "text": "Während du hier sitzt, bemerkst du vielleicht, dass deine Gedanken anfangen zu wandern. Das ist völlig normal. Genau das tun Gedanken."
+      },
+      {
+        "key": "mb10",
+        "text": "Wenn du merkst, dass deine Gedanken in die Vergangenheit, die Zukunft oder zu einer To-Do-Liste abgeschweift sind, erkenne den Gedanken einfach ohne Bewertung an."
+      },
+      {
+        "key": "mb11",
+        "text": "Stell dir vor, er sei wie eine Wolke, die am Himmel vorbeizieht. Führe dann sanft und freundlich deine Aufmerksamkeit zurück zur körperlichen Empfindung deines Atems."
+      },
+      {
+        "key": "mb12",
+        "text": "Zurück zum Einatmen... und zum Ausatmen."
+      },
+      {
+        "key": "mb13",
+        "text": "Lass uns für ein paar Momente in Stille dabei bleiben. Folge jedem Atemzug vom Beginn des Einatmens über die kurze Pause bis zum Ende des Ausatmens."
+      },
+      {
+        "key": "mb14",
+        "text": "Wenn du zehnmal abgelenkt wirst, kehre einfach zehnmal zurück. Jedes Mal, wenn du zum Atem zurückkehrst, stärkst du deinen Achtsamkeitsmuskel."
+      },
+      {
+        "key": "mb15",
+        "text": "Während wir diese Übung beenden, nimm dir einen Moment Zeit, um zu spüren, wie es dir geht. Gibt es ein Gefühl von Stille? Etwas mehr Raum in deinem Geist?"
+      },
+      {
+        "key": "mb16",
+        "text": "Wisse, dass dieser Atem dir jederzeit als Anker zur Verfügung steht."
+      },
+      {
+        "key": "mb17",
+        "text": "Wenn du bereit bist, bewege sanft deine Finger und Zehen und öffne langsam deine Augen."
+      },
+      {
+        "key": "mb18",
+        "text": "Danke, dass du heute mit mir geübt hast. Nimm dieses Gefühl der Präsenz mit in den Rest deines Tages."
+      }
+    ],
+    "body-scan": [
+      {
+        "key": "bs1",
+        "text": "Willkommen. Finde eine bequeme Position – wenn möglich im Liegen oder sitzend mit sanft gestütztem Rücken."
+      },
+      {
+        "key": "bs2",
+        "text": "Lass deine Augen schließen oder deinen Blick sanft nach unten ruhen. Erlaube dir, hier anzukommen."
+      },
+      {
+        "key": "bs3",
+        "text": "Atme tief durch die Nase ein... und lass den Atem langsam durch den Mund wieder los. Beginne loszulassen."
+      },
+      {
+        "key": "bs4",
+        "text": "Lass deinen Atem in seinen natürlichen Rhythmus zurückkehren. In dieser Übung werden wir die Aufmerksamkeit langsam durch den Körper führen – einfach nur wahrnehmen, ohne etwas reparieren oder verändern zu wollen."
+      },
+      {
+        "key": "bs5",
+        "text": "Lenke deine Aufmerksamkeit ganz nach unten zu deinen Füßen. Nimm die Fußsohlen wahr – Wärme, Kühle, Kribbeln oder Druck. Beobachte einfach."
+      },
+      {
+        "key": "bs6",
+        "text": "Wandere mit deiner Aufmerksamkeit zu deinen Knöcheln und Waden. Halten sie Spannung? Du musst nichts ändern – sei dir dessen einfach nur bewusst."
+      },
+      {
+        "key": "bs7",
+        "text": "Lenke deine Aufmerksamkeit nun zu deinen Knien und Oberschenkeln. Spüre das Gewicht deiner Beine. Nimm wahr, wo sie die Unterlage unter dir berühren."
+      },
+      {
+        "key": "bs8",
+        "text": "Lass deine Aufmerksamkeit zu deinen Hüften und deinem unteren Rücken wandern. Dieser Bereich hält bei vielen von uns viel fest. Atme hier für einen Moment."
+      },
+      {
+        "key": "bs9",
+        "text": "Nimm deinen Bauch wahr. Spüre, wie er sich mit jedem Einatmen hebt. Spüre, wie er sich mit jedem Ausatmen senkt. Lass ihn weich und entspannt sein."
+      },
+      {
+        "key": "bs10",
+        "text": "Lenke deine Aufmerksamkeit auf deinen Brustkorb und den Bereich um dein Herz. Nimm das sanfte Heben und Senken deines Atems wahr. Spüre deinen Herzschlag, wenn du kannst."
+      },
+      {
+        "key": "bs11",
+        "text": "Verlagere deine Aufmerksamkeit auf deinen oberen Rücken und deine Schultern. Stell dir vor, wie sich jede festgehaltene Spannung mit jedem Ausatmen löst und auflöst."
+      },
+      {
+        "key": "bs12",
+        "text": "Lass die Aufmerksamkeit durch deine Arme fließen – deine Ellbogen, Unterarme, Handgelenke – bis hin zu deinen Händen und Fingerspitzen. Nimm hier Wärme oder ein Pulsieren wahr."
+      },
+      {
+        "key": "bs13",
+        "text": "Lenke deine Aufmerksamkeit nun auf deinen Nacken und Hals. Nimm wahr, ob es dort Verspannungen gibt. Atme sanft hinein und lass sie weich werden."
+      },
+      {
+        "key": "bs14",
+        "text": "Verlagere deine Aufmerksamkeit auf deinen Kiefer. Lass ihn locker. Lass deine Zunge entspannt im Mund ruhen und deine Lippen leicht geöffnet."
+      },
+      {
+        "key": "bs15",
+        "text": "Nimm die Muskeln um deine Augen und auf deiner Stirn wahr. Lass sie glatt und entspannt werden, als ob eine sanfte Hand dort ruhen würde."
+      },
+      {
+        "key": "bs16",
+        "text": "Erweitere nun deine Aufmerksamkeit, um deinen ganzen Körper auf einmal wahrzunehmen – von der Oberseite deines Kopfes bis zu den Spitzen deiner Zehen."
+      },
+      {
+        "key": "bs17",
+        "text": "Dein ganzer Körper, atmend. Ruhend. Lebendig."
+      },
+      {
+        "key": "bs18",
+        "text": "Wenn du Bereiche mit Spannung oder Unbehagen bemerkt hast, ist das völlig natürlich. Die Übung besteht darin, dies mit Freundlichkeit wahrzunehmen – nicht zu urteilen."
+      },
+      {
+        "key": "bs19",
+        "text": "Bleibe für einen Moment in diesem Ganzkörperbewusstsein. Lass deinen Atem leicht sein. Lass deinen Körper von der Unterlage, auf der du ruhst, getragen werden."
+      },
+      {
+        "key": "bs20",
+        "text": "Du bist genau dort, wo du gerade sein musst."
+      },
+      {
+        "key": "bs21",
+        "text": "Atme langsam und tief ein... und lass alles los."
+      },
+      {
+        "key": "bs22",
+        "text": "Beginne, deinen Atem sanft zu vertiefen. Bewege deine Finger und Zehen, um den Körper langsam wieder zu wecken."
+      },
+      {
+        "key": "bs23",
+        "text": "Rolle langsam deinen Nacken von einer Seite zur anderen, wenn es sich angenehm anfühlt. Lass dir Zeit."
+      },
+      {
+        "key": "bs24",
+        "text": "Wenn du bereit bist, öffne sanft deine Augen. Es gibt keinen Grund zur Eile."
+      },
+      {
+        "key": "bs25",
+        "text": "Danke, dass du dir diese Zeit genommen hast, auf deinen Körper zu hören. Nimm dieses Gefühl der Leichtigkeit mit in den Rest deines Tages."
+      }
+    ],
+    "five-senses": [
+      {
+        "key": "fs1",
+        "text": "Willkommen zu dieser Erdungsübung. Wann immer sich dein Geist zerstreut oder ängstlich anfühlt, kann dich diese Übung zurück in den gegenwärtigen Moment bringen."
+      },
+      {
+        "key": "fs2",
+        "text": "Finde eine bequeme Position – sitzend, stehend oder liegend. Spüre, wie deine Füße den Boden berühren."
+      },
+      {
+        "key": "fs3",
+        "text": "Atme einmal langsam durch die Nase ein... und lange durch den Mund aus. Gut. Lass uns beginnen."
+      },
+      {
+        "key": "fs4",
+        "text": "Wir werden nacheinander deine fünf Sinne durchgehen. Jeder von ihnen ist ein Anker für den gegenwärtigen Moment – für das Hier und Jetzt."
+      },
+      {
+        "key": "fs5",
+        "text": "Beginne mit dem Sehen. Schau dich in deiner Umgebung um und nimm fünf Dinge wahr, die du sehen kannst. Lass dir Zeit – betrachte jedes einzelne wirklich genau."
+      },
+      {
+        "key": "fs6",
+        "text": "Achte auf Farben, Texturen, Schatten, Formen. Lass deine Augen einen Moment auf jedem Gegenstand ruhen. Eins... Zwei... Drei... Vier... Fünf."
+      },
+      {
+        "key": "fs7",
+        "text": "Richte deine Aufmerksamkeit nun auf das Tasten. Nimm vier Empfindungen wahr, die du körperlich spüren kannst – an deinem Körper oder auf deiner Haut."
+      },
+      {
+        "key": "fs8",
+        "text": "Vielleicht das Gewicht deiner Hände auf deinem Schoß. Die Temperatur der Luft. Der Druck des Stuhls unter dir. Die Textur des Stoffes auf deiner Haut. Nimm vier wahr."
+      },
+      {
+        "key": "fs9",
+        "text": "Richte deine Aufmerksamkeit nun auf das Hören. Nimm drei Geräusche in deiner Umgebung wahr."
+      },
+      {
+        "key": "fs10",
+        "text": "Öffne dein Gehör – für nahe und ferne Geräusche, laute und leise. Nimm einfach drei davon wahr, ohne sie zu bewerten."
+      },
+      {
+        "key": "fs11",
+        "text": "Wende dich nun dem Geruchssinn zu. Richte deine Aufmerksamkeit darauf, was du riechen kannst – oder einfach auf die Qualität der Luft, während du einatmest."
+      },
+      {
+        "key": "fs12",
+        "text": "Atme langsam ein. Vielleicht nimmst du etwas Schwaches wahr – einen Duft im Raum, die Frische der Luft oder einfach die Wärme deines Atems. Nimm zwei Dinge wahr."
+      },
+      {
+        "key": "fs13",
+        "text": "Und schließlich nimm eine Sache wahr, die du schmecken kannst. Vielleicht ein nachklingender Geschmack oder einfach das neutrale Gefühl in deinem Mund und auf deiner Zunge."
+      },
+      {
+        "key": "fs14",
+        "text": "Nimm dir nun einen Moment Zeit, um alle fünf Sinne zusammenzubringen. Du siehst, fühlst, hörst, riechst und schmeckst – alles gleichzeitig."
+      },
+      {
+        "key": "fs15",
+        "text": "Du bist voll und ganz hier. Genau in diesem Moment."
+      },
+      {
+        "key": "fs16",
+        "text": "Spüre, wie anders sich das anfühlt als zu Beginn. Dieses leichte Gefühl von Beständigkeit, des Geerdet-Seins – das ist echt."
+      },
+      {
+        "key": "fs17",
+        "text": "Diese Technik funktioniert, indem sie dein Nervensystem von einer Stressreaktion hin zu einer Achtsamkeit für den gegenwärtigen Moment lenkt."
+      },
+      {
+        "key": "fs18",
+        "text": "Du kannst dies überall anwenden – vor einem schwierigen Meeting, in einem Moment der Panik oder einfach als täglichen Reset."
+      },
+      {
+        "key": "fs19",
+        "text": "Lass uns mit drei langsamen, bewussten Atemzügen abschließen. Atme durch die Nase ein... und durch den Mund aus."
+      },
+      {
+        "key": "fs20",
+        "text": "Noch einmal. Durch die Nase ein... und langsam aus."
+      },
+      {
+        "key": "fs21",
+        "text": "Ein letztes Mal. Ein langes Einatmen... und ein vollständiges Ausatmen."
+      },
+      {
+        "key": "fs22",
+        "text": "Wenn du dich unsicher fühlst, kehre zu deinen Sinnen zurück. Fünf Dinge, die du siehst, vier, die du fühlst, drei, die du hörst, zwei, die du riechst, eines, das du schmeckst."
+      },
+      {
+        "key": "fs23",
+        "text": "Der gegenwärtige Moment ist immer hier und wartet auf dich."
+      },
+      {
+        "key": "fs24",
+        "text": "Gut gemacht. Danke für das heutige Üben."
+      }
+    ],
+    "loving-kindness": [
+      {
+        "key": "lk1",
+        "text": "Willkommen zu dieser Meditation der liebenden Güte, auch Metta-Praxis genannt."
+      },
+      {
+        "key": "lk2",
+        "text": "In dieser Praxis kultivieren wir sanft Gefühle von Wärme und Wohlwollen – zuerst uns selbst gegenüber und dann nach außen hin anderen gegenüber."
+      },
+      {
+        "key": "lk3",
+        "text": "Finde einen bequemen Sitz. Lass deine Hände auf deinem Schoß ruhen und schließe deine Augen."
+      },
+      {
+        "key": "lk4",
+        "text": "Atme ein paar Mal langsam und natürlich. Lass mit jedem Ausatmen ein wenig von dem los, was du heute mit dir herumträgst."
+      },
+      {
+        "key": "lk5",
+        "text": "Wir beginnen bei uns selbst – nicht aus Egoismus, sondern weil echte Mitgefühl uns selbst einschließen muss, um ganz zu sein."
+      },
+      {
+        "key": "lk6",
+        "text": "Stell dir vor, wie du gerade jetzt bist. Vielleicht fällt dir das leicht, oder es fühlt sich etwas unangenehm an. Beides ist in Ordnung."
+      },
+      {
+        "key": "lk7",
+        "text": "Wiederhole diese Sätze still für dich: Möge ich sicher sein. Möge ich gesund sein. Möge ich glücklich sein. Möge ich mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk8",
+        "text": "Lass die Worte wirken, ohne ein bestimmtes Gefühl erzwingen zu wollen. Die Absicht zu setzen, reicht völlig aus."
+      },
+      {
+        "key": "lk9",
+        "text": "Noch einmal: Möge ich sicher sein. Möge ich gesund sein. Möge ich glücklich sein. Möge ich mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk10",
+        "text": "Denke nun an jemanden, den du leicht lieben kannst – einen engen Freund, ein Familienmitglied, ein Kind oder ein Haustier, dessen Anwesenheit dich mit Wärme erfüllt."
+      },
+      {
+        "key": "lk11",
+        "text": "Stell dir diese Person klar vor. Lass die natürliche Zuneigung, die du für sie empfindest, zu."
+      },
+      {
+        "key": "lk12",
+        "text": "Sende ihr dieselben Wünsche: Mögest du sicher sein. Mögest du gesund sein. Mögest du glücklich sein. Mögest du mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk13",
+        "text": "Spüre, wie diese Wärme von deinem Herzen zu ihr fließt, wie ein sanftes Licht, das die Distanz zwischen euch überbrückt."
+      },
+      {
+        "key": "lk14",
+        "text": "Denke nun an eine neutrale Person – jemanden, dem du im Alltag begegnest, den du aber nicht gut kennst. Ein Nachbar, ein Kassierer, ein Fremder auf der Straße."
+      },
+      {
+        "key": "lk15",
+        "text": "Diese Person hat wie du ein reiches Innenleben – Freuden und Sorgen, Hoffnungen und Ängste. Biete ihr dieselbe Güte an: Mögest du sicher sein. Mögest du gesund sein. Mögest du glücklich sein. Mögest du mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk16",
+        "text": "Wenn du dich bereit fühlst, denke nun an jemanden, der dir gegenüber schwierig war. Du musst nichts von dem gutheißen, was diese Person getan hat."
+      },
+      {
+        "key": "lk17",
+        "text": "Erkenne einfach an, dass auch sie Leid trägt. Auch sie möchte frei von Schmerz sein. Biete so gut du kannst an: Mögest du sicher sein. Mögest du gesund sein. Mögest du glücklich sein. Mögest du mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk18",
+        "text": "Wenn sich das heute zu schwer anfühlt, kehre einfach zu dir selbst zurück. Mitgefühl ist eine Praxis, kein Test."
+      },
+      {
+        "key": "lk19",
+        "text": "Lass schließlich dein Bewusstsein sich ausdehnen, um alle Wesen überall einzuschließen – jeden Menschen, jedes Lebewesen auf dieser Erde."
+      },
+      {
+        "key": "lk20",
+        "text": "Mögen alle Wesen sicher sein. Mögen alle Wesen gesund sein. Mögen alle Wesen glücklich sein. Mögen alle Wesen mit Leichtigkeit leben."
+      },
+      {
+        "key": "lk21",
+        "text": "Spüre den vollständigen Kreis dieses Mitgefühls – beginnend bei deinem eigenen Herzen, ausstrahlend auf alles Leben."
+      },
+      {
+        "key": "lk22",
+        "text": "Verweile einen Moment darin. Atmend. Offen. Gütig."
+      },
+      {
+        "key": "lk23",
+        "text": "Nimm wahr, wie du dich fühlst. Vielleicht ist da eine sanfte Wärme, ein Gefühl von Offenheit oder einfach Stille."
+      },
+      {
+        "key": "lk24",
+        "text": "Atme langsam und vollständig ein... und lass sanft wieder los."
+      },
+      {
+        "key": "lk25",
+        "text": "Die Güte, die du heute angeboten hast, ist echt. Trage sie mit dir. Danke für das Üben."
+      }
+    ],
+    "mindful-walking": [
+      {
+        "key": "mw1",
+        "text": "Willkommen zu dieser achtsamen Gehmeditation. Du brauchst einen ruhigen Ort, an dem du langsam gehen kannst – selbst ein paar Schritte hin und her reichen aus."
+      },
+      {
+        "key": "mw2",
+        "text": "Bevor du dich bewegst, bleibe einen Moment still stehen. Spüre deine Füße fest auf dem Boden."
+      },
+      {
+        "key": "mw3",
+        "text": "Atme langsam ein... und lass los. Lass deinen Körper hier ankommen."
+      },
+      {
+        "key": "mw4",
+        "text": "Werde dir deiner Haltung bewusst. Stehe sanft aufrecht, mit entspannten Schultern und einem weichen Blick – schaue leicht nach vorne und unten."
+      },
+      {
+        "key": "mw5",
+        "text": "Richte nun deine volle Aufmerksamkeit auf deine Füße. Nimm wahr, wie das Gewicht deines Körpers durch deine Beine in den Boden unter dir fließt."
+      },
+      {
+        "key": "mw6",
+        "text": "Beginne sehr langsam zu gehen. Viel langsamer, als du es normalerweise tun würdest. Nimm bei jedem Schritt die feinen Bewegungen wahr."
+      },
+      {
+        "key": "mw7",
+        "text": "Wenn du deinen Fuß anhebst – spüre, wie sich die Ferse hebt, dann der Ballen, dann die Zehen."
+      },
+      {
+        "key": "mw8",
+        "text": "Wenn du deinen Fuß aufsetzt – spüre, wie zuerst die Ferse den Boden berührt, dann das Fußgewölbe, dann die Zehen, die sich ablegen."
+      },
+      {
+        "key": "mw9",
+        "text": "Anheben. Bewegen. Aufsetzen. Das ist alles. Anheben. Bewegen. Aufsetzen."
+      },
+      {
+        "key": "mw10",
+        "text": "Wenn deine Gedanken abschweifen – zu Aufgaben, Sorgen oder einem Gefühl der Befangenheit – nimm es einfach wahr und bringe deine Aufmerksamkeit sanft zurück zu deinen Füßen."
+      },
+      {
+        "key": "mw11",
+        "text": "Beginne nun, deine Atmung mit deinen Schritten zu koordinieren. Atme für zwei oder drei Schritte ein... und für zwei oder drei Schritte aus."
+      },
+      {
+        "key": "mw12",
+        "text": "Lass deine Arme natürlich an den Seiten hängen. Du musst nichts mit ihnen tun. Geh einfach."
+      },
+      {
+        "key": "mw13",
+        "text": "Nimm den Boden unter dir wahr. Hart oder weich. Warm oder kühl. Stabil."
+      },
+      {
+        "key": "mw14",
+        "text": "Nimm deine Umgebung wahr, ohne dich von ihr mitreißen zu lassen. Lass sie einfach die Kulisse für deine Bewegung sein."
+      },
+      {
+        "key": "mw15",
+        "text": "Gehe weiter langsam. Jeder Schritt ist in sich vollständig. Jeder Schritt ist ein Ankommen."
+      },
+      {
+        "key": "mw16",
+        "text": "Wenn du dich unruhig oder albern fühlst, ist das völlig natürlich. Nimm das Gefühl einfach wahr und geh weiter."
+      },
+      {
+        "key": "mw17",
+        "text": "Bei dieser Praxis geht es darum, das wahrzunehmen, was immer geschieht, aber meist ignoriert wird – das Wunder der Bewegung, das Geschenk eines Körpers, der dich durch die Welt trägt."
+      },
+      {
+        "key": "mw18",
+        "text": "Lass dein Tempo noch weiter verlangsamen. Gehe ein letztes Mal langsam durch deinen Raum, mit voller Aufmerksamkeit."
+      },
+      {
+        "key": "mw19",
+        "text": "Komm nun sanft zum Stehen. Bleibe noch einmal still stehen. Spüre deine Füße auf dem Boden."
+      },
+      {
+        "key": "mw20",
+        "text": "Atme langsam ein... und lange aus."
+      },
+      {
+        "key": "mw21",
+        "text": "Nimm wahr, wie du dich in diesem Moment fühlst im Vergleich zu dem Zeitpunkt, als du begonnen hast. Selbst eine kurze Zeit achtsamer Bewegung kann etwas verändern."
+      },
+      {
+        "key": "mw22",
+        "text": "Danke, dass du dich heute mit Absicht bewegt hast. Du kannst diese Qualität der Aufmerksamkeit in jeden Spaziergang mitnehmen."
+      }
+    ],
+    "seated-stretch": [
+      {
+        "key": "ss1",
+        "text": "Willkommen zu dieser Dehnübung im Sitzen. Diese Praxis löst Spannungen im Körper – du brauchst keine Ausrüstung, nur deinen Stuhl."
+      },
+      {
+        "key": "ss2",
+        "text": "Setz dich an die vordere Kante deines Stuhls, sodass deine Füße flach auf dem Boden stehen, hüftbreit auseinander."
+      },
+      {
+        "key": "ss3",
+        "text": "Atme langsam ein... und wieder aus. Lass deine Schultern von den Ohren weg nach unten sinken."
+      },
+      {
+        "key": "ss4",
+        "text": "Beginnen wir mit deinen Schultern. Atme ein und ziehe sie zu den Ohren hoch... dann rolle sie beim Ausatmen nach hinten und unten. Wiederhole das ein paar Mal in deinem eigenen Tempo."
+      },
+      {
+        "key": "ss5",
+        "text": "Rolle sie nun nach vorne – hoch, vor und runter. Lass jede Anspannung langsam nachlassen."
+      },
+      {
+        "key": "ss6",
+        "text": "Drehe deinen Kopf sanft nach rechts, als würdest du über deine Schulter schauen. Halte die Position für ein oder zwei Atemzüge. Kehre dann langsam zur Mitte zurück."
+      },
+      {
+        "key": "ss7",
+        "text": "Drehe nun deinen Kopf nach links. Halte. Kehre zur Mitte zurück."
+      },
+      {
+        "key": "ss8",
+        "text": "Senke dein rechtes Ohr sanft Richtung rechte Schulter, um die linke Seite deines Nackens zu dehnen. Lass deine linke Schulter entspannt. Atme in die Dehnung hinein."
+      },
+      {
+        "key": "ss9",
+        "text": "Kehre langsam zur Mitte zurück und senke dann dein linkes Ohr Richtung linke Schulter. Atme in die rechte Seite deines Nackens."
+      },
+      {
+        "key": "ss10",
+        "text": "Komm zurück zur Mitte. Nimm einen Atemzug."
+      },
+      {
+        "key": "ss11",
+        "text": "Verschränke deine Finger und strecke deine Arme vor dir aus, die Handflächen zeigen nach außen. Spüre die Dehnung im oberen Rücken und in den Schultern."
+      },
+      {
+        "key": "ss12",
+        "text": "Hebe dann deine Arme über den Kopf, die Handflächen zeigen nach oben. Atme tief ein, während du dich nach oben streckst... und lass die Arme beim Ausatmen sinken."
+      },
+      {
+        "key": "ss13",
+        "text": "Drehe dich sanft nach rechts, lege die linke Hand auf dein rechtes Knie und die rechte Hand auf die Stuhllehne. Atme in die Drehung."
+      },
+      {
+        "key": "ss14",
+        "text": "Löse die Drehung langsam und wiederhole sie auf der anderen Seite – drehe dich nach links, rechte Hand auf das linke Knie, linke Hand nach hinten. Atme."
+      },
+      {
+        "key": "ss15",
+        "text": "Komm zurück zur Mitte."
+      },
+      {
+        "key": "ss16",
+        "text": "Strecke dein rechtes Bein gerade vor dir aus, beuge und strecke den Fuß ein paar Mal, um Knöchel und Wade zu aktivieren. Stelle ihn dann wieder ab."
+      },
+      {
+        "key": "ss17",
+        "text": "Nun das linke Bein – ausstrecken, beugen, strecken. Dann zurückkehren."
+      },
+      {
+        "key": "ss18",
+        "text": "Verschränke deine Finger hinter deinem unteren Rücken, falls das angenehm ist, und öffne sanft die Brust, indem du die Schulterblätter zusammenziehst. Nimm hier einen Atemzug."
+      },
+      {
+        "key": "ss19",
+        "text": "Löse die Haltung. Lass deine Hände in deinem Schoß ruhen. Mache deinen Rücken sanft rund und ziehe das Kinn ein – als würdest du dich selbst von innen umarmen. Nimm einen Atemzug."
+      },
+      {
+        "key": "ss20",
+        "text": "Komm langsam zurück in eine neutrale, aufrechte Sitzposition."
+      },
+      {
+        "key": "ss21",
+        "text": "Nimm einen letzten, tiefen Atemzug durch die Nase – lass deinen Bauch sich weiten, dann deine Brust – und atme lang und langsam aus."
+      },
+      {
+        "key": "ss22",
+        "text": "Gut gemacht. Du hast deinem Körper eine Pause gegönnt. Nimm dieses Gefühl der Entspannung mit in alles, was jetzt kommt."
+      }
+    ],
+    "mindful-listening": [
+      {
+        "key": "ml1",
+        "text": "Willkommen zu dieser Achtsamkeitsübung für das Hören. Geräusche sind immer präsent, aber wir schenken ihnen selten unsere volle Aufmerksamkeit."
+      },
+      {
+        "key": "ml2",
+        "text": "Finde eine bequeme Sitzposition. Du kannst für diese Übung die Augen schließen, das hilft dir, dich tiefer auf das zu konzentrieren, was du hörst."
+      },
+      {
+        "key": "ml3",
+        "text": "Atme langsam ein... und aus. Lass deinen Körper zur Ruhe kommen."
+      },
+      {
+        "key": "ml4",
+        "text": "Nimm für einen Moment einfach wahr, dass es Geräusche in deiner Umgebung gibt. Du musst sie nicht identifizieren oder analysieren – nimm einfach wahr, dass sie existieren."
+      },
+      {
+        "key": "ml5",
+        "text": "Erweitere nun dein Bewusstsein auf die gesamte Klangkulisse um dich herum. Wie beim Öffnen eines Fensters, lass alle Geräusche herein – nah und fern, laut und leise."
+      },
+      {
+        "key": "ml6",
+        "text": "Nimm das Geräusch wahr, das dir am nächsten ist. Welche Qualität hat es? Ist es scharf oder sanft? Konstant oder unterbrochen? Beobachte es einfach."
+      },
+      {
+        "key": "ml7",
+        "text": "Lass dein Bewusstsein nun zu dem entferntesten Geräusch wandern, das du wahrnehmen kannst. Vielleicht ein fernes Auto, der Wind oder Stimmen aus einem anderen Raum. Nimm es wahr, ohne ihm nachzujagen."
+      },
+      {
+        "key": "ml8",
+        "text": "Lass dein Gehör fließend zwischen nah und fern wechseln – wie ein Weitwinkelobjektiv, das das gesamte Klangfeld erfasst."
+      },
+      {
+        "key": "ml9",
+        "text": "Anstatt dich darauf zu konzentrieren, WAS etwas ist, versuche die reinen Qualitäten der Geräusche wahrzunehmen. Hoch oder tief. Glatt oder rau. Laut oder leise."
+      },
+      {
+        "key": "ml10",
+        "text": "Nimm wahr, dass Geräusche entstehen... und wieder vergehen. Jedes Geräusch hat einen Anfang, eine Dauer und ein Ende."
+      },
+      {
+        "key": "ml11",
+        "text": "Wenn du dich dabei ertappst, Geräusche zu benennen – 'das ist ein Auto, das ist ein Vogel' – nimm die Bezeichnung einfach wahr und kehre zur reinen Erfahrung des Hörens zurück."
+      },
+      {
+        "key": "ml12",
+        "text": "Vielleicht bemerkst du die Stille zwischen den Geräuschen. Verweile auch in dieser Stille. Sie ist eine eigene Art von Klang."
+      },
+      {
+        "key": "ml13",
+        "text": "Richte deine Aufmerksamkeit nun auf das Geräusch deines eigenen Atems. Das subtile Rauschen der Luft beim Einatmen. Das sanftere Entweichen beim Ausatmen."
+      },
+      {
+        "key": "ml14",
+        "text": "Nimm den Rhythmus deines Atems als Geräusch wahr. Stetig. Lebendig."
+      },
+      {
+        "key": "ml15",
+        "text": "Erweitere dein Bewusstsein wieder auf die gesamte Klangkulisse – dein Atem und die Umgebung zusammen."
+      },
+      {
+        "key": "ml16",
+        "text": "Nimm wahr, dass all diese Geräusche gleichzeitig geschehen und dein Bewusstsein sie alle mühelos aufnehmen kann."
+      },
+      {
+        "key": "ml17",
+        "text": "Lass für einen Moment jede Anstrengung los. Sitze einfach da und lass die Geräusche auf dich wirken, ohne etwas festzuhalten oder wegzustoßen."
+      },
+      {
+        "key": "ml18",
+        "text": "Das ist das Wesen achtsamen Hörens – offen, empfänglich, mühelos."
+      },
+      {
+        "key": "ml19",
+        "text": "Kehre langsam mit deiner Aufmerksamkeit zurück in den Raum. Nimm einen Atemzug."
+      },
+      {
+        "key": "ml20",
+        "text": "Nimm wahr, wie anders sich Geräusche anfühlen, wenn du mit voller Aufmerksamkeit zuhörst, anstatt nur halb hinzuhören."
+      },
+      {
+        "key": "ml21",
+        "text": "Diese Art des Zuhörens – weit, offen, ohne Urteil – kannst du auch den Menschen in deinem Leben entgegenbringen."
+      },
+      {
+        "key": "ml22",
+        "text": "Wenn du bereit bist, öffne sanft deine Augen. Danke fürs Zuhören heute."
+      }
+    ],
+    "affirmation-breath": [
+      {
+        "key": "ab1",
+        "text": "Willkommen zu dieser Affirmations-Atemübung. Wir verbinden einen beruhigenden Satz mit dem natürlichen Rhythmus deines Atems."
+      },
+      {
+        "key": "ab2",
+        "text": "Finde eine bequeme, aufrechte Position. Lass deine Hände sanft in deinem Schoß ruhen."
+      },
+      {
+        "key": "ab3",
+        "text": "Schließe deine Augen und atme ein paar Mal ganz natürlich. Komm einfach hier an."
+      },
+      {
+        "key": "ab4",
+        "text": "In dieser Praxis nutzen wir einen kurzen Satz – eine Affirmation – als Fokus für jedes Ein- und Ausatmen. Die Worte reiten auf dem Atem."
+      },
+      {
+        "key": "ab5",
+        "text": "Lass uns beginnen. Wenn du einatmest, sage innerlich: 'Ich atme Ruhe ein.' Wenn du ausatmest: 'Ich lasse Anspannung los.'"
+      },
+      {
+        "key": "ab6",
+        "text": "Atme Ruhe ein... und atme Anspannung aus. Lass die Worte sanft auf dem Atem reiten."
+      },
+      {
+        "key": "ab7",
+        "text": "Noch einmal. Atme Ruhe ein... atme Anspannung aus."
+      },
+      {
+        "key": "ab8",
+        "text": "Lass uns nun den Satz ändern. Atme ein und sage innerlich: 'Ich bin präsent.' Atme aus: 'Ich lasse los.'"
+      },
+      {
+        "key": "ab9",
+        "text": "Ich bin präsent... Ich lasse los."
+      },
+      {
+        "key": "ab10",
+        "text": "Ich bin präsent... Ich lasse los."
+      },
+      {
+        "key": "ab11",
+        "text": "Versuche nun: 'Ich bin genug.' Atme diese Worte ein. Und beim Ausatmen: 'Alles ist gut.'"
+      },
+      {
+        "key": "ab12",
+        "text": "Ich bin genug... Alles ist gut."
+      },
+      {
+        "key": "ab13",
+        "text": "Ich bin genug... Alles ist gut."
+      },
+      {
+        "key": "ab14",
+        "text": "Noch eine Kombination. Atme ein: 'Ich wähle Frieden.' Atme aus: 'Ich lasse los, was ich nicht kontrollieren kann.'"
+      },
+      {
+        "key": "ab15",
+        "text": "Ich wähle Frieden... Ich lasse los, was ich nicht kontrollieren kann."
+      },
+      {
+        "key": "ab16",
+        "text": "Ich wähle Frieden... Ich lasse los, was ich nicht kontrollieren kann."
+      },
+      {
+        "key": "ab17",
+        "text": "Lass nun alle spezifischen Sätze los. Atme einfach – natürlich, leicht – und lass deinen Körper die Wahrheit dieser Worte spüren."
+      },
+      {
+        "key": "ab18",
+        "text": "Du bist ruhig. Du bist präsent. Du bist genug. Du bist in Frieden."
+      },
+      {
+        "key": "ab19",
+        "text": "Nimm einen letzten, tiefen Atemzug – atme alles ein, was du brauchst... und lass beim Ausatmen alles los, was du nicht brauchst."
+      },
+      {
+        "key": "ab20",
+        "text": "Gut gemacht. Diese Affirmationen gehören dir. Kehre zu ihnen zurück, wann immer du einen Moment der Stabilität brauchst."
+      }
+    ],
+    "stress-release": [
+      {
+        "key": "sr1",
+        "text": "Willkommen zu diesem Check-in zum Stressabbau. Wir nehmen uns ein paar Minuten Zeit, um wahrzunehmen, zu benennen und zu lindern, was dich gerade belastet."
+      },
+      {
+        "key": "sr2",
+        "text": "Finde eine bequeme Position. Du musst nichts vorbereiten oder in Ordnung bringen – komm einfach so an, wie du bist."
+      },
+      {
+        "key": "sr3",
+        "text": "Atme langsam durch die Nase ein... und lass den Atem vollständig durch den Mund wieder ausströmen. Lass dies ein Signal an dich selbst sein, dass es in Ordnung ist, innezuhalten."
+      },
+      {
+        "key": "sr4",
+        "text": "Lass uns damit beginnen, in deinen Körper hineinzuspüren. Scanne von deinen Schultern bis hinunter zu deinem Bauch. Wo hältst du gerade Spannung fest?"
+      },
+      {
+        "key": "sr5",
+        "text": "Vielleicht ist dein Kiefer fest oder deine Schultern sind hochgezogen. Vielleicht gibt es einen Knoten in deiner Brust oder eine Schwere in deinem Bauch. Nimm es einfach nur wahr."
+      },
+      {
+        "key": "sr6",
+        "text": "Was auch immer du findest, erlaube ihm, da zu sein. Du musst es nicht zum Verschwinden bringen. Erkenne es einfach an: 'Ich nehme hier Spannung wahr.'"
+      },
+      {
+        "key": "sr7",
+        "text": "Überprüfe nun deine Gedanken. Was hat deinen Geist heute beschäftigt? Nimm ohne zu analysieren den allgemeinen Ton wahr – geschäftig, besorgt, zerstreut, betäubt?"
+      },
+      {
+        "key": "sr8",
+        "text": "Benenne es. 'Mein Geist fühlt sich __ an.' Eine Erfahrung zu benennen, lockert ihren Griff auf uns."
+      },
+      {
+        "key": "sr9",
+        "text": "Überprüfe nun deine Emotionen. Nicht, was du glaubst fühlen zu sollen, sondern was tatsächlich da ist. Frustration? Traurigkeit? Angst? Erschöpfung?"
+      },
+      {
+        "key": "sr10",
+        "text": "Benenne auch das. 'Im Moment fühle ich __.' Es gibt keine falsche Antwort."
+      },
+      {
+        "key": "sr11",
+        "text": "Atme tief durch. Du hast gerade etwas Wichtiges getan – du hast ehrlich auf deine eigene innere Erfahrung geschaut."
+      },
+      {
+        "key": "sr12",
+        "text": "Lass uns nun beginnen, loszulassen. Stell dir beim nächsten Ausatmen vor, wie du ein wenig der Spannung in deinem Körper freigibst. Nicht alles – nur ein wenig."
+      },
+      {
+        "key": "sr13",
+        "text": "Und noch ein Ausatmen – lass ein wenig mehr los."
+      },
+      {
+        "key": "sr14",
+        "text": "Atme Beständigkeit ein... und atme aus, was du nicht mehr brauchst."
+      },
+      {
+        "key": "sr15",
+        "text": "Lege eine Hand auf deine Brust und eine auf deinen Bauch. Spüre, wie sich beide beim Atmen heben und senken."
+      },
+      {
+        "key": "sr16",
+        "text": "Dieser Kontakt – deine eigene Hand auf deinem eigenen Körper – ist ein Akt der Selbstmitgefühl. Nimm wahr, wie sich das anfühlt."
+      },
+      {
+        "key": "sr17",
+        "text": "Nimm hier drei langsame Atemzüge in deinem eigenen Tempo. Es gibt keine Eile."
+      },
+      {
+        "key": "sr18",
+        "text": "Der Stress, den du trägst, ist real. Die Herausforderungen sind real. Und du bewältigst sie gerade jetzt."
+      },
+      {
+        "key": "sr19",
+        "text": "Du bist fähiger, als du denkst. Du hast schon früher schwierige Tage überstanden. Du wirst auch diesen überstehen."
+      },
+      {
+        "key": "sr20",
+        "text": "Nimm noch einen Atemzug – voll und langsam – und lass deine Hände zurück in deinen Schoß sinken."
+      },
+      {
+        "key": "sr21",
+        "text": "Wann immer du dich heute überfordert fühlst, kehre hierher zurück: drei langsame Atemzüge, eine Hand auf deinem Herzen und das Wissen, dass dieser Moment vorübergehen wird."
+      },
+      {
+        "key": "sr22",
+        "text": "Danke, dass du bei dir selbst eingecheckt hast. Dieser Akt der Achtsamkeit ist das Fundament von allem."
+      }
+    ],
+    "morning-intention": [
+      {
+        "key": "mi1",
+        "text": "Guten Morgen. Willkommen zu dieser Praxis zur Setzung einer Intention. Ein paar achtsame Minuten zu Beginn des Tages können für alles, was folgt, einen völlig anderen Ton angeben."
+      },
+      {
+        "key": "mi2",
+        "text": "Finde eine bequeme Sitzposition. Wenn du kannst, tue dies, bevor du auf dein Handy schaust oder mit irgendwelchen Aufgaben beginnst."
+      },
+      {
+        "key": "mi3",
+        "text": "Atme langsam durch die Nase ein... und atme vollständig aus. Lass deinen Körper sanft erwachen."
+      },
+      {
+        "key": "mi4",
+        "text": "Nimm für einen Moment einfach wahr, dass ein neuer Tag begonnen hat. Was auch immer gestern passiert ist, liegt in der Vergangenheit. Dieser Moment ist frisch."
+      },
+      {
+        "key": "mi5",
+        "text": "Überprüfe kurz deinen Körper. Wie fühlst du dich heute Morgen – körperlich? Ausgeruht, müde, irgendwo dazwischen? Nimm es einfach ohne Urteil wahr."
+      },
+      {
+        "key": "mi6",
+        "text": "Überprüfe nun deine Stimmung. Was ist der emotionale Ton deines Morgens? Auch hier: Nimm es einfach nur wahr – du musst nichts ändern."
+      },
+      {
+        "key": "mi7",
+        "text": "Lass uns nun zur Intention kommen. Eine Intention unterscheidet sich von einem Ziel. Ein Ziel ist etwas, das du erreichst. Eine Intention ist eine Qualität, die du in deinen Tag bringen möchtest."
+      },
+      {
+        "key": "mi8",
+        "text": "Frage dich selbst: Wie möchte ich heute auftreten? Welche Qualität möchte ich am meisten in meine Handlungen und Interaktionen einbringen?"
+      },
+      {
+        "key": "mi9",
+        "text": "Vielleicht ist es Geduld. Oder Präsenz. Oder Mut. Oder Freundlichkeit. Oder einfach Gelassenheit."
+      },
+      {
+        "key": "mi10",
+        "text": "Lass ein Wort oder einen Satz zu dir kommen. Denke nicht zu viel darüber nach. Vertraue darauf, was auftaucht."
+      },
+      {
+        "key": "mi11",
+        "text": "Halte diese Intention sanft in deinem Geist. Sage sie dir einmal selbst: 'Heute habe ich die Absicht, __ zu sein.' Mach sie zu deiner eigenen."
+      },
+      {
+        "key": "mi12",
+        "text": "Atme ein und lass diese Intention in deinen Körper einsinken. Wo spürst du sie? In deiner Brust? Deinen Schultern? Deinem Atem?"
+      },
+      {
+        "key": "mi13",
+        "text": "Denke nun an eine kleine, konkrete Handlung, die du heute Morgen tun kannst und die mit dieser Intention übereinstimmt. Nur eine kleine Sache."
+      },
+      {
+        "key": "mi14",
+        "text": "Du musst nicht den ganzen Tag verändern. Du musst nur den nächsten Schritt machen."
+      },
+      {
+        "key": "mi15",
+        "text": "Atme noch einmal ein. Spüre die stille Bereitschaft in deinem Körper – die natürliche Wachheit eines neuen Morgens."
+      },
+      {
+        "key": "mi16",
+        "text": "Was auch immer dieser Tag bringt, du hast ihn bereits mit Achtsamkeit und Intention begonnen. Das verändert die Dinge."
+      },
+      {
+        "key": "mi17",
+        "text": "Nimm einen letzten tiefen Atemzug, fülle deine Lungen vollständig... und atme lang und befreiend aus."
+      },
+      {
+        "key": "mi18",
+        "text": "Öffne sanft deine Augen. Der Tag wartet."
+      },
+      {
+        "key": "mi19",
+        "text": "Kehre zu deiner Intention zurück, wann immer du sie brauchst – schreibe sie auf, sprich sie laut aus oder halte sie einfach in deinem Herzen."
+      },
+      {
+        "key": "mi20",
+        "text": "Guten Morgen. Möge der heutige Tag genau das sein, was du brauchst."
+      }
+    ],
+    "sleep-wind-down": [
+      {
+        "key": "sw1",
+        "text": "Willkommen zu dieser Praxis zum Einschlafen. Du hast einen weiteren Tag hinter dir. Es ist Zeit, den Tag loszulassen und Körper und Geist auf die Ruhe vorzubereiten."
+      },
+      {
+        "key": "sw2",
+        "text": "Finde eine bequeme Position im Bett, wenn möglich auf dem Rücken liegend. Entkreuze deine Beine und lass deine Arme an deinen Seiten ruhen."
+      },
+      {
+        "key": "sw3",
+        "text": "Erlaube deinen Augen, sich zu schließen. Es gibt nichts, was du jetzt tun musst. Nichts zu überprüfen. Nirgendwo, wo du sein musst."
+      },
+      {
+        "key": "sw4",
+        "text": "Atme langsam durch die Nase ein, lass deinen Bauch sich heben... und atme lang und langsam durch leicht geöffnete Lippen aus. Lass den Tag langsam verblassen."
+      },
+      {
+        "key": "sw5",
+        "text": "Noch einmal. Atme ein... und ganz wieder aus."
+      },
+      {
+        "key": "sw6",
+        "text": "Lass uns kurz jegliche Spannung aus dem Körper lösen. Beginne mit deinem Gesicht – lass deinen Kiefer locker, deine Stirn glatt werden, deine Augen weich werden."
+      },
+      {
+        "key": "sw7",
+        "text": "Spüre, wie dein Kopf schwer in das Kissen sinkt. Lass deinen Nacken los."
+      },
+      {
+        "key": "sw8",
+        "text": "Entspanne deine Schultern. Spüre, wie sie in Richtung Matratze sinken. Lass deine Arme schwer werden."
+      },
+      {
+        "key": "sw9",
+        "text": "Deine Brust und dein Bauch – weich. Sie heben und senken sich mit jedem Atemzug, ganz ohne Anstrengung."
+      },
+      {
+        "key": "sw10",
+        "text": "Dein unterer Rücken – lass ihn jegliche Anspannung loslassen und in das Bett sinken."
+      },
+      {
+        "key": "sw11",
+        "text": "Deine Beine – schwer, warm, vollkommen entspannt. Deine Füße – still."
+      },
+      {
+        "key": "sw12",
+        "text": "Dein ganzer Körper, schwer und in Ruhe."
+      },
+      {
+        "key": "sw13",
+        "text": "Lass uns nun den Geist beruhigen. Wenn Gedanken auftauchen – Sorgen, To-do-Listen, Wiederholungen des Tages – nimm sie einfach wahr und lass sie sanft ziehen. Du kannst dich morgen wieder darum kümmern."
+      },
+      {
+        "key": "sw14",
+        "text": "Stell dir jeden Gedanken wie eine Wolke vor, die langsam über einen Nachthimmel zieht. Du beobachtest, wie sie vorbeizieht, und der Himmel wird wieder klar."
+      },
+      {
+        "key": "sw15",
+        "text": "Lass deinen Atem noch langsamer und sanfter werden. Du bist sicher. Du hast es warm. Für dich ist gesorgt."
+      },
+      {
+        "key": "sw16",
+        "text": "Spüre mit jedem Ausatmen, wie du ein wenig tiefer in die Entspannung sinkst."
+      },
+      {
+        "key": "sw17",
+        "text": "Es gibt keinen Ort, an den du gehen musst. Nichts zu lösen. Du hast heute genug getan."
+      },
+      {
+        "key": "sw18",
+        "text": "Lass dein Bewusstsein weich und diffus werden – wie der Moment kurz vor dem Einschlafen, wenn die Gedanken beginnen zu verschwimmen."
+      },
+      {
+        "key": "sw19",
+        "text": "Atme einfach. Ein... und aus. Ein... und aus."
+      },
+      {
+        "key": "sw20",
+        "text": "Du treibst dahin. Der Tag liegt hinter dir. Die Ruhe ist da."
+      },
+      {
+        "key": "sw21",
+        "text": "Lass jegliche Anstrengung los, einschlafen zu wollen. Sei einfach hier, bequem und still."
+      },
+      {
+        "key": "sw22",
+        "text": "Ein... und aus."
+      },
+      {
+        "key": "sw23",
+        "text": "Lass den Schlaf auf natürliche Weise zu dir kommen, zu seiner eigenen Zeit. Du ruhst dich bereits aus."
+      },
+      {
+        "key": "sw24",
+        "text": "Gute Nacht. Du hast heute gut gearbeitet."
+      }
+    ]
+  },
+  "fortunes": [
+    "Eine kleine Pause wird den nächsten richtigen Schritt offenbaren.",
+    "Ihre Aufmerksamkeit ist eine Form der Fürsorge – richten Sie sie heute auf etwas Sanftes.",
+    "Etwas Gewöhnliches wird sich leise bedeutungsvoll anfühlen, wenn Sie dafür langsamer werden.",
+    "Sie brauchen keinen perfekten Tag, um Platz für einen guten Moment zu schaffen.",
+    "Lassen Sie Gelassenheit nützlich sein. Sie dürfen sich in einem freundlicheren Tempo bewegen.",
+    "Das Gefühl, für das Sie heute Platz schaffen, wird morgen weniger Macht über Sie haben.",
+    "Ein Gespräch heute könnte freundlicher sein, als Sie erwarten.",
+    "Die Antwort kommt vielleicht, nachdem Sie aufgehört haben, sie zu erzwingen.",
+    "Ihre Energie zu schützen ist auch eine Form von Fortschritt.",
+    "Ein ehrlicher Atemzug kann den Ton der nächsten Stunde verändern.",
+    "Lassen Sie in Ihren Plänen ein wenig Raum für etwas Erfreuliches.",
+    "Eine Aufgabe, die Sie vermieden haben, ist vielleicht leichter, sobald Sie beginnen.",
+    "Jemand wird die Sorgfalt zu schätzen wissen, die Sie in einen kleinen Moment einbringen.",
+    "Ihre stille Anstrengung baut etwas auf, das Sie noch nicht sehen können.",
+    "Wählen Sie den nächsten freundlichen Schritt, nicht die ganze Treppe.",
+    "Eine klare Grenze schafft Raum für etwas Besseres.",
+    "Heute bevorzugt Neugier gegenüber Gewissheit.",
+    "Der gewöhnliche Pfad könnte die Überraschung bereithalten, die Sie brauchen.",
+    "Ruhe wird Ihnen mehr zurückgeben als Eile.",
+    "Eine einfache, ruhig getroffene Wahl wird Sie voranbringen.",
+    "Beachten Sie, was einfacher wird, wenn Sie aufhören, den Moment zu bewerten.",
+    "Sie wissen vielleicht schon, was Ihre Aufmerksamkeit zuerst verdient.",
+    "Ein vertrauter Ort wird heute eine neue Perspektive bieten.",
+    "Lassen Sie eine unvollendete Sache ohne Schuldgefühle unvollendet.",
+    "Eine aufrichtige Frage kann eine Tür öffnen, die Anstrengung nicht öffnen kann.",
+    "Geben Sie dem heutigen Tag eine kleine Erinnerung, die es wert ist, behalten zu werden.",
+    "Ihr Tempo muss nicht dem von jemand anderem entsprechen.",
+    "Etwas, das Sie loslassen, wird den Rest leichter anfühlen lassen.",
+    "Vertrauen Sie dem Fortschritt, der von außen betrachtet ruhig aussieht.",
+    "Ein Moment des Spiels könnte mehr wiederherstellen als eine weitere Stunde Arbeit."
+  ]
+}

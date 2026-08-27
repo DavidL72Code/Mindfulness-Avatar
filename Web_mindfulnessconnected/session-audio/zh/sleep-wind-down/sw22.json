@@ -1,0 +1,1 @@
+{"locale":"zh","session_id":"sleep-wind-down","segment_key":"sw22","text":"吸……呼。","text_sha256":"cfa39f3bf94bfbd60fd57eadd33ed193eec97e6bab51b4ac2d64496e9f53a255","voice_name":"zh-CN-YunxiNeural","word_boundaries":[{"text":"吸","offset":1000000,"duration":5250000},{"text":"呼","offset":8500000,"duration":3500000}],"rhubarb_mouth_cues":[],"lipsync_source":"word_boundaries"}

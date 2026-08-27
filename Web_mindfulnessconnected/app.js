@@ -1,7 +1,10 @@
-const API_BASE_URL =
-  window.location.protocol === "http:" || window.location.protocol === "https:"
-    ? window.location.origin
-    : "https://multilingual-virtual-assistant.onrender.com";
+const WORKING_API_URL = "https://mindfulness-avatar.onrender.com";
+const IS_LEGACY_RENDER_HOST = window.location.hostname === "multilingual-virtual-assistant.onrender.com";
+const API_BASE_URL = IS_LEGACY_RENDER_HOST
+  ? WORKING_API_URL
+  : ((window.location.protocol === "http:" || window.location.protocol === "https:")
+      ? window.location.origin
+      : WORKING_API_URL);
 const TOTAL_BREATHING_ROUNDS = 4;
 const LANGUAGES = [
   { code: "en", name: "English",     gtLang: "en",    srLang: "en-US", dir: "ltr" },
@@ -382,6 +385,8 @@ const sessionCatalog = [
     id: "caregiver-fatigue",
     title: "Caregiver Fatigue",
     description: "A compassion meditation to recharge when caring for others.",
+    previewDescription: "Set down the responsibility you have been carrying for a few minutes. This gentle practice helps you soften self-criticism, restore steadiness, and make room for your own needs.",
+    zodiac: "Aries",
     kind: "scripted",
     duration: "~4 min · 6 segments"
   },
@@ -389,6 +394,8 @@ const sessionCatalog = [
     id: "body-scan",
     title: "Body Scan",
     description: "A guided check-in from head to toe.",
+    previewDescription: "Bring your attention slowly through the body, noticing pressure, warmth, tension, and ease without needing to change anything. A grounding choice when your mind feels busy or disconnected.",
+    zodiac: "Taurus",
     kind: "scripted",
     duration: "~7 min · 25 steps"
   },
@@ -396,6 +403,8 @@ const sessionCatalog = [
     id: "five-senses",
     title: "Five Senses Grounding",
     description: "A grounding exercise to reconnect with the present moment.",
+    previewDescription: "Use sight, sound, touch, smell, and taste to return to what is happening right now. This short sensory reset can help interrupt spiraling thoughts and settle an overwhelmed nervous system.",
+    zodiac: "Gemini",
     kind: "scripted",
     duration: "~6 min · 24 steps"
   },
@@ -403,6 +412,8 @@ const sessionCatalog = [
     id: "mindful-breathing",
     title: "Mindful Breathing",
     description: "A foundational breath awareness practice you can use anywhere.",
+    previewDescription: "Follow the natural rhythm of your inhale and exhale without forcing it into a pattern. A simple practice for creating a little space before a meeting, conversation, or difficult moment.",
+    zodiac: "Cancer",
     kind: "scripted",
     duration: "~5 min · 5 segments"
   },
@@ -410,6 +421,8 @@ const sessionCatalog = [
     id: "loving-kindness",
     title: "Loving Kindness",
     description: "A compassion-focused mindfulness practice.",
+    previewDescription: "Repeat quiet wishes of safety, ease, and care for yourself and the people in your life. Use it when you feel hardened, lonely, or in need of a kinder inner voice.",
+    zodiac: "Leo",
     kind: "scripted",
     duration: "~7 min · 25 steps"
   },
@@ -417,6 +430,8 @@ const sessionCatalog = [
     id: "mindful-walking",
     title: "Mindful Walking",
     description: "A light movement practice with full attention on each step.",
+    previewDescription: "Let the pace of your steps become an anchor as you notice balance, movement, and the space around you. A good reset when sitting still feels difficult or restless energy needs somewhere to go.",
+    zodiac: "Virgo",
     kind: "scripted",
     duration: "~6 min · 22 steps"
   },
@@ -424,6 +439,8 @@ const sessionCatalog = [
     id: "seated-stretch",
     title: "Seated Stretch Reset",
     description: "Gentle seated stretches to release tension.",
+    previewDescription: "Ease common tension in the shoulders, neck, back, and hips with movements that can be done from a chair. Designed for a quiet desk break or a low-energy afternoon reset.",
+    zodiac: "Libra",
     kind: "scripted",
     duration: "~6 min · 22 steps"
   },
@@ -431,6 +448,8 @@ const sessionCatalog = [
     id: "mindful-listening",
     title: "Mindful Listening",
     description: "A practice that centers attention through sound.",
+    previewDescription: "Notice near and distant sounds without judging or chasing them. This listening practice can help widen your attention when thoughts feel loud and bring you back into your surroundings.",
+    zodiac: "Scorpio",
     kind: "scripted",
     duration: "~6 min · 22 steps"
   },
@@ -438,6 +457,8 @@ const sessionCatalog = [
     id: "affirmation-breath",
     title: "Affirmation Breath",
     description: "Pair a calming phrase with your breath.",
+    previewDescription: "Match a steady breath with a phrase that gives you support, such as ‘I can take this one moment at a time.’ A small ritual for building reassurance before the day gathers speed.",
+    zodiac: "Sagittarius",
     kind: "scripted",
     duration: "~5 min · 20 steps"
   },
@@ -445,6 +466,8 @@ const sessionCatalog = [
     id: "stress-release",
     title: "Stress Release Check-In",
     description: "Notice, name, and soften what you are carrying.",
+    previewDescription: "Pause long enough to identify what is asking for your attention instead of holding it as one undifferentiated weight. This reflective reset helps you name the pressure and choose a gentler next step.",
+    zodiac: "Capricorn",
     kind: "scripted",
     duration: "~6 min · 22 steps"
   },
@@ -452,6 +475,8 @@ const sessionCatalog = [
     id: "morning-intention",
     title: "Morning Intention",
     description: "A simple intention-setting practice for the day.",
+    previewDescription: "Start with a quality you want to bring into the next few hours—patience, focus, openness, or care. This is a brief way to choose how you want to meet the day rather than rush straight into it.",
+    zodiac: "Aquarius",
     kind: "scripted",
     duration: "~5 min · 20 steps"
   },
@@ -459,6 +484,8 @@ const sessionCatalog = [
     id: "sleep-wind-down",
     title: "Sleep Wind Down",
     description: "A quiet practice to prepare your body for rest.",
+    previewDescription: "Slow the transition from a full day into a softer, quieter state. Gentle body awareness and unhurried breathing help you release the urge to solve anything before sleep.",
+    zodiac: "Pisces",
     kind: "scripted",
     duration: "~7 min · 24 steps"
   }
@@ -466,6 +493,61 @@ const sessionCatalog = [
   ...session,
   number: String(index + 1).padStart(2, "0")
 }));
+
+const MOOD_OPTIONS = [
+  { key: "low", emoji: "😔", label: "Low", value: 1, prompt: "What’s weighing on you today? You don’t have to solve it all at once." },
+  { key: "tender", emoji: "😕", label: "Tender", value: 2, prompt: "What feels a little harder than usual today?" },
+  { key: "steady", emoji: "😐", label: "Steady", value: 3, prompt: "Steady is enough. What would help you stay grounded today?" },
+  { key: "good", emoji: "🙂", label: "Good", value: 4, prompt: "What’s one thing that helped you feel good today?" },
+  { key: "bright", emoji: "😊", label: "Bright", value: 5, prompt: "What happened that you want to remember from today?" }
+];
+
+const DAILY_FORTUNES = [
+  "A small pause will reveal the next right step.",
+  "Your attention is a form of care—place it somewhere gentle today.",
+  "Something ordinary will feel quietly meaningful when you slow down for it.",
+  "You do not need a perfect day to make room for one good moment.",
+  "Let ease be useful. You are allowed to move at a kinder pace.",
+  "The feeling you make space for today will have less power over you tomorrow."
+];
+
+function getMoodOptions() {
+  return MOOD_OPTIONS.map((mood) => ({
+    ...mood,
+    label: lt(`mood${mood.key[0].toUpperCase()}${mood.key.slice(1)}`),
+    prompt: lt(`moodPrompt${mood.key[0].toUpperCase()}${mood.key.slice(1)}`)
+  }));
+}
+
+function getDailyFortunes() {
+  return window.MC_LOCALES?.[state.locale]?.fortunes || window.MC_LOCALES?.en?.fortunes || DAILY_FORTUNES;
+}
+
+const ZODIAC_CONSTELLATIONS = {
+  Aries: { points: [[12,42],[27,25],[43,38],[58,18],[78,30]], edges: [[0,1],[1,2],[2,3],[3,4]] },
+  Taurus: { points: [[10,28],[24,16],[40,27],[55,12],[72,23],[88,39]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[1,4]] },
+  Gemini: { points: [[18,12],[20,42],[38,25],[58,14],[60,46],[78,28]], edges: [[0,1],[0,2],[2,3],[3,4],[3,5],[4,5]] },
+  Cancer: { points: [[14,28],[30,15],[48,25],[64,12],[82,30],[61,45],[39,41]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0]] },
+  Leo: { points: [[12,32],[25,18],[42,24],[58,14],[77,20],[68,39],[48,43],[34,34]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[2,7]] },
+  Virgo: { points: [[10,42],[20,22],[34,31],[42,12],[55,26],[69,17],[84,31]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]] },
+  Libra: { points: [[12,36],[28,20],[44,34],[60,20],[78,36],[44,47]], edges: [[0,1],[1,2],[2,3],[3,4],[2,5]] },
+  Scorpio: { points: [[10,18],[25,26],[39,16],[52,30],[64,20],[76,35],[88,25],[78,45]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]] },
+  Sagittarius: { points: [[14,43],[30,30],[45,37],[41,16],[58,27],[70,12],[85,24]], edges: [[0,1],[1,2],[1,3],[3,4],[4,5],[5,6],[2,4]] },
+  Capricorn: { points: [[10,25],[25,15],[42,29],[56,18],[70,36],[88,23],[73,47]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[4,6]] },
+  Aquarius: { points: [[10,18],[24,32],[38,19],[53,38],[67,22],[84,34],[72,48]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]] },
+  Pisces: { points: [[12,17],[27,29],[42,20],[55,34],[70,22],[86,12],[78,44]], edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[4,6]] }
+};
+
+function renderZodiacConstellation(sign) {
+  const constellation = ZODIAC_CONSTELLATIONS[sign] || ZODIAC_CONSTELLATIONS.Aries;
+  const lines = constellation.edges.map(([from, to]) => {
+    const [x1, y1] = constellation.points[from];
+    const [x2, y2] = constellation.points[to];
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" />`;
+  }).join("");
+  const stars = constellation.points.map(([cx, cy], index) => `<circle cx="${cx}" cy="${cy}" r="${index % 3 === 0 ? 2 : 1.4}" />`).join("");
+  return `<svg class="zodiac-constellation" viewBox="0 0 100 60" role="img" aria-label="${escapeHtml(sign)} constellation">${lines}${stars}</svg>`;
+}
 
 const initialChatMessage =
   "Hi, I can answer general mindfulness questions and explain any session tile in the app. Open a session first if you want details about that specific practice.";
@@ -689,7 +771,7 @@ const state = {
   signUpConfirmPassword: "",
   signUpError: "",
   currentUser: null,
-  languageModalVisible: true,
+  languageModalVisible: false,
   screen: "home",
   selectedSessionId: sessionCatalog[0].id,
   chatSessionId: createSessionId(),
@@ -701,6 +783,8 @@ const state = {
   chatStatus: "Ready",
   chatModalVisible: false,
   sessionActive: false,
+  sessionCompleted: false,
+  leaveWarningVisible: false,
   sessionStatus: "Not started",
   sessionStartTime: null,
   placeholderMessage: "",
@@ -719,7 +803,7 @@ const state = {
   phaseSubtext: breathingSlides[2].body,
   boxTraceSide: null,
   boxTraceStatus: "idle",
-  avatarDockVisible: true,
+  avatarDockVisible: false,
   avatarDockX: null,
   avatarDockY: null,
   avatarDockWidth: null,
@@ -727,14 +811,32 @@ const state = {
   userStats: null,
   userStatsLoading: false,
   userStatsUnsubscribe: null,
+  avatarTranscripts: {},
+  guideProfile: "",
+  expandedHistoryId: "",
   userSessions: [],
   userSessionsLoading: false,
   userSessionsUnsubscribe: null,
+  statsMonthKey: "",
+  statsSelectedDateKey: "",
+  moodEntries: [],
+  moodTodayKey: "",
+  moodStorageKey: "",
+  dailyFortune: "",
+  fortuneSpinning: false,
   settings: {
     notifications: false,
     theme: "light"
   },
-  settingsBanner: { type: "", text: "" }
+  settingsBanner: { type: "", text: "" },
+  personalInfoDraft: {
+    firstName: "",
+    lastName: "",
+    dateOfBirth: ""
+  },
+  personalInfoDirty: false,
+  personalInfoSaving: false,
+  personalInfoStatus: { type: "", text: "" }
 };
 
 function createSessionId() {
@@ -743,6 +845,187 @@ function createSessionId() {
   }
 
   return `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function getMoodDateKey(date = new Date()) {
+  return getLocalDateKey(date);
+}
+
+function getMoodStorageKey(user) {
+  const identity = user?.uid || user?.email || "guest";
+  return `mindfulness-moods-${identity}`;
+}
+
+function loadMoodState(user) {
+  const storageKey = getMoodStorageKey(user);
+  state.moodStorageKey = storageKey;
+  state.moodEntries = [];
+  state.moodTodayKey = "";
+  state.dailyFortune = "";
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    state.moodEntries = Array.isArray(saved.entries)
+      ? saved.entries.filter((entry) => /^\d{4}-\d{2}-\d{2}$/.test(entry.dateKey) && MOOD_OPTIONS.some((mood) => mood.key === entry.mood)).slice(-365)
+      : [];
+    state.moodTodayKey = saved.moodTodayKey || "";
+    state.dailyFortune = saved.locale === state.locale && saved.fortuneDateKey === getMoodDateKey() ? String(saved.dailyFortune || "") : "";
+  } catch {
+    state.moodEntries = [];
+  }
+}
+
+function persistMoodState() {
+  if (!state.moodStorageKey) return;
+  try {
+    localStorage.setItem(state.moodStorageKey, JSON.stringify({
+      entries: state.moodEntries.slice(-365),
+      moodTodayKey: state.moodTodayKey,
+      dailyFortune: state.dailyFortune,
+      fortuneDateKey: state.dailyFortune ? getMoodDateKey() : "",
+      locale: state.locale
+    }));
+  } catch {
+    // Mood check-ins remain usable if local storage is unavailable.
+  }
+}
+
+function recordMood(moodKey) {
+  const mood = getMoodOptions().find((option) => option.key === moodKey);
+  if (!mood) return;
+  const dateKey = getMoodDateKey();
+  const nextEntries = state.moodEntries.filter((entry) => entry.dateKey !== dateKey);
+  nextEntries.push({ dateKey, mood: mood.key });
+  state.moodEntries = nextEntries.slice(-365);
+  state.moodTodayKey = mood.key;
+  persistMoodState();
+  state.avatarDockVisible = true;
+  render();
+  void sendMoodFollowUp(mood);
+}
+
+async function sendMoodFollowUp(mood) {
+  const startedAt = Date.now();
+  while (!avatarReadyState[AVATAR_HOST_HOME] && Date.now() - startedAt < 20000) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  if (!avatarReadyState[AVATAR_HOST_HOME]) return;
+  await syncAvatarAuthState(AVATAR_HOST_HOME);
+  queueAvatarCommand(AVATAR_HOST_HOME, {
+    type: "host-send-text",
+    text: `I’m feeling ${mood.label.toLowerCase()} today. Respond warmly and ask me one brief, natural follow-up question about what is behind that feeling. Do not answer the question for me or give advice unless I ask for it.`
+  });
+}
+
+const FORTUNE_SPIN_MS = 1150;
+
+/* Spin the reel in place. This deliberately does not call render(): a full
+   re-render rebuilds the whole app shell mid-animation, which reads as the
+   page reloading. Row height is measured rather than hardcoded, because the
+   compact machine and the fortune card use different line heights. */
+function spinDailyFortune() {
+  if (state.fortuneSpinning) return;
+  const fortunes = getDailyFortunes();
+  if (!fortunes.length) return;
+  const chosen = fortunes[Math.floor(Math.random() * fortunes.length)];
+
+  const row = document.querySelector(".fortune-row");
+  const reel = row && row.querySelector(".fortune-machine-reel");
+  const button = row && row.querySelector('[data-action="spin-fortune"]');
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!row || !reel || reduceMotion || typeof reel.animate !== "function") {
+    state.dailyFortune = chosen;
+    state.fortuneSpinning = false;
+    persistMoodState();
+    render();
+    return;
+  }
+
+  state.fortuneSpinning = true;
+
+  const strip = [];
+  for (let index = 0; index < 5; index += 1) {
+    strip.push(fortunes[Math.floor(Math.random() * fortunes.length)]);
+  }
+  strip.push(chosen);
+  reel.innerHTML = strip.map((line) => `<span>${escapeHtml(line)}</span>`).join("");
+
+  row.classList.add("is-spinning");
+  let restoreLabel = "";
+  if (button) {
+    restoreLabel = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `<span aria-hidden="true">✦</span> ${escapeHtml(lt("spinning"))}`;
+  }
+
+  const rowHeight = reel.firstElementChild
+    ? reel.firstElementChild.getBoundingClientRect().height
+    : 0;
+  const animation = reel.animate(
+    [{ transform: "translateY(0)" }, { transform: `translateY(-${rowHeight * (strip.length - 1)}px)` }],
+    { duration: FORTUNE_SPIN_MS, easing: "cubic-bezier(.16,.86,.26,1)", fill: "forwards" }
+  );
+
+  const settle = () => {
+    state.dailyFortune = chosen;
+    state.fortuneSpinning = false;
+    persistMoodState();
+    animation.cancel();
+    row.classList.remove("is-spinning");
+    reel.innerHTML = `<span>${escapeHtml(chosen)}</span>`;
+    if (button) {
+      button.disabled = false;
+      button.innerHTML = restoreLabel;
+    }
+  };
+  animation.finished.then(settle, settle);
+}
+
+function renderMoodPulse() {
+  const moodOptions = getMoodOptions();
+  const fortunes = getDailyFortunes();
+  const todayMood = moodOptions.find((mood) => mood.key === state.moodTodayKey);
+  const recentEntries = state.moodEntries.slice(-7);
+  const average = recentEntries.length
+    ? (recentEntries.reduce((sum, entry) => sum + (moodOptions.find((mood) => mood.key === entry.mood)?.value || 0), 0) / recentEntries.length).toFixed(1)
+    : "—";
+
+  return `
+    <section class="home-wellness-grid" aria-label="${escapeHtml(lt("dailyMindfulnessTools"))}">
+      <section class="home-tool-card mood-pulse" aria-labelledby="mood-pulse-title">
+        <div class="mood-pulse-head">
+          <div>
+            <h2 id="mood-pulse-title">${escapeHtml(lt("quickCheckIn"))}</h2>
+            <p>${escapeHtml(lt("homeWelcomeQuestion"))}</p>
+          </div>
+        <span class="mood-average">${recentEntries.length ? `${escapeHtml(lt("sevenDayAverage"))} <strong>${average}/5</strong>` : escapeHtml(lt("homeWelcomeQuestion"))}</span>
+        </div>
+        <div class="mood-options" role="group" aria-label="${escapeHtml(lt("chooseFeeling"))}">
+          ${moodOptions.map((mood) => `
+            <button class="mood-option ${state.moodTodayKey === mood.key ? "is-selected" : ""}" data-action="record-mood" data-mood="${mood.key}" type="button" aria-label="${escapeHtml(lt("feelingLabel", { feeling: mood.label }))}" aria-pressed="${state.moodTodayKey === mood.key}">
+              <span aria-hidden="true">${mood.emoji}</span><small>${mood.label}</small>
+            </button>
+          `).join("")}
+        </div>
+        ${todayMood ? `<p class="mood-prompt"><strong>${todayMood.emoji} ${escapeHtml(lt("moodSaved"))}</strong> ${escapeHtml(lt("guidePreparingFollowUp"))}</p>` : `<p class="mood-prompt">${escapeHtml(lt("chooseClosestFeeling"))}</p>`}
+      </section>
+      <section class="home-tool-card fortune-card" aria-labelledby="fortune-card-title">
+        <div class="fortune-card-copy">
+          <h2 id="fortune-card-title">${escapeHtml(lt("fortuneMachine"))}</h2>
+          <p>${escapeHtml(lt("fortuneDescription"))}</p>
+        </div>
+        <div class="fortune-row ${state.fortuneSpinning ? "is-spinning" : ""}">
+          <div class="fortune-machine" aria-live="polite" aria-label="${escapeHtml(lt("fortuneMachine"))}">
+            <div class="fortune-slot-marquee"><span>FORTUNE MACHINE</span><i aria-hidden="true"></i></div>
+            <div class="fortune-machine-window"><div class="fortune-machine-reel">${state.dailyFortune && !state.fortuneSpinning ? `<span>${escapeHtml(state.dailyFortune)}</span>` : fortunes.slice(0, 4).map((fortune) => `<span>${escapeHtml(fortune)}</span>`).join("")}</div></div>
+            <button class="fortune-button" data-action="spin-fortune" type="button" ${state.fortuneSpinning ? "disabled" : ""}><span aria-hidden="true">✦</span> ${state.fortuneSpinning ? escapeHtml(lt("spinning")) : escapeHtml(lt("spinFortune"))}</button>
+            <div class="fortune-slot-base"><span>${escapeHtml(lt("yourMessageToday"))}</span><i aria-hidden="true"></i></div>
+            <span class="fortune-slot-lever" aria-hidden="true"><i></i></span>
+          </div>
+        </div>
+      </section>
+    </section>
+  `;
 }
 
 async function getCurrentUserIdToken() {
@@ -863,14 +1146,118 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function renderAppIcon(name) {
+  const paths = {
+    home: '<path d="M3 11.5 12 4l9 7.5v8a1 1 0 0 1-1 1h-5.2v-6.2H9.2v6.2H4a1 1 0 0 1-1-1z"/>',
+    stats: '<path d="M5 20V10m7 10V4m7 16v-7"/><path d="M3 20h18"/>',
+    profile: '<circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>',
+    spark: '<path d="m12 2 1.5 5.2L19 9l-5.5 1.8L12 16l-1.5-5.2L5 9l5.5-1.8z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7z"/>',
+    arrow: '<path d="M5 12h14m-5-5 5 5-5 5"/>',
+    logout: '<path d="M10 5H5v14h5m4-4 4-3-4-3m4 3H9"/>',
+    identity: '<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.6a3.6 3.6 0 0 1 6.4 0M14.5 10.5H18m-3.5 3.5H18"/>',
+    settings: '<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/>',
+    support: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.4v.4"/><path d="M12 17.2h.01"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.3 2.4 3.5 5.4 3.5 9S14.3 18.6 12 21c-2.3-2.4-3.5-5.4-3.5-9S9.7 5.4 12 3"/>'
+  };
+  return `<svg class="app-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths[name] || paths.spark}</svg>`;
+}
+
+const BRAND = {
+  name: "Respire",
+  wordmark: "RESPIRE"
+};
+
+/* The Respire mark: a hanko — an ink seal block,
+   ruled with a fine gold keyline, carrying a mitsudomoe: three commas
+   turning around a common centre. Colours come from CSS custom properties
+   so the block inverts for the dark theme. The geometry lives as a sprite symbol in index.html. */
+function renderBrandMark() {
+  return `<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="${BRAND.name}"><use href="#respire-seal-mark"/></svg>`;
+}
+
+/* The crest on its own, for the coloured guide surfaces where a solid
+   seal block would fight the container. */
+function renderBrandLetter() {
+  return `<svg class="brand-letter" viewBox="0 0 64 64" aria-hidden="true"><use href="#respire-glyph"/></svg>`;
+}
+
+function renderBrandLockup(extraClass = "") {
+  return `<span class="app-brand-mark">${renderBrandMark()}</span><span class="app-brand-word ${extraClass}"><strong>${escapeHtml(BRAND.wordmark)}</strong></span>`;
+}
+
 function t(key) {
-  return translations[state.locale]?.[key] || translations.en[key] || key;
+  return window.MC_LOCALES?.[state.locale]?.ui?.[key] || translations[state.locale]?.[key] || translations.en[key] || key;
+}
+
+function formatLocalized(template, values = {}) {
+  return String(template).replace(/\{(\w+)\}/g, (match, key) =>
+    Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : match
+  );
+}
+
+function lt(key, values = {}) {
+  const template = window.MC_LOCALES?.[state.locale]?.ui?.[key]
+    || window.MC_LOCALES?.en?.ui?.[key]
+    || key;
+  return formatLocalized(template, values);
+}
+
+function getSessionScripts(sessionId) {
+  return window.MC_LOCALES?.[state.locale]?.sessions?.[sessionId]
+    || window.MC_LOCALES?.en?.sessions?.[sessionId]
+    || SESSION_SCRIPTS[sessionId]
+    || [];
+}
+
+function localizeSession(session) {
+  if (!session) return session;
+  const translated = window.MC_LOCALES?.[state.locale]?.catalog?.[session.id]
+    || window.MC_LOCALES?.en?.catalog?.[session.id]
+    || {};
+  return { ...session, ...translated };
 }
 
 function renderLangSelect(cssClass) {
   return `<select class="${cssClass} notranslate" data-action="set-language" aria-label="${escapeHtml(t('language'))}" translate="no">
     ${LANGUAGES.map(l => `<option value="${l.code}"${state.locale === l.code ? " selected" : ""}>${l.name}</option>`).join("")}
   </select>`;
+}
+
+const LANGUAGE_STORAGE_KEY = "mc_language_preference_v1";
+
+function isSupportedLocale(locale) {
+  return LANGUAGES.some((language) => language.code === locale);
+}
+
+function getLocalLanguagePreference() {
+  try {
+    const locale = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return isSupportedLocale(locale) ? locale : "";
+  } catch {
+    return "";
+  }
+}
+
+function persistLocalLanguagePreference(locale) {
+  if (!isSupportedLocale(locale)) return;
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, locale);
+  } catch {
+    // The account copy remains authoritative when browser storage is unavailable.
+  }
+}
+
+function setLanguagePreference(locale, { dismissModal = false, shouldRender = true } = {}) {
+  if (!isSupportedLocale(locale)) return;
+  const localeChanged = state.locale !== locale;
+  state.locale = locale;
+  if (localeChanged) state.dailyFortune = "";
+  if (dismissModal) state.languageModalVisible = false;
+  persistLocalLanguagePreference(locale);
+  void persistRemoteSettings({ locale });
+  applyLocaleToDocument(locale);
+  if (localeChanged) scheduleGoogleRetranslate();
+  if (shouldRender) render();
 }
 
 function applyLocaleToDocument(locale) {
@@ -988,10 +1375,50 @@ function _doGoogleRetranslate() {
 }
 
 function getSelectedSession() {
-  return (
+  return localizeSession(
     sessionCatalog.find((session) => session.id === state.selectedSessionId) ||
     sessionCatalog[0]
   );
+}
+
+/* Which practices has this account actually finished? */
+function getCompletedSessionTimes() {
+  const lastCompletedAt = new Map();
+  for (const entry of state.userSessions || []) {
+    if (!entry || !entry.sessionId || entry.completed === false) continue;
+    const when = entry.createdAt instanceof Date && !Number.isNaN(entry.createdAt.getTime())
+      ? entry.createdAt.getTime()
+      : 0;
+    if (when >= (lastCompletedAt.get(entry.sessionId) || 0)) {
+      lastCompletedAt.set(entry.sessionId, when);
+    }
+  }
+  return lastCompletedAt;
+}
+
+/* Suggest something the user has not done yet. Once they have tried
+   everything, resurface whichever practice they have left alone the longest.
+   The pick is seeded off the local date so it stays put for the day instead of
+   changing on every re-render. */
+function getSuggestedSession() {
+  if (!sessionCatalog.length) return getSelectedSession();
+
+  const lastCompletedAt = getCompletedSessionTimes();
+  const untried = sessionCatalog.filter((session) => !lastCompletedAt.has(session.id));
+
+  if (!untried.length) {
+    const staleFirst = [...sessionCatalog].sort(
+      (a, b) => (lastCompletedAt.get(a.id) || 0) - (lastCompletedAt.get(b.id) || 0)
+    );
+    return localizeSession(staleFirst[0]);
+  }
+
+  const dateKey = getLocalDateKey();
+  let seed = 0;
+  for (let index = 0; index < dateKey.length; index += 1) {
+    seed = (seed * 31 + dateKey.charCodeAt(index)) % 100000;
+  }
+  return localizeSession(untried[seed % untried.length]);
 }
 
 function getSessionContext() {
@@ -1006,13 +1433,19 @@ function getSessionContext() {
     roundsDone: state.roundsDone,
     phaseBadge: state.phaseBadge,
     scriptSlideIndex: state.scriptSlideIndex,
-    sessionlanguage: "English"
+    sessionlanguage: (LANGUAGES.find((language) => language.code === state.locale) || LANGUAGES[0]).name
   };
 }
 
 function buildChatPrompt(message, sessionContext) {
+  const conversationStyle = [
+    "Response style: Sound like a warm, natural conversation, not a lesson or a prepared script.",
+    "Use 1 to 3 short sentences and stay under 70 words unless the user explicitly asks for more detail or a guided exercise.",
+    "Answer directly and ask no more than one brief follow-up question."
+  ];
   if (!sessionContext?.selectedSession) {
     return [
+      ...conversationStyle,
       "App context: The web mindfulness app has 12 selectable session rectangles.",
       "All 12 session pages now include guided or scripted mindfulness content.",
       `User message: ${message}`
@@ -1020,6 +1453,7 @@ function buildChatPrompt(message, sessionContext) {
   }
 
   const lines = [
+    ...conversationStyle,
     "App context: The web mindfulness app has 12 selectable session rectangles.",
     `Current session title: ${sessionContext.selectedSession.title}`,
     `Session description: ${sessionContext.selectedSession.description}`,
@@ -1028,7 +1462,7 @@ function buildChatPrompt(message, sessionContext) {
   ];
 
   if (sessionContext.selectedSession.kind === "scripted") {
-    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    const segments = getSessionScripts(sessionContext.selectedSession.id);
     lines.push(`This is a scripted session with ${segments.length} passages.`);
     lines.push(`Current passage: ${sessionContext.scriptSlideIndex + 1} of ${segments.length}.`);
   }
@@ -1039,7 +1473,7 @@ function buildChatPrompt(message, sessionContext) {
 
 function buildLocalChatFallback(_message, sessionContext) {
   if (sessionContext?.selectedSession?.kind === "scripted") {
-    const segments = SESSION_SCRIPTS[sessionContext.selectedSession.id] || [];
+    const segments = getSessionScripts(sessionContext.selectedSession.id);
     return `${sessionContext.selectedSession.title} is a scripted session with ${segments.length} passages. You are on passage ${(sessionContext.scriptSlideIndex || 0) + 1}.`;
   }
 
@@ -1140,13 +1574,13 @@ function getAvatarTargetOrigin() {
     : "*";
 }
 
-function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversationId = "" }) {
+function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversationId = "", welcome = "" }) {
   const params = new URLSearchParams({
     compact: "1",
     controlled: "1",
     host,
     locale: state.locale,
-    v: "5"
+    v: "33"
   });
 
   if (autostart) {
@@ -1159,6 +1593,10 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
 
   if (conversationId) {
     params.set("chat_id", conversationId);
+  }
+
+  if (welcome) {
+    params.set("welcome", welcome);
   }
 
   return `avatar.html?${params.toString()}`;
@@ -1209,16 +1647,17 @@ function postAvatarCommand(host, command) {
 async function syncAvatarAuthState(host = null) {
   const command = {
     type: "host-auth-token",
-    token: await getCurrentUserIdToken()
+    token: await getCurrentUserIdToken(),
+    profile: state.guideProfile || ""
   };
 
   if (host) {
-    postAvatarCommand(host, command);
+    queueAvatarCommand(host, command);
     return;
   }
 
-  postAvatarCommand(AVATAR_HOST_HOME, command);
-  postAvatarCommand(AVATAR_HOST_SESSION, command);
+  queueAvatarCommand(AVATAR_HOST_HOME, command);
+  queueAvatarCommand(AVATAR_HOST_SESSION, command);
 }
 
 function buildSessionAvatarWelcomePrompt(sessionTitle) {
@@ -1248,12 +1687,17 @@ function startAvatarGuidance() {
   }
 
   if (selectedSession.kind === "scripted") {
-    const segments = SESSION_SCRIPTS[selectedSession.id] || [];
+    const segments = getSessionScripts(selectedSession.id);
     const segment  = segments[state.scriptSlideIndex] || segments[0];
     if (segment) {
+      const nextSegment = segments[state.scriptSlideIndex + 1] || null;
       queueAvatarCommand(AVATAR_HOST_SESSION, {
         type: "host-speak-script",
-        text: segment.text
+        text: segment.text,
+        sessionId: selectedSession.id,
+        segmentKey: segment.key,
+        nextSegmentKey: nextSegment?.key || "",
+        nextSegmentText: nextSegment?.text || ""
       });
       return;
     }
@@ -1368,21 +1812,91 @@ function handleAvatarDockPointerUp() {
 
 function handleAvatarDockResizeMove(event) {
   if (!avatarDockResize) return;
-  const minW = 220, minH = 280;
-  const maxW = Math.min(window.innerWidth - 24, 600);
-  const maxH = Math.min(window.innerHeight - 24, 700);
-  state.avatarDockWidth  = Math.min(maxW, Math.max(minW, avatarDockResize.startWidth  + (event.clientX - avatarDockResize.startX)));
-  state.avatarDockHeight = Math.min(maxH, Math.max(minH, avatarDockResize.startHeight + (event.clientY - avatarDockResize.startY)));
+  const { corner, startX, startY, startWidth, startHeight, startLeft, startTop } = avatarDockResize;
+  const deltaX = event.clientX - startX;
+  const deltaY = event.clientY - startY;
+  const resizeFromWest = corner.includes("w");
+  const resizeFromNorth = corner.includes("n");
+  const minW = 1;
+  const minH = 1;
+  const availableWidth = resizeFromWest
+    ? startLeft + startWidth - 12
+    : window.innerWidth - startLeft - 12;
+  const availableHeight = resizeFromNorth
+    ? startTop + startHeight - 12
+    : window.innerHeight - startTop - 12;
+  const maxW = Math.max(minW, Math.min(availableWidth, 600));
+  const maxH = Math.max(minH, Math.min(availableHeight, 700));
+  const width = Math.min(maxW, Math.max(minW, startWidth + (resizeFromWest ? -deltaX : deltaX)));
+  const height = Math.min(maxH, Math.max(minH, startHeight + (resizeFromNorth ? -deltaY : deltaY)));
+
+  state.avatarDockWidth = width;
+  state.avatarDockHeight = height;
+  state.avatarDockX = resizeFromWest ? startLeft + startWidth - width : startLeft;
+  state.avatarDockY = resizeFromNorth ? startTop + startHeight - height : startTop;
   applyAvatarDockSize();
   applyAvatarDockPosition();
 }
 
 function handleAvatarDockResizeUp() {
   avatarDockResize = null;
+  document.body.classList.remove("avatar-resizing");
+  document.body.style.cursor = "";
+}
+
+/* Each avatar frame holds a WebGL context and a full set of decoded textures,
+   so leaving both mounted means the page carries two complete 3D scenes.
+   But rebuilding one costs ~25s of texture decoding, so releasing the instant
+   a surface is hidden makes casual toggling unusable. Compromise: hold the
+   hidden frame for a grace period, which keeps quick returns instant, and
+   reclaim it only if the user has genuinely moved on. */
+/* Reclaim an idle frame after this long. Worth doing again now that a rebuild
+   is ~3s rather than the ~25s it cost before the model was compressed: a frame
+   the user has moved on from should not keep a WebGL context and a full set of
+   textures alive. Returning inside the window still reuses the live frame, so
+   ordinary toggling never pays the cost. Set to 0 to keep frames forever. */
+const AVATAR_RELEASE_GRACE_MS = 30000;
+const avatarReleaseTimers = {};
+
+function releaseAvatarFrame(which) {
+  const iframe = which === AVATAR_HOST_SESSION ? avatarSessionIframeEl : avatarDockIframeEl;
+  if (!iframe || !iframe.isConnected) return;
+  const parent = iframe.parentNode;
+  iframe.src = "about:blank";        // drops the GL context and its textures
+  if (parent) parent.removeChild(iframe);
+  if (which === AVATAR_HOST_SESSION) avatarSessionIframeEl = null;
+  else avatarDockIframeEl = null;
+  avatarReadyState[which] = false;
+}
+
+function scheduleAvatarRelease(which) {
+  if (!AVATAR_RELEASE_GRACE_MS) return;   // keep it resident
+  if (avatarReleaseTimers[which]) return;
+  avatarReleaseTimers[which] = window.setTimeout(() => {
+    avatarReleaseTimers[which] = null;
+    releaseAvatarFrame(which);
+  }, AVATAR_RELEASE_GRACE_MS);
+}
+
+function keepAvatarAlive(which) {
+  if (!avatarReleaseTimers[which]) return;
+  clearTimeout(avatarReleaseTimers[which]);
+  avatarReleaseTimers[which] = null;
 }
 
 function ensureAvatarDock() {
+  if (avatarDockEl && avatarDockIframeEl && avatarDockIframeEl.isConnected) {
+    return;
+  }
   if (avatarDockEl) {
+    // element survives, only the frame was released
+    const wrap = avatarDockEl.querySelector(".avatar-dock-frame-wrap");
+    const frame = document.createElement("iframe");
+    frame.className = "avatar-dock-frame";
+    frame.title = "Mindfulness avatar guide";
+    frame.setAttribute("allow", "autoplay; microphone");
+    wrap.appendChild(frame);
+    avatarDockIframeEl = frame;
     return;
   }
 
@@ -1404,7 +1918,10 @@ function ensureAvatarDock() {
         allow="autoplay"
       ></iframe>
     </div>
-    <div class="avatar-dock-resize-handle" aria-hidden="true"></div>
+    <div class="avatar-dock-resize-handle avatar-dock-resize-nw" data-resize-corner="nw" aria-hidden="true"></div>
+    <div class="avatar-dock-resize-handle avatar-dock-resize-ne" data-resize-corner="ne" aria-hidden="true"></div>
+    <div class="avatar-dock-resize-handle avatar-dock-resize-sw" data-resize-corner="sw" aria-hidden="true"></div>
+    <div class="avatar-dock-resize-handle avatar-dock-resize-se" data-resize-corner="se" aria-hidden="true"></div>
   `;
 
   document.body.appendChild(avatarDockEl);
@@ -1437,35 +1954,50 @@ function ensureAvatarDock() {
 
   window.addEventListener("pointermove", handleAvatarDockPointerMove);
   window.addEventListener("pointerup", handleAvatarDockPointerUp);
+  window.addEventListener("pointercancel", handleAvatarDockPointerUp);
 
-  const resizeHandle = avatarDockEl.querySelector(".avatar-dock-resize-handle");
-  resizeHandle.addEventListener("pointerdown", (event) => {
-    event.stopPropagation();
-    const rect = avatarDockEl.getBoundingClientRect();
-    avatarDockResize = {
-      startX: event.clientX,
-      startY: event.clientY,
-      startWidth: rect.width,
-      startHeight: rect.height
-    };
-    resizeHandle.setPointerCapture(event.pointerId);
+  avatarDockEl.querySelectorAll(".avatar-dock-resize-handle").forEach((resizeHandle) => {
+    resizeHandle.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const rect = avatarDockEl.getBoundingClientRect();
+      const cursor = getComputedStyle(resizeHandle).cursor;
+      avatarDockResize = {
+        corner: resizeHandle.dataset.resizeCorner,
+        cursor,
+        startX: event.clientX,
+        startY: event.clientY,
+        startLeft: rect.left,
+        startTop: rect.top,
+        startWidth: rect.width,
+        startHeight: rect.height
+      };
+      document.body.classList.add("avatar-resizing");
+      document.body.style.cursor = cursor;
+      resizeHandle.setPointerCapture?.(event.pointerId);
+    });
   });
   window.addEventListener("pointermove", handleAvatarDockResizeMove);
   window.addEventListener("pointerup", handleAvatarDockResizeUp);
+  window.addEventListener("pointercancel", handleAvatarDockResizeUp);
 }
 
 function syncAvatarDock() {
-  ensureAvatarDock();
-
   const shouldShow = state.screen === "home" && state.avatarDockVisible;
+  if (!shouldShow && !avatarDockEl) return;   // nothing built yet, nothing to release
+  ensureAvatarDock();
+  document.body.classList.toggle("avatar-dock-open", shouldShow);
   avatarDockEl.classList.toggle("hidden", !shouldShow);
 
   if (!shouldShow) {
+    scheduleAvatarRelease(AVATAR_HOST_HOME);
     return;
   }
+  keepAvatarAlive(AVATAR_HOST_HOME);
+  scheduleAvatarRelease(AVATAR_HOST_SESSION);
 
-  avatarDockKickerEl.textContent = t("miniGuide");
-  avatarDockTitleEl.textContent = t("miniGuideTitle");
+  avatarDockKickerEl.textContent = "";
+  avatarDockTitleEl.textContent = "";
   avatarDockCloseEl.textContent = t("hide");
   avatarDockCloseEl.setAttribute("aria-label", t("hideMiniGuide"));
 
@@ -1475,7 +2007,10 @@ function syncAvatarDock() {
   const src = buildAvatarFrameSrc({
     host: AVATAR_HOST_HOME,
     autostart: true,
-    conversationId: state.avatarConversationId
+    conversationId: state.avatarConversationId,
+    welcome: lt("welcomeGuideNamed", {
+      name: state.userStats?.firstName || state.userStats?.fullName?.split(" ")[0] || ""
+    }).replace(/\s+/g, " ").trim()
   });
   if (avatarDockIframeEl.dataset.src !== src) {
     avatarReadyState[AVATAR_HOST_HOME] = false;
@@ -1486,7 +2021,17 @@ function syncAvatarDock() {
 }
 
 function ensureSessionAvatarPanel() {
+  if (avatarSessionEl && avatarSessionIframeEl && avatarSessionIframeEl.isConnected) {
+    return;
+  }
   if (avatarSessionEl) {
+    const frame = document.createElement("iframe");
+    frame.className = "session-avatar-frame";
+    frame.title = "Mindfulness session guide";
+    frame.setAttribute("loading", "lazy");
+    frame.setAttribute("allow", "autoplay; microphone");
+    avatarSessionEl.appendChild(frame);
+    avatarSessionIframeEl = frame;
     return;
   }
 
@@ -1506,15 +2051,18 @@ function ensureSessionAvatarPanel() {
 }
 
 function syncSessionAvatarPanel() {
-  ensureSessionAvatarPanel();
-
   const hostEl = document.getElementById("session-avatar-host");
   const shouldShow = state.screen === "session" && Boolean(hostEl);
+  if (!shouldShow && !avatarSessionEl) return;
+  ensureSessionAvatarPanel();
   avatarSessionEl.classList.toggle("hidden", !shouldShow);
 
   if (!shouldShow) {
+    scheduleAvatarRelease(AVATAR_HOST_SESSION);
     return;
   }
+  keepAvatarAlive(AVATAR_HOST_SESSION);
+  scheduleAvatarRelease(AVATAR_HOST_HOME);
 
   const rect = hostEl.getBoundingClientRect();
   avatarSessionEl.style.left   = rect.left   + "px";
@@ -1569,12 +2117,105 @@ function goStats() {
   render();
 }
 
+function shiftStatsMonth(delta) {
+  const month = parseMonthKey(state.statsMonthKey || getMonthKey(new Date()));
+  month.setMonth(month.getMonth() + delta);
+  state.statsMonthKey = getMonthKey(month);
+  render();
+}
+
+function resetStatsMonth() {
+  state.statsMonthKey = getMonthKey(new Date());
+  render();
+}
+
 function goSubpage(screen) {
   endHomeDockAvatar();
   state.screen = screen;
   state.settingsBanner = { type: "", text: "" };
+  if (screen === "personal-info") {
+    initializePersonalInfoDraft();
+  }
   if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
   render();
+}
+
+function initializePersonalInfoDraft() {
+  const data = state.userStats || {};
+  state.personalInfoDraft = {
+    firstName: String(data.firstName || ""),
+    lastName: String(data.lastName || ""),
+    dateOfBirth: normalizeDobInputValue(data.dateOfBirth || data.dob)
+  };
+  state.personalInfoDirty = false;
+  state.personalInfoSaving = false;
+  state.personalInfoStatus = { type: "", text: "" };
+}
+
+function getPersonalInfoSaveError(error) {
+  const code = error?.code || "";
+  if (code === "permission-denied" || code === "firestore/permission-denied") {
+    return "Your profile could not be saved because Firebase denied the update.";
+  }
+  if (code === "unavailable" || code === "firestore/unavailable" || code === "auth/network-request-failed") {
+    return "Your profile could not be saved because the network is unavailable. Try again.";
+  }
+  return "Your profile could not be saved. Please try again.";
+}
+
+async function handleSavePersonalInfo() {
+  if (state.personalInfoSaving) return;
+
+  const firstName = state.personalInfoDraft.firstName.trim();
+  const lastName = state.personalInfoDraft.lastName.trim();
+  const dateOfBirth = state.personalInfoDraft.dateOfBirth;
+  const today = getLocalDateKey();
+
+  if (!firstName || !lastName) {
+    state.personalInfoStatus = { type: "error", text: "Enter both your first and last name." };
+    render();
+    return;
+  }
+  if (firstName.length > 60 || lastName.length > 60) {
+    state.personalInfoStatus = { type: "error", text: "Names must be 60 characters or fewer." };
+    render();
+    return;
+  }
+  if (dateOfBirth && (dateOfBirth < "1900-01-01" || dateOfBirth > today)) {
+    state.personalInfoStatus = { type: "error", text: "Enter a valid date of birth." };
+    render();
+    return;
+  }
+  if (!window._fb || !state.currentUser) {
+    state.personalInfoStatus = { type: "error", text: "Your account is not ready. Sign in again and retry." };
+    render();
+    return;
+  }
+
+  state.personalInfoSaving = true;
+  state.personalInfoStatus = { type: "", text: "Saving your profile…" };
+  render();
+
+  try {
+    const profilePatch = {
+      firstName,
+      lastName,
+      fullName: `${firstName} ${lastName}`,
+      dateOfBirth
+    };
+    await window._fb.updateUserProfile(state.currentUser.uid, profilePatch);
+    state.userStats = { ...(state.userStats || {}), ...profilePatch };
+    state.personalInfoDraft = { firstName, lastName, dateOfBirth };
+    state.personalInfoDirty = false;
+    state.personalInfoSaving = false;
+    state.personalInfoStatus = { type: "ok", text: "Profile saved." };
+    render();
+  } catch (error) {
+    console.warn("Failed to save personal information", error);
+    state.personalInfoSaving = false;
+    state.personalInfoStatus = { type: "error", text: getPersonalInfoSaveError(error) };
+    render();
+  }
 }
 
 const SETTINGS_STORAGE_KEY = "mc_settings_v1";
@@ -1608,6 +2249,7 @@ async function persistRemoteSettings(patch) {
     const payload = {};
     if (Object.prototype.hasOwnProperty.call(patch, "locale")) {
       payload.locale = patch.locale;
+      payload.languagePreference = patch.locale;
     }
     const settingsKeys = ["notifications", "theme"];
     const settingsPatch = {};
@@ -1743,7 +2385,7 @@ function goToNextSlide() {
 }
 
 function goToNextScriptSegment() {
-  const segments = SESSION_SCRIPTS[state.selectedSessionId] || [];
+  const segments = getSessionScripts(state.selectedSessionId);
   if (state.scriptSlideIndex >= segments.length - 1) {
     endSelectedSession();
     return;
@@ -1751,9 +2393,14 @@ function goToNextScriptSegment() {
   state.scriptSlideIndex += 1;
   render();
   const segment = segments[state.scriptSlideIndex];
+  const nextSegment = segments[state.scriptSlideIndex + 1] || null;
   queueAvatarCommand(AVATAR_HOST_SESSION, {
     type: "host-speak-script",
-    text: segment.text
+    text: segment.text,
+    sessionId: state.selectedSessionId,
+    segmentKey: segment.key,
+    nextSegmentKey: nextSegment?.key || "",
+    nextSegmentText: nextSegment?.text || ""
   });
 }
 
@@ -1942,6 +2589,7 @@ async function sendChatMessage() {
   }
 
   function _sentAdvance() {
+    if (_playingSeq === -1) return;
     const s = _sents[_nextSeq];
     if (s && s.audio && s.audio.src && s.audio.src.startsWith('blob:')) URL.revokeObjectURL(s.audio.src);
     delete _sents[_nextSeq];
@@ -1964,12 +2612,28 @@ async function sendChatMessage() {
       ms.addEventListener('sourceopen', () => {
         const sb = ms.addSourceBuffer('audio/mpeg');
         s.sb = sb;
-        sb.addEventListener('updateend', () => _sentFlush(seq));
+        sb.addEventListener('updateend', () => {
+          _sentFlush(seq);
+          if (s.ended) _sentFinish(seq);
+        });
         _sentFlush(seq);
       }, { once: true });
       audio.addEventListener('canplay', () => _sentTryPlay(seq));
     } else if (s.sb && !s.sb.updating) {
       _sentFlush(seq);
+    }
+  }
+
+  function _sentFinish(seq) {
+    const s = _sents[seq];
+    if (!s || !s.ms || !s.sb) return;
+    if (s.pending.length) { _sentFlush(seq); return; }
+    if (s.sb.updating) {
+      s.sb.addEventListener('updateend', () => _sentFinish(seq), { once: true });
+      return;
+    }
+    if (s.ms.readyState === 'open') {
+      try { s.ms.endOfStream(); } catch (_) {}
     }
   }
 
@@ -1984,13 +2648,7 @@ async function sendChatMessage() {
       _sentTryPlay(seq);
       return;
     }
-    if (!s.ms || !s.sb) return;
-    const _fin = () => {
-      if (s.pending.length) { _sentFlush(seq); return; }
-      if (s.sb.updating) { s.sb.addEventListener('updateend', _fin, { once: true }); return; }
-      try { s.ms.endOfStream(); } catch (_) {}
-    };
-    _fin();
+    _sentFinish(seq);
   }
 
   try {
@@ -2102,6 +2760,80 @@ function startSelectedSession() {
   startAvatarGuidance();
 }
 
+const TRANSCRIPT_MAX_MESSAGES = 120;
+const TRANSCRIPT_MAX_CHARS = 24000;
+
+/* Firestore documents cap at 1 MB, so trim the transcript from the front and
+   keep the most recent exchange. */
+/* The guide frame builds the updated profile (it owns the API plumbing) and
+   posts it up; the host is what has Firestore access, so it persists. */
+async function persistGuideProfile(profile) {
+  const next = String(profile || "").trim();
+  if (!next || next === state.guideProfile) return;
+  if (!state.currentUser || !window._fb) return;
+  state.guideProfile = next;
+  try {
+    await window._fb.updateUserProfile(state.currentUser.uid, { guideProfile: next });
+  } catch (error) {
+    console.warn("Could not save the guide profile", error);
+  }
+}
+
+function collectSessionTranscript() {
+  const messages = state.avatarTranscripts[AVATAR_HOST_SESSION] || [];
+  const trimmed = [];
+  let chars = 0;
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const entry = messages[index];
+    const text = String(entry?.text || "").slice(0, 4000);
+    if (!text) continue;
+    if (trimmed.length >= TRANSCRIPT_MAX_MESSAGES || chars + text.length > TRANSCRIPT_MAX_CHARS) break;
+    chars += text.length;
+    trimmed.unshift({ role: entry.role === "user" ? "user" : "assistant", text });
+  }
+  return trimmed;
+}
+
+/* Would ending right now count as a full session? Used both by the leave
+   warning and by the record that gets written. */
+function isSelectedSessionComplete(selectedSession) {
+  if (!selectedSession) return false;
+  if (selectedSession.kind === "guided") {
+    return state.slideIndex === breathingSlides.length - 1 || state.roundsDone >= TOTAL_BREATHING_ROUNDS;
+  }
+  if (selectedSession.kind === "scripted") {
+    const segments = getSessionScripts(selectedSession.id);
+    return segments.length > 0 && state.scriptSlideIndex >= segments.length - 1;
+  }
+  return true;
+}
+
+function getElapsedSessionSeconds() {
+  return Math.max(0, Math.floor((Date.now() - (state.sessionStartTime || Date.now())) / 1000));
+}
+
+/* The End button asks first when the practice is unfinished. Leaving still
+   banks the time — only the "completed" credit is lost. */
+function requestEndSelectedSession() {
+  if (!state.sessionActive) return;
+  if (isSelectedSessionComplete(getSelectedSession())) {
+    endSelectedSession();
+    return;
+  }
+  state.leaveWarningVisible = true;
+  render();
+}
+
+function dismissLeaveWarning() {
+  state.leaveWarningVisible = false;
+  render();
+}
+
+function confirmLeaveSession() {
+  state.leaveWarningVisible = false;
+  endSelectedSession();
+}
+
 function endSelectedSession() {
   const selectedSession = getSelectedSession();
   if (!state.sessionActive) {
@@ -2121,21 +2853,26 @@ function endSelectedSession() {
 
   if (selectedSession.kind === "guided") {
     state.sessionSummary = buildGuidedSessionSummary(state.slideIndex, state.roundsDone);
-    completed = state.slideIndex === breathingSlides.length - 1 || state.roundsDone >= TOTAL_BREATHING_ROUNDS;
+    completed = isSelectedSessionComplete(selectedSession);
     trackingMetadata.slideIndex = state.slideIndex;
     trackingMetadata.roundsDone = state.roundsDone;
     trackingMetadata.totalRounds = TOTAL_BREATHING_ROUNDS;
   } else if (selectedSession.kind === "scripted") {
-    const segments = SESSION_SCRIPTS[selectedSession.id] || [];
-    completed = segments.length > 0 && state.scriptSlideIndex >= segments.length - 1;
+    const segments = getSessionScripts(selectedSession.id);
+    completed = isSelectedSessionComplete(selectedSession);
     trackingMetadata.scriptSlideIndex = state.scriptSlideIndex;
     trackingMetadata.scriptSegments = segments.length;
     state.sessionSummary = completed
       ? `You completed the full ${selectedSession.title} session.`
-      : `You ended ${selectedSession.title} after passage ${state.scriptSlideIndex + 1} of ${segments.length}.`;
+      : `You made it through ${state.scriptSlideIndex + 1} of ${segments.length} passages of ${selectedSession.title}, and that time still counts. Come back when you have a few more minutes and finish it off.`;
   } else {
     state.sessionSummary = `${selectedSession.title} ended. This session page is still empty for now, but the layout is ready for future guided content.`;
   }
+
+  state.sessionCompleted = completed;
+
+  const sessionTranscript = collectSessionTranscript();
+  state.avatarTranscripts[AVATAR_HOST_SESSION] = [];
 
   state.sessionTrackingMessage = "Saving to Active Stats...";
   state.summaryModalVisible = true;
@@ -2146,7 +2883,7 @@ function endSelectedSession() {
     selectedSession,
     elapsedSeconds,
     completed,
-    metadata: { ...trackingMetadata, summary: state.sessionSummary },
+    metadata: { ...trackingMetadata, summary: state.sessionSummary, transcript: sessionTranscript, messageCount: sessionTranscript.length },
   }).then((trackingResult) => {
     state.sessionTrackingMessage = trackingResult?.message || "";
     if (state.summaryModalVisible) render();
@@ -2266,13 +3003,14 @@ async function handleLogout() {
   state.currentUser = null;
   state.authScreen = "signin";
   state.screen = "home";
-  state.languageModalVisible = true;
+  state.languageModalVisible = false;
   state.avatarDockVisible = true;
   if (avatarSessionEl) avatarSessionEl.classList.add("hidden");
   render();
 }
 
 function renderSessionTile(session) {
+  session = localizeSession(session);
   const disabled = state.sessionActive && state.selectedSessionId !== session.id;
   const selected = state.selectedSessionId === session.id;
 
@@ -2417,11 +3155,9 @@ function renderSignInScreen() {
       </div>
 
       <section class="signin-card" aria-label="Sign in">
-        <img
-          class="signin-logo"
-          src="../assets/multi-lang-wellness.png"
-          alt="Multilingual wellness"
-        >
+        <div class="signin-brand-lockup app-brand" aria-label="${escapeHtml(BRAND.name)}">
+          ${renderBrandLockup()}
+        </div>
         <h1 class="signin-title">${escapeHtml(t("signInWelcome"))}</h1>
         <p class="signin-subtitle">${escapeHtml(t("signInSubtitle"))}</p>
 
@@ -2430,6 +3166,7 @@ function renderSignInScreen() {
           <input
             id="signin-email"
             type="email"
+            aria-label="${escapeHtml(t("email"))}"
             autocomplete="email"
             placeholder="${escapeHtml(t("email"))}"
             value="${escapeHtml(state.signInEmail)}"
@@ -2441,6 +3178,7 @@ function renderSignInScreen() {
           <input
             id="signin-password"
             type="password"
+            aria-label="${escapeHtml(t("password"))}"
             autocomplete="current-password"
             placeholder="${escapeHtml(t("password"))}"
             value="${escapeHtml(state.signInPassword)}"
@@ -2481,8 +3219,9 @@ function renderSignUpScreen() {
         <div class="signup-name-row">
           <label class="signin-field signup-half">
             <input
-              id="signup-firstname"
-              type="text"
+            id="signup-firstname"
+            type="text"
+            aria-label="${escapeHtml(t("firstName"))}"
               autocomplete="given-name"
               placeholder="${escapeHtml(t("firstName"))}"
               value="${escapeHtml(state.signUpFirstName)}"
@@ -2490,8 +3229,9 @@ function renderSignUpScreen() {
           </label>
           <label class="signin-field signup-half">
             <input
-              id="signup-lastname"
-              type="text"
+            id="signup-lastname"
+            type="text"
+            aria-label="${escapeHtml(t("lastName"))}"
               autocomplete="family-name"
               placeholder="${escapeHtml(t("lastName"))}"
               value="${escapeHtml(state.signUpLastName)}"
@@ -2503,6 +3243,7 @@ function renderSignUpScreen() {
           <input
             id="signup-dob"
             type="date"
+            aria-label="${escapeHtml(t("dateOfBirth"))}"
             autocomplete="bday"
             placeholder="${escapeHtml(t("dateOfBirth"))}"
             value="${escapeHtml(state.signUpDob)}"
@@ -2514,6 +3255,7 @@ function renderSignUpScreen() {
           <input
             id="signup-email"
             type="email"
+            aria-label="${escapeHtml(t("email"))}"
             autocomplete="email"
             placeholder="${escapeHtml(t("email"))}"
             value="${escapeHtml(state.signUpEmail)}"
@@ -2525,6 +3267,7 @@ function renderSignUpScreen() {
           <input
             id="signup-password"
             type="password"
+            aria-label="${escapeHtml(t("password"))}"
             autocomplete="new-password"
             placeholder="${escapeHtml(t("password"))}"
             value="${escapeHtml(state.signUpPassword)}"
@@ -2536,6 +3279,7 @@ function renderSignUpScreen() {
           <input
             id="signup-confirm"
             type="password"
+            aria-label="${escapeHtml(t("confirmPassword"))}"
             autocomplete="new-password"
             placeholder="${escapeHtml(t("confirmPassword"))}"
             value="${escapeHtml(state.signUpConfirmPassword)}"
@@ -2561,6 +3305,12 @@ function renderSignUpScreen() {
 
 function renderHomeScreen() {
   const selectedSession = getSelectedSession();
+  const suggestedSession = getSuggestedSession();
+  const completedSessionTimes = getCompletedSessionTimes();
+  const localizedSessionCatalog = sessionCatalog.map(localizeSession);
+  const firstName = state.userStats?.firstName || state.userStats?.fullName?.split(" ")[0] || state.currentUser?.displayName?.split(" ")[0] || "there";
+  const totalActiveDays = state.userStats?.totalActiveDays ?? state.userStats?.totalDays ?? 0;
+  const currentStreak = state.userStats?.currentStreak ?? 0;
 
   return `
     ${
@@ -2579,34 +3329,72 @@ function renderHomeScreen() {
         : ""
     }
 
-    <section class="welcome-card">
-      <p class="welcome-eyebrow">Welcome</p>
-      <h2 class="welcome-title">Take a moment for yourself.</h2>
-      <p class="welcome-body">
-        Mindfulness sessions are short, guided practices designed to help you
-        slow down, breathe, and reset. Choose any session below — there's no
-        right or wrong place to begin. Even a few minutes can make a difference.
-      </p>
+    <section class="atlas-welcome" aria-labelledby="atlas-welcome-title">
+      <div class="atlas-welcome-copy">
+        <span class="atlas-kicker"><i class="atlas-kicker-seal" aria-hidden="true"></i>${escapeHtml(lt("recommendedStartingPoint"))}</span>
+        <h1 id="atlas-welcome-title">${escapeHtml(lt("welcomeBackNamed", { name: firstName }))}</h1>
+      </div>
+      <div class="atlas-rhythm" aria-label="${escapeHtml(lt("yourActivity"))}">
+        <button data-action="go-stats" type="button"><strong>${escapeHtml(String(currentStreak))}</strong><span>${escapeHtml(lt("dayStreak"))}</span></button>
+        <i aria-hidden="true"></i>
+        <button data-action="go-stats" type="button"><strong>${escapeHtml(String(totalActiveDays))}</strong><span>${escapeHtml(lt("daysActive"))}</span></button>
+      </div>
     </section>
+
+    <section class="atlas-next-step">
+      <button class="atlas-practice-hero" data-action="open-session" data-session-id="${escapeHtml(suggestedSession.id)}" type="button">
+        <span class="atlas-practice-copy">
+          <span class="atlas-practice-label">${escapeHtml(lt("homeFeaturedLabel"))}</span>
+          <strong>${escapeHtml(suggestedSession.title)}</strong>
+          <span>${escapeHtml(suggestedSession.previewDescription || suggestedSession.description)}</span>
+          <span class="atlas-practice-cta">${escapeHtml(lt("beginPractice", { title: suggestedSession.title }))} ${renderAppIcon("arrow")}</span>
+        </span>
+        <span class="atlas-constellation zodiac-${escapeHtml(suggestedSession.zodiac.toLowerCase())}" aria-hidden="true">
+          <small>${escapeHtml(suggestedSession.zodiac)}</small>
+          ${renderZodiacConstellation(suggestedSession.zodiac)}
+        </span>
+      </button>
+      <aside class="atlas-guide-card" data-action="open-avatar-dock">
+        <span class="atlas-guide-orbit" aria-hidden="true">${renderBrandLetter()}</span>
+        <div><span>${escapeHtml(lt("homeSubtitle"))}</span><strong>${escapeHtml(lt("askGuide"))}</strong><p>${escapeHtml(lt("homeWelcomeQuestion"))}</p></div>
+        <button data-action="open-avatar-dock" type="button" aria-label="${escapeHtml(lt("askGuide"))}">${renderAppIcon("arrow")}</button>
+      </aside>
+    </section>
+
+    ${renderMoodPulse()}
 
     ${
       state.sessionActive
         ? `
           <section class="resume-card">
             <div class="resume-copy">
-              <p class="resume-title">Session in progress</p>
-              <p class="resume-body">${escapeHtml(selectedSession.title)} is still active. Reopen it to continue or end it.</p>
+              <p class="resume-title">${escapeHtml(lt("continuePractice"))}</p>
+              <p class="resume-body">${escapeHtml(lt("practiceStillActive", { title: selectedSession.title }))}</p>
             </div>
-            <button class="action-button action-button-primary" data-action="resume-session">Resume</button>
+            <button class="action-button action-button-primary" data-action="resume-session">${escapeHtml(lt("continuePractice"))}</button>
           </section>
         `
         : ""
     }
 
-    <section>
-      <h2 class="section-title">Session Selection</h2>
-      <div class="session-grid">
-        ${sessionCatalog.map(renderSessionTile).join("")}
+    <section class="home-practice-section atlas-library-section">
+      <div class="atlas-section-heading">
+        <div><span>${escapeHtml(lt("homeSelectionIntro"))}</span><h2>${escapeHtml(lt("exploreAllPractices"))}</h2></div>
+        <span class="atlas-count">${escapeHtml(lt("availableCount", { count: localizedSessionCatalog.length }))}</span>
+      </div>
+      <div class="home-library atlas-library">
+        ${localizedSessionCatalog.map((session) => {
+          const isDone = completedSessionTimes.has(session.id);
+          const isSuggested = session.id === suggestedSession.id;
+          return `
+          <button class="home-library-row practice-${escapeHtml(session.id)} ${isDone ? "is-complete" : ""} ${isSuggested ? "is-suggested" : ""}" data-action="open-session" data-session-id="${escapeHtml(session.id)}" type="button" aria-label="${escapeHtml(session.title)}, ${escapeHtml(session.duration)}${isDone ? `, ${escapeHtml(lt("completed"))}` : ""}" aria-describedby="practice-details-${escapeHtml(session.id)}">
+            <span class="home-library-index">${escapeHtml(session.number)}</span>
+            <span class="home-library-copy"><small>${escapeHtml(session.zodiac)}${isDone ? ` <b class="home-library-done">${escapeHtml(lt("completed"))}</b>` : isSuggested ? ` <b class="home-library-tag">${escapeHtml(lt("homeFeaturedLabel"))}</b>` : ""}</small><strong>${escapeHtml(session.title)}</strong></span>
+            <span class="home-library-meta"><span class="home-library-duration">${escapeHtml(session.duration)}</span><b aria-hidden="true">+</b></span>
+            <span class="home-library-preview" id="practice-details-${escapeHtml(session.id)}"><span class="home-library-preview-inner"><span class="home-library-preview-art zodiac-${escapeHtml(session.zodiac.toLowerCase())}" aria-hidden="true"><small>${escapeHtml(session.zodiac)}</small>${renderZodiacConstellation(session.zodiac)}</span><span class="home-library-preview-copy"><span>${escapeHtml(session.previewDescription || session.description)}</span><em>${escapeHtml(lt("homeOpenPractice"))} ↗</em></span></span></span>
+          </button>
+        `;
+        }).join("")}
       </div>
     </section>
 
@@ -2637,6 +3425,45 @@ function formatSessionTimestamp(createdAt, localDate) {
   return "";
 }
 
+function getMonthKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function parseMonthKey(monthKey) {
+  const [year, month] = String(monthKey || getMonthKey(new Date())).split("-").map(Number);
+  const safeYear = Number.isFinite(year) ? year : new Date().getFullYear();
+  const safeMonth = Number.isFinite(month) && month >= 1 && month <= 12 ? month : new Date().getMonth() + 1;
+  return new Date(safeYear, safeMonth - 1, 1);
+}
+
+function buildActivityMap() {
+  return state.userSessions.reduce((map, entry) => {
+    const dateKey = entry.localDate || (entry.createdAt instanceof Date ? getLocalDateKey(entry.createdAt) : "");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return map;
+    if (!map[dateKey]) map[dateKey] = { sessions: 0, seconds: 0, titles: [] };
+    map[dateKey].sessions += 1;
+    map[dateKey].seconds += Math.max(0, Number(entry.durationSeconds) || 0);
+    if (entry.sessionTitle) map[dateKey].titles.push(entry.sessionTitle);
+    return map;
+  }, {});
+}
+
+function buildCalendarDays(monthDate) {
+  const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+  const start = new Date(first);
+  start.setDate(first.getDate() - first.getDay());
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(start);
+    date.setDate(start.getDate() + index);
+    return {
+      key: getLocalDateKey(date),
+      day: date.getDate(),
+      inMonth: date.getMonth() === monthDate.getMonth(),
+      label: date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }),
+    };
+  });
+}
+
 function formatSessionLength(seconds) {
   const s = Math.max(0, Math.floor(Number(seconds) || 0));
   if (s < 60) return `${s}s`;
@@ -2648,13 +3475,36 @@ function formatSessionLength(seconds) {
   return mins ? `${h}h ${mins}m` : `${h}h`;
 }
 
+function renderHistoryTranscript(entry) {
+  const transcript = Array.isArray(entry.transcript) ? entry.transcript : [];
+  if (!transcript.length) return "";
+  const expanded = state.expandedHistoryId === entry.id;
+  const count = transcript.length;
+  return `
+    <button class="history-transcript-toggle ${expanded ? "is-open" : ""}" data-action="toggle-history-transcript" data-history-id="${escapeHtml(entry.id)}" type="button" aria-expanded="${expanded}">
+      <span>${expanded ? "Hide conversation" : "View conversation"}</span>
+      <span class="history-transcript-count">${count} message${count === 1 ? "" : "s"}</span>
+    </button>
+    ${expanded ? `
+      <ol class="history-transcript">
+        ${transcript.map((line) => `
+          <li class="history-transcript-line history-transcript-${line.role === "user" ? "user" : "guide"}">
+            <span class="history-transcript-who">${line.role === "user" ? "You" : "Guide"}</span>
+            <p>${escapeHtml(line.text)}</p>
+          </li>
+        `).join("")}
+      </ol>
+    ` : ""}
+  `;
+}
+
 function renderSessionHistory() {
   if (!state.currentUser) return "";
   if (state.userSessionsLoading && state.userSessions.length === 0) {
     return `
       <section class="history-section">
-        <h2 class="history-title">Session history</h2>
-        <p class="history-empty">Loading your sessions…</p>
+        <h2 class="history-title">${escapeHtml(t("recentPractice"))}</h2>
+        <p class="history-empty">${escapeHtml(t("statsLoading"))}</p>
       </section>
     `;
   }
@@ -2687,6 +3537,7 @@ function renderSessionHistory() {
                   ${length ? `<span>${escapeHtml(length)}</span>` : ""}
                 </p>
                 ${entry.summary ? `<p class="history-item-summary">${escapeHtml(entry.summary)}</p>` : ""}
+                ${renderHistoryTranscript(entry)}
               </li>
             `;
           })
@@ -2697,6 +3548,7 @@ function renderSessionHistory() {
 }
 
 function renderStatsScreen() {
+  if (!state.statsMonthKey) state.statsMonthKey = getMonthKey(new Date());
   const data = state.userStats || {};
   const totalSessionSeconds = data.totalSessionSeconds ?? data.totalSessionTime ?? 0;
   const currentStreak = data.currentStreak ?? 0;
@@ -2715,10 +3567,23 @@ function renderStatsScreen() {
       ? `Longest: ${longestStreak} day${longestStreak === 1 ? "" : "s"}`
       : "";
   const activeHint = totalActiveDays > 0 ? "Total unique days" : "";
+  const activityMap = buildActivityMap();
+  const month = parseMonthKey(state.statsMonthKey);
+  const monthLabel = month.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  const calendarDays = buildCalendarDays(month);
+  const monthActiveDays = calendarDays.filter((day) => activityMap[day.key]).length;
+  const maxMonthSessions = Math.max(1, ...calendarDays.map((day) => activityMap[day.key]?.sessions || 0));
+  const selectedDay = calendarDays.find((day) => day.key === state.statsSelectedDateKey);
+  const selectedActivity = state.statsSelectedDateKey ? activityMap[state.statsSelectedDateKey] : null;
 
   return `
-    <h1 class="stats-title">Active Stats</h1>
-    <p class="stats-subtitle">${escapeHtml(subtitle)}</p>
+    <section class="stats-heading-row">
+      <div>
+        <h1 class="stats-title">Your rhythm</h1>
+        <p class="stats-subtitle">${escapeHtml(subtitle)}</p>
+      </div>
+      <div class="stats-heading-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
 
     <section class="stats-grid">
       <div class="stat-card">
@@ -2741,32 +3606,120 @@ function renderStatsScreen() {
       </div>
     </section>
 
+    <section class="activity-panel" aria-labelledby="activity-calendar-title">
+      <div class="activity-panel-head">
+        <div>
+          <h2 id="activity-calendar-title">Practice map</h2>
+          <p>${monthActiveDays} active day${monthActiveDays === 1 ? "" : "s"} in ${escapeHtml(monthLabel)}</p>
+        </div>
+        <div class="month-controls" aria-label="${escapeHtml(t("activityCalendar"))}">
+          <button class="month-nav-button" data-action="stats-previous-month" type="button" aria-label="${escapeHtml(lt("previousMonth"))}">‹</button>
+          <button class="month-label-button" data-action="stats-current-month" type="button">${escapeHtml(monthLabel)}</button>
+          <button class="month-nav-button" data-action="stats-next-month" type="button" aria-label="${escapeHtml(lt("nextMonth"))}">›</button>
+        </div>
+      </div>
+      <div class="activity-calendar" role="grid" aria-label="${escapeHtml(lt("calendarLabel", { month: monthLabel }))}">
+        <div class="activity-weekdays" role="row">
+          ${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => `<span role="columnheader">${day}</span>`).join("")}
+        </div>
+        <div class="activity-grid">
+          ${calendarDays.map((day) => {
+            const activity = activityMap[day.key];
+            const count = activity?.sessions || 0;
+            const label = activity
+              ? `${day.label}: ${count} session${count === 1 ? "" : "s"}, ${formatMinutes(activity.seconds)}`
+              : `${day.label}: no sessions`;
+            const level = count ? Math.min(4, Math.ceil((count / maxMonthSessions) * 4)) : 0;
+            return `<div class="activity-day ${day.inMonth ? "" : "activity-day-muted"} activity-level-${level} ${state.statsSelectedDateKey === day.key ? "activity-day-selected" : ""}" data-action="stats-day" data-date-key="${day.key}" role="gridcell" tabindex="0" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"><span>${day.day}</span></div>`;
+          }).join("")}
+        </div>
+      </div>
+      ${selectedDay ? `
+        <div class="activity-detail" aria-live="polite">
+          <div><strong>${escapeHtml(selectedDay.label)}</strong><span>${selectedActivity ? `${selectedActivity.sessions} session${selectedActivity.sessions === 1 ? "" : "s"} · ${escapeHtml(formatMinutes(selectedActivity.seconds))}` : "No sessions"}</span></div>
+          ${selectedActivity?.titles?.length ? `<p>${escapeHtml(selectedActivity.titles.join(" · "))}</p>` : ""}
+        </div>
+      ` : ""}
+      <div class="activity-legend"><span>Less</span><i class="activity-swatch activity-level-0"></i><i class="activity-swatch activity-level-1"></i><i class="activity-swatch activity-level-2"></i><i class="activity-swatch activity-level-3"></i><i class="activity-swatch activity-level-4"></i><span>More</span></div>
+    </section>
+
     ${renderSessionHistory()}
   `;
 }
 
 function renderProfileScreen() {
-  return `
-    <h1 class="profile-title">${escapeHtml(t("profileTitle"))}</h1>
+  const user = state.currentUser;
+  const data = state.userStats || {};
+  const nameParts = String(data.fullName || user?.displayName || "").trim().split(/\s+/).filter(Boolean);
+  const firstName = data.firstName || nameParts[0] || "";
+  const lastName = data.lastName || nameParts.slice(1).join(" ") || "";
+  const email = user?.email || data.email || "";
+  const fullName = [firstName, lastName].filter(Boolean).join(" ");
+  const displayName = fullName || (email ? email.split("@")[0] : t("profileTitle"));
+  const initials =
+    ((firstName[0] || email[0] || BRAND.name[0]) + (lastName[0] || "")).toUpperCase();
+  const memberSince = user?.metadata?.creationTime
+    ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: "long", year: "numeric" })
+    : "";
 
+  const currentStreak = data.currentStreak ?? 0;
+  const sessionsFinished = data.sessionsFinished ?? 0;
+  const totalSessionSeconds = data.totalSessionSeconds ?? data.totalSessionTime ?? 0;
+
+  const rows = [
+    { action: "go-personal-info", icon: "identity", label: t("personalInformation"), hint: "Name, email, and date of birth" },
+    { action: "go-settings", icon: "settings", label: t("settings"), hint: "Language, appearance, session preferences" },
+    { action: "go-support", icon: "support", label: t("support"), hint: "Questions, feedback, and account help" }
+  ];
+
+  return `
+    <header class="profile-head">
+      <p class="profile-eyebrow">${escapeHtml(BRAND.wordmark)}</p>
+      <h1 class="profile-title">${escapeHtml(t("profileTitle"))}</h1>
+    </header>
+
+    <section class="profile-identity" aria-label="Account summary">
+      <div class="profile-identity-main">
+        <span class="profile-avatar" aria-hidden="true">${escapeHtml(initials)}</span>
+        <div class="profile-identity-copy">
+          <strong>${escapeHtml(displayName)}</strong>
+          ${memberSince ? `<span class="profile-identity-meta">A member since ${escapeHtml(memberSince)}</span>` : ""}
+        </div>
+        <button class="profile-edit" data-action="go-personal-info" type="button">Edit</button>
+      </div>
+      <dl class="profile-metrics">
+        <div><dt>Current streak</dt><dd>${currentStreak}<span>${currentStreak === 1 ? "day" : "days"}</span></dd></div>
+        <div><dt>Sessions</dt><dd>${sessionsFinished}<span>complete</span></dd></div>
+        <div><dt>Time in practice</dt><dd>${escapeHtml(formatMinutes(totalSessionSeconds))}</dd></div>
+      </dl>
+    </section>
+
+    <p class="profile-group-label">Account</p>
     <section class="profile-section">
-      <button class="profile-row" data-action="go-personal-info" type="button">
-        <span class="profile-row-label">${escapeHtml(t("personalInformation"))}</span>
-        <span class="profile-arrow">›</span>
-      </button>
-      <button class="profile-row" data-action="go-settings" type="button">
-        <span class="profile-row-label">${escapeHtml(t("settings"))}</span>
-        <span class="profile-arrow">›</span>
-      </button>
-      <button class="profile-row" data-action="go-support" type="button">
-        <span class="profile-row-label">${escapeHtml(t("support"))}</span>
-        <span class="profile-arrow">›</span>
-      </button>
-      <button class="profile-row" data-action="logout" type="button">
-        <span class="profile-row-label profile-danger-text">${escapeHtml(t("logOut"))}</span>
-        <span class="profile-arrow">›</span>
+      ${rows.map((row) => `
+        <button class="profile-row" data-action="${row.action}" type="button">
+          <span class="profile-row-icon" aria-hidden="true">${renderAppIcon(row.icon)}</span>
+          <span class="profile-row-copy">
+            <span class="profile-row-label">${escapeHtml(row.label)}</span>
+            <span class="profile-row-hint">${escapeHtml(row.hint)}</span>
+          </span>
+          <span class="profile-arrow" aria-hidden="true">›</span>
+        </button>
+      `).join("")}
+    </section>
+
+    <section class="profile-section profile-section-danger">
+      <button class="profile-row profile-row-danger" data-action="logout" type="button">
+        <span class="profile-row-icon" aria-hidden="true">${renderAppIcon("logout")}</span>
+        <span class="profile-row-copy">
+          <span class="profile-row-label profile-danger-text">${escapeHtml(t("logOut"))}</span>
+          <span class="profile-row-hint">Sign out of ${escapeHtml(BRAND.name)} on this device</span>
+        </span>
+        <span class="profile-arrow" aria-hidden="true">›</span>
       </button>
     </section>
+
+    <p class="profile-signature">${escapeHtml(BRAND.wordmark)}</p>
   `;
 }
 
@@ -2778,26 +3731,24 @@ function renderBackBar() {
   `;
 }
 
-function formatDob(dob) {
-  if (!dob) return "—";
-  const parsed = new Date(`${dob}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return dob;
-  return parsed.toLocaleDateString(undefined, {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+function normalizeDobInputValue(dob) {
+  if (!dob) return "";
+  if (typeof dob.toDate === "function") {
+    return getLocalDateKey(dob.toDate());
+  }
+  if (dob instanceof Date && !Number.isNaN(dob.getTime())) {
+    return getLocalDateKey(dob);
+  }
+  const value = String(dob).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? "" : getLocalDateKey(parsed);
 }
 
 function renderPersonalInfoScreen() {
   const user = state.currentUser;
   const data = state.userStats || {};
   const email = (user && user.email) || data.email || "—";
-  const firstName = data.firstName || "—";
-  const lastName = data.lastName || "—";
-  const dob = formatDob(data.dob);
-  const _langEntry = LANGUAGES.find(l => l.code === (data.locale || state.locale));
-  const language = _langEntry ? _langEntry.name : "English";
   const creationTime = user && user.metadata && user.metadata.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })
     : "—";
@@ -2823,24 +3774,28 @@ function renderPersonalInfoScreen() {
 
     <section class="subpage-section">
       <p class="subpage-section-title">Profile</p>
-      <div class="info-card">
-        <div class="info-row">
-          <span class="info-row-label">First name</span>
-          <span class="info-row-value">${escapeHtml(firstName)}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row-label">Last name</span>
-          <span class="info-row-value">${escapeHtml(lastName)}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row-label">Date of birth</span>
-          <span class="info-row-value">${escapeHtml(dob)}</span>
-        </div>
+      <form class="info-card personal-info-form" id="personal-info-form" novalidate>
+        <label class="personal-info-field" for="profile-first-name">
+          <span>First name</span>
+          <input id="profile-first-name" type="text" value="${escapeHtml(state.personalInfoDraft.firstName)}" maxlength="60" autocomplete="given-name" required>
+        </label>
+        <label class="personal-info-field" for="profile-last-name">
+          <span>Last name</span>
+          <input id="profile-last-name" type="text" value="${escapeHtml(state.personalInfoDraft.lastName)}" maxlength="60" autocomplete="family-name" required>
+        </label>
+        <label class="personal-info-field" for="profile-date-of-birth">
+          <span>Date of birth</span>
+          <input id="profile-date-of-birth" type="date" value="${escapeHtml(state.personalInfoDraft.dateOfBirth)}" min="1900-01-01" max="${escapeHtml(getLocalDateKey())}" autocomplete="bday">
+        </label>
         <div class="info-row">
           <span class="info-row-label">Language</span>
-          <span class="info-row-value">${escapeHtml(language)}</span>
+          ${renderLangSelect("lang-select lang-select-light")}
         </div>
-      </div>
+        <div class="personal-info-actions">
+          <p class="personal-info-status ${state.personalInfoStatus.type === "error" ? "error" : ""}" role="status" aria-live="polite">${escapeHtml(state.personalInfoStatus.text)}</p>
+          <button class="personal-info-save" type="submit" ${state.personalInfoSaving || !state.personalInfoDirty ? "disabled" : ""}>${state.personalInfoSaving ? "Saving…" : "Save changes"}</button>
+        </div>
+      </form>
     </section>
   `;
 }
@@ -2876,7 +3831,7 @@ function renderSettingsScreen() {
             <p class="settings-row-label">Theme</p>
             <p class="settings-row-hint">${state.settings.theme === "dark" ? "Dark mode is on." : "Light mode."}</p>
           </div>
-          <button class="toggle-switch ${state.settings.theme === "dark" ? "on" : ""}" data-action="toggle-theme" type="button" aria-label="Toggle theme"></button>
+          <button class="toggle-switch ${state.settings.theme === "dark" ? "on" : ""}" data-action="toggle-theme" type="button" aria-label="${escapeHtml(lt("toggleTheme"))}"></button>
         </div>
 
         <div class="settings-row">
@@ -2884,7 +3839,7 @@ function renderSettingsScreen() {
             <p class="settings-row-label">Notifications</p>
             <p class="settings-row-hint">${escapeHtml(notifText)}</p>
           </div>
-          <button class="toggle-switch ${state.settings.notifications ? "on" : ""}" data-action="toggle-notifications" type="button" aria-label="Toggle notifications"></button>
+          <button class="toggle-switch ${state.settings.notifications ? "on" : ""}" data-action="toggle-notifications" type="button" aria-label="${escapeHtml(lt("toggleNotifications"))}"></button>
         </div>
 
       </div>
@@ -2979,7 +3934,7 @@ function computeSessionProgress(selectedSession) {
     };
   }
   if (selectedSession.kind === "scripted") {
-    const segs = SESSION_SCRIPTS[selectedSession.id] || [];
+    const segs = getSessionScripts(selectedSession.id);
     if (!segs.length) return { percent: 0, label: "" };
     const percent = Math.min(100, Math.round(((state.scriptSlideIndex + 1) / segs.length) * 100));
     return { percent, label: `Passage ${state.scriptSlideIndex + 1} of ${segs.length}` };
@@ -2998,7 +3953,7 @@ function computeNextButtonState(selectedSession) {
     return { visible: true, disabled, label: isLast ? "Finish" : "Next" };
   }
   if (selectedSession.kind === "scripted") {
-    const segs = SESSION_SCRIPTS[selectedSession.id] || [];
+    const segs = getSessionScripts(selectedSession.id);
     const isLast = state.scriptSlideIndex >= segs.length - 1;
     return { visible: true, disabled: false, label: isLast ? "Finish" : "Next" };
   }
@@ -3028,36 +3983,61 @@ function syncSessionAvatarProgress() {
 
 function renderSessionScreen() {
   const selectedSession = getSelectedSession();
+  const localizedStatus = state.sessionStatus === "Session active" ? lt("sessionActive") : lt("statusNotStarted");
+  const isComplete = state.sessionActive && isSelectedSessionComplete(selectedSession);
 
   return `
-    <button class="action-button action-button-secondary" data-action="go-home">Back to sessions</button>
+    <nav class="session-crumbs" aria-label="Breadcrumb">
+      <button class="session-back" data-action="go-home" type="button">
+        <span aria-hidden="true">‹</span> ${escapeHtml(lt("backToSessions"))}
+      </button>
+      <span class="session-crumb-sep" aria-hidden="true">/</span>
+      <span class="session-crumb-current">${escapeHtml(selectedSession.title)}</span>
+    </nav>
 
-    <section class="detail-hero">
-      <div class="detail-hero-top">
+    <section class="detail-hero session-hero ${state.sessionActive ? "is-running" : ""}">
+      <span class="session-hero-art zodiac-${escapeHtml(selectedSession.zodiac.toLowerCase())}" aria-hidden="true">
+        <small>${escapeHtml(selectedSession.zodiac)}</small>
+        ${renderZodiacConstellation(selectedSession.zodiac)}
+      </span>
+
+      <div class="session-hero-copy">
         <div class="detail-hero-top-left">
           <span class="detail-number">${selectedSession.number}</span>
           <span class="detail-pill ${selectedSession.kind !== "placeholder" ? "detail-pill-guided" : "detail-pill-placeholder"}">
-            ${selectedSession.kind === "guided" ? "Guided session" : selectedSession.kind === "scripted" ? "Scripted session" : "Empty session"}
+            ${escapeHtml(selectedSession.kind === "placeholder" ? lt("templateReserved") : lt("guidedSession"))}
+          </span>
+          <span class="session-status ${state.sessionActive ? "is-live" : ""}">
+            <i aria-hidden="true"></i>${escapeHtml(localizedStatus)}
           </span>
         </div>
+
+        <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
+
+        ${
+          selectedSession.description
+            ? `<p class="detail-description">${escapeHtml(selectedSession.description)}</p>`
+            : ""
+        }
+
+        ${
+          selectedSession.duration
+            ? `<p class="session-hero-meta">${escapeHtml(selectedSession.duration)}</p>`
+            : ""
+        }
+
         <div class="detail-hero-actions">
-          <button class="action-button action-button-primary" data-action="start-session" ${state.sessionActive ? "disabled" : ""}>
-            Start Session
-          </button>
-          <button class="action-button action-button-secondary" data-action="end-session" ${!state.sessionActive ? "disabled" : ""}>
-            End Session
-          </button>
+          ${
+            state.sessionActive
+              ? `<button class="session-cta session-cta-end ${isComplete ? "is-finish" : ""}" data-action="end-session">
+                   ${escapeHtml(isComplete ? lt("finish") : lt("endSession"))}
+                 </button>`
+              : `<button class="session-cta session-cta-start" data-action="start-session">
+                   ${escapeHtml(lt("start"))}
+                 </button>`
+          }
         </div>
       </div>
-
-      <h1 class="detail-title">${escapeHtml(selectedSession.title)}</h1>
-
-      ${
-        selectedSession.description
-          ? `<p class="detail-description">${escapeHtml(selectedSession.description)}</p>`
-          : ""
-      }
-      <p class="detail-meta">Status: ${escapeHtml(state.sessionStatus)}</p>
     </section>
 
     <section class="panel-card session-avatar-shell">
@@ -3119,32 +4099,32 @@ function renderChatModal() {
       <section class="chat-sheet">
         <div class="sheet-header">
           <div class="sheet-header-copy">
-            <h2 class="sheet-title">Mindfulness Chat</h2>
+            <h2 class="sheet-title">${escapeHtml(lt("mindfulnessChat"))}</h2>
             <p class="sheet-subtitle">
               ${
                 state.screen === "session"
-                  ? `Current context: ${escapeHtml(selectedSession.title)}`
-                  : "Current context: general app help"
+                  ? escapeHtml(lt("contextSession", { title: selectedSession.title }))
+                  : escapeHtml(lt("contextGeneral"))
               }
             </p>
           </div>
-          <button class="close-button" data-action="close-chat">Close</button>
+          <button class="close-button" data-action="close-chat">${escapeHtml(t("cancel"))}</button>
         </div>
 
         <div class="chat-frame">
-          <div class="status-row">Assistant status: ${escapeHtml(state.chatStatus)}</div>
+          <div class="status-row">${escapeHtml(lt("assistantStatus", { status: state.chatStatus }))}</div>
           <div class="chat-window" id="chat-window">
             ${renderMessages(state.chatMessages)}
           </div>
           <div class="composer">
-            <button class="composer-mic${_voiceRecording ? ' mic-recording' : ''}" data-action="toggle-mic" type="button" aria-label="${_voiceRecording ? 'Stop recording' : 'Start voice input'}">${_voiceRecording ? _waveHtml() : _micIconSvg()}</button>
+            <button class="composer-mic${_voiceRecording ? ' mic-recording' : ''}" data-action="toggle-mic" type="button" aria-label="${escapeHtml(_voiceRecording ? lt('stopRecording') : lt('startVoiceInput'))}">${_voiceRecording ? _waveHtml() : _micIconSvg()}</button>
             <textarea
               class="chat-input"
               id="chat-input"
-              placeholder="Ask about mindfulness, app features, or this session..."
+              placeholder="${escapeHtml(lt("chatPlaceholder"))}"
               ${state.chatBusy ? "disabled" : ""}
             >${escapeHtml(state.chatDraft)}</textarea>
-            <button class="composer-send" data-action="send-chat" ${!state.chatDraft.trim() || state.chatBusy ? "disabled" : ""}>Send</button>
+            <button class="composer-send" data-action="send-chat" type="button" aria-label="${escapeHtml(t("sendMessage"))}" ${!state.chatDraft.trim() || state.chatBusy ? "disabled" : ""}>${escapeHtml(lt("send"))}</button>
           </div>
         </div>
       </section>
@@ -3156,11 +4136,34 @@ function renderSummaryModal() {
   return `
     <div class="overlay ${state.summaryModalVisible ? "" : "hidden"}" data-action="close-summary">
       <section class="modal-card">
-        <h2 class="modal-title">Session Complete</h2>
+        <h2 class="modal-title">${escapeHtml(state.sessionCompleted ? "Session complete" : "Paused for now")}</h2>
         <div class="modal-duration">Session length: ${escapeHtml(state.sessionDuration)}</div>
         <div class="modal-summary">${escapeHtml(state.sessionSummary)}</div>
         ${state.sessionTrackingMessage ? `<div class="modal-summary">${escapeHtml(state.sessionTrackingMessage)}</div>` : ""}
         <button class="summary-close" data-action="close-summary">Close</button>
+      </section>
+    </div>
+  `;
+}
+
+function renderLeaveWarning() {
+  if (!state.leaveWarningVisible) return "";
+  const elapsed = getElapsedSessionSeconds();
+  const banked = formatMinutes(elapsed);
+  return `
+    <div class="overlay leave-warning-overlay" data-action="dismiss-leave-warning">
+      <section class="leave-warning" role="alertdialog" aria-modal="true" aria-labelledby="leave-warning-title" aria-describedby="leave-warning-body">
+        <h2 class="leave-warning-title" id="leave-warning-title">Leave before finishing?</h2>
+        <p class="leave-warning-body" id="leave-warning-body">
+          This practice won't count as completed, and it won't extend your streak — those are for finished sessions.
+        </p>
+        <p class="leave-warning-credit">
+          Your ${escapeHtml(banked)} of practice still counts toward your total time.
+        </p>
+        <div class="leave-warning-actions">
+          <button class="leave-warning-stay" data-action="dismiss-leave-warning" type="button">Keep practicing</button>
+          <button class="leave-warning-leave" data-action="confirm-leave-session" type="button">Leave anyway</button>
+        </div>
       </section>
     </div>
   `;
@@ -3180,22 +4183,22 @@ function render() {
     return;
   }
 
+  const profileActive = ["profile","personal-info","settings","support"].includes(state.screen);
   appEl.innerHTML = `
-    <main class="home-container">
-      <header class="home-header">
-        <div class="home-lang-container">
-          ${renderLangSelect("lang-select")}
-        </div>
-        <h1 class="home-header-title">${escapeHtml(t("headerTitle"))}</h1>
-        <div class="home-header-actions">
-          <button class="home-profile-btn ${state.screen === "home" ? "active" : ""}" data-action="go-home" type="button">Home</button>
-          <button class="home-profile-btn ${state.screen === "stats" ? "active" : ""}" data-action="go-stats" type="button">My Stats</button>
-          <button class="home-profile-btn ${["profile","personal-info","settings","support"].includes(state.screen) ? "active" : ""}" data-action="go-profile" type="button">Profile</button>
-          <button class="home-logout-btn" data-action="logout" type="button">${escapeHtml(t("logoutBtn"))}</button>
-        </div>
-      </header>
-
-      <div class="home-scroll-body content-stack">
+    <main class="app-shell">
+      <aside class="app-sidebar">
+        <button class="app-brand" data-action="go-home" type="button" aria-label="${escapeHtml(BRAND.name)}">${renderBrandLockup()}</button>
+        <nav class="app-nav" aria-label="Primary navigation">
+          <button class="${state.screen === "home" ? "active" : ""}" data-action="go-home" type="button">${renderAppIcon("home")}<span>${escapeHtml(t("homeTab"))}</span></button>
+          <button class="${state.screen === "stats" ? "active" : ""}" data-action="go-stats" type="button">${renderAppIcon("stats")}<span>${escapeHtml(t("myStatsTab"))}</span></button>
+          <button class="${profileActive ? "active" : ""}" data-action="go-profile" type="button">${renderAppIcon("profile")}<span>${escapeHtml(t("profileTab"))}</span></button>
+        </nav>
+        <div class="app-sidebar-guide" data-action="open-avatar-dock"><span>${renderBrandLetter()}</span><strong>${escapeHtml(lt("askGuide"))}</strong><p>${escapeHtml(lt("homeWelcomeQuestion"))}</p><button data-action="open-avatar-dock" type="button">${escapeHtml(lt("chat"))} ${renderAppIcon("arrow")}</button></div>
+        <div class="app-sidebar-footer"><div class="app-language">${renderAppIcon("globe")}${renderLangSelect("lang-select lang-select-light")}</div><button class="app-signout" data-action="logout" type="button">${renderAppIcon("logout")}${escapeHtml(t("logoutBtn"))}</button></div>
+      </aside>
+      <section class="app-workspace">
+        <header class="app-mobile-header"><button class="app-brand" data-action="go-home" type="button" aria-label="${escapeHtml(BRAND.name)}">${renderBrandLockup()}</button><div class="app-language">${renderLangSelect("lang-select lang-select-light")}</div></header>
+        <div class="home-scroll-body content-stack">
         ${
           state.screen === "home"
             ? renderHomeScreen()
@@ -3211,14 +4214,21 @@ function render() {
                       ? renderSupportScreen()
                       : renderSessionScreen()
         }
-      </div>
+        </div>
+        <nav class="app-mobile-nav" aria-label="Primary navigation">
+          <button class="${state.screen === "home" ? "active" : ""}" data-action="go-home" type="button">${renderAppIcon("home")}<span>${escapeHtml(t("homeTab"))}</span></button>
+          <button class="${state.screen === "stats" ? "active" : ""}" data-action="go-stats" type="button">${renderAppIcon("stats")}<span>${escapeHtml(t("myStatsTab"))}</span></button>
+          <button class="${profileActive ? "active" : ""}" data-action="go-profile" type="button">${renderAppIcon("profile")}<span>${escapeHtml(t("profileTab"))}</span></button>
+        </nav>
+      </section>
     </main>
     ${
       state.screen === "home" && !state.avatarDockVisible
-        ? `<button class="avatar-dock-launcher" data-action="open-avatar-dock" type="button" aria-label="Open mindfulness chat">Chat</button>`
+        ? `<button class="avatar-dock-launcher" data-action="open-avatar-dock" type="button" aria-label="${escapeHtml(lt("openMindfulnessChat"))}">${escapeHtml(lt("chat"))}</button>`
         : ""
     }
     ${renderSummaryModal()}
+    ${renderLeaveWarning()}
   `;
 
   attachInputHandlers();
@@ -3269,6 +4279,29 @@ function attachInputHandlers() {
   bindSignup("signup-password",  "signUpPassword");
   bindSignup("signup-confirm",   "signUpConfirmPassword");
 
+  const bindPersonalInfo = (id, key) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", (event) => {
+      state.personalInfoDraft[key] = event.target.value;
+      state.personalInfoDirty = true;
+      state.personalInfoStatus = { type: "", text: "" };
+      const saveButton = document.querySelector(".personal-info-save");
+      if (saveButton) saveButton.disabled = false;
+    });
+  };
+  bindPersonalInfo("profile-first-name", "firstName");
+  bindPersonalInfo("profile-last-name", "lastName");
+  bindPersonalInfo("profile-date-of-birth", "dateOfBirth");
+
+  const personalInfoForm = document.getElementById("personal-info-form");
+  if (personalInfoForm) {
+    personalInfoForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      void handleSavePersonalInfo();
+    });
+  }
+
   const chatInput = document.getElementById("chat-input");
   if (chatInput) {
     chatInput.addEventListener("input", (event) => {
@@ -3300,12 +4333,10 @@ appEl.addEventListener("change", (event) => {
   const sel = event.target.closest("select[data-action='set-language']");
   if (!sel) return;
   const newLocale = sel.value;
-  if (newLocale && LANGUAGES.some(l => l.code === newLocale) && newLocale !== state.locale) {
-    state.locale = newLocale;
-    persistRemoteSettings({ locale: newLocale });
-    applyLocaleToDocument(newLocale);
-    scheduleGoogleRetranslate();
-    render();
+  if (newLocale && isSupportedLocale(newLocale)) {
+    setLanguagePreference(newLocale, {
+      dismissModal: !sel.closest(".home-modal")
+    });
   }
 });
 
@@ -3318,25 +4349,20 @@ appEl.addEventListener("click", (event) => {
   const { action } = actionEl.dataset;
   const isOverlay = actionEl.classList.contains("overlay");
 
-  if ((action === "close-chat" || action === "close-summary") && isOverlay && event.target !== actionEl) {
+  if ((action === "close-chat" || action === "close-summary" || action === "dismiss-leave-warning") && isOverlay && event.target !== actionEl) {
     return;
   }
 
   switch (action) {
     case "set-language": {
       const newLocale = actionEl.dataset.locale;
-      if (newLocale && LANGUAGES.some(l => l.code === newLocale)) {
-        state.locale = newLocale;
-        persistRemoteSettings({ locale: newLocale });
-        applyLocaleToDocument(newLocale);
-        scheduleGoogleRetranslate();
-        render();
+      if (newLocale && isSupportedLocale(newLocale)) {
+        setLanguagePreference(newLocale, { dismissModal: true });
       }
       break;
     }
     case "close-language-modal":
-      state.languageModalVisible = false;
-      render();
+      setLanguagePreference(state.locale, { dismissModal: true });
       break;
     case "sign-in":
       handleWebSignIn();
@@ -3374,6 +4400,25 @@ appEl.addEventListener("click", (event) => {
     case "go-stats":
       goStats();
       break;
+    case "record-mood":
+      recordMood(actionEl.dataset.mood);
+      break;
+    case "spin-fortune":
+      spinDailyFortune();
+      break;
+    case "stats-previous-month":
+      shiftStatsMonth(-1);
+      break;
+    case "stats-next-month":
+      shiftStatsMonth(1);
+      break;
+    case "stats-current-month":
+      resetStatsMonth();
+      break;
+    case "stats-day":
+      state.statsSelectedDateKey = actionEl.dataset.dateKey || "";
+      render();
+      break;
     case "go-personal-info":
       goSubpage("personal-info");
       break;
@@ -3392,6 +4437,12 @@ appEl.addEventListener("click", (event) => {
     case "reset-password":
       handlePasswordReset();
       break;
+    case "toggle-history-transcript": {
+      const historyId = actionEl.dataset.historyId || "";
+      state.expandedHistoryId = state.expandedHistoryId === historyId ? "" : historyId;
+      render();
+      break;
+    }
     case "open-avatar-dock":
       state.avatarDockVisible = true;
       render();
@@ -3402,8 +4453,14 @@ appEl.addEventListener("click", (event) => {
     case "start-session":
       startSelectedSession();
       break;
+    case "dismiss-leave-warning":
+      dismissLeaveWarning();
+      break;
+    case "confirm-leave-session":
+      confirmLeaveSession();
+      break;
     case "end-session":
-      endSelectedSession();
+      requestEndSelectedSession();
       break;
     case "prev-slide":
       goToPreviousSlide();
@@ -3445,6 +4502,14 @@ appEl.addEventListener("click", (event) => {
   }
 });
 
+appEl.addEventListener("keydown", (event) => {
+  const day = event.target.closest?.('[data-action="stats-day"]');
+  if (!day || (event.key !== "Enter" && event.key !== " ")) return;
+  event.preventDefault();
+  state.statsSelectedDateKey = day.dataset.dateKey || "";
+  render();
+});
+
 window.addEventListener("message", (event) => {
   if (event.origin !== window.location.origin) {
     return;
@@ -3462,6 +4527,16 @@ window.addEventListener("message", (event) => {
     if (data.host === AVATAR_HOST_SESSION) {
       syncSessionAvatarProgress();
     }
+    return;
+  }
+
+  if (data.type === "profile-updated") {
+    void persistGuideProfile(data.profile);
+    return;
+  }
+
+  if (data.type === "transcript") {
+    state.avatarTranscripts[data.host] = Array.isArray(data.messages) ? data.messages : [];
     return;
   }
 
@@ -3483,6 +4558,9 @@ window.addEventListener("keydown", (event) => {
     }
     if (state.summaryModalVisible) {
       state.summaryModalVisible = false;
+    }
+    if (state.leaveWarningVisible) {
+      state.leaveWarningVisible = false;
     }
     render();
   }
@@ -3519,11 +4597,16 @@ fetch(`${API_BASE_URL}/health`, {
 window._fb = null;
 
 loadLocalSettings();
+const storedLanguagePreference = getLocalLanguagePreference();
+if (storedLanguagePreference) {
+  state.locale = storedLanguagePreference;
+  applyLocaleToDocument(storedLanguagePreference);
+}
 
 (async function initApp() {
   let fbReady = false;
   try {
-    const res = await fetch("/firebase-config");
+    const res = await fetch(`${API_BASE_URL}/firebase-config`);
     const { firebaseConfig } = await res.json();
     if (firebaseConfig && firebaseConfig.apiKey) {
       if (!firebase.apps.length) {
@@ -3539,15 +4622,18 @@ loadLocalSettings();
         getCurrentUser:   ()          => auth.currentUser,
         sendPasswordResetEmail: (email) => auth.sendPasswordResetEmail(email),
         saveUserProfile:  (uid, data) => db.collection("users").doc(uid).set(data),
+        updateUserProfile: (uid, data) => db.collection("users").doc(uid).set({
+          ...data,
+          updatedAt: fieldValue.serverTimestamp(),
+        }, { merge: true }),
         subscribeToUserDoc: (uid, onData, onError) =>
           db.collection("users").doc(uid).onSnapshot(
             (snap) => onData(snap.exists ? snap.data() : {}),
             (err) => { if (onError) onError(err); }
           ),
-        subscribeToUserSessions: (uid, onData, onError) =>
+          subscribeToUserSessions: (uid, onData, onError) =>
           db.collection("users").doc(uid).collection("sessions")
             .orderBy("createdAt", "desc")
-            .limit(50)
             .onSnapshot(
               (snap) => {
                 const sessions = [];
@@ -3564,6 +4650,7 @@ loadLocalSettings();
                     completed: data.completed !== false,
                     localDate: data.localDate || "",
                     summary: (data.metadata && data.metadata.summary) || "",
+                    transcript: Array.isArray(data.metadata && data.metadata.transcript) ? data.metadata.transcript : [],
                     createdAt: created,
                   });
                 });
@@ -3584,19 +4671,26 @@ loadLocalSettings();
           await db.runTransaction(async (transaction) => {
             const snapshot = await transaction.get(userRef);
             const data = snapshot.exists ? snapshot.data() : {};
+            // Only a finished practice earns credit: the completed count, the
+            // streak and the active-day tally are all gated on it. Time spent
+            // always banks, so leaving early is never worth nothing.
+            const isFullSession = completed === true;
             const lastActiveDate = data.lastActiveDate || null;
             const diff = getDayDifference(lastActiveDate, todayKey);
             const isNewActiveDay = lastActiveDate !== todayKey;
-            const currentStreak = !isNewActiveDay
-              ? data.currentStreak || 1
-              : diff === 1
-                ? (data.currentStreak || 0) + 1
-                : 1;
+            const currentStreak = isFullSession
+              ? (!isNewActiveDay
+                  ? data.currentStreak || 1
+                  : diff === 1
+                    ? (data.currentStreak || 0) + 1
+                    : 1)
+              : data.currentStreak || 0;
             const longestStreak = Math.max(data.longestStreak || 0, currentStreak);
-            const totalActiveDays = (data.totalActiveDays ?? data.totalDays ?? 0) + (isNewActiveDay ? 1 : 0);
+            const totalActiveDays = (data.totalActiveDays ?? data.totalDays ?? 0)
+              + (isFullSession && isNewActiveDay ? 1 : 0);
             const totalSessionSeconds = (data.totalSessionSeconds || 0) + elapsedSeconds;
             const totalSessionMinutes = roundSessionMinutes(totalSessionSeconds);
-            const sessionsFinished = (data.sessionsFinished || 0) + 1;
+            const sessionsFinished = (data.sessionsFinished || 0) + (isFullSession ? 1 : 0);
 
             transaction.set(sessionRef, {
               sessionId,
@@ -3621,7 +4715,9 @@ loadLocalSettings();
               longestStreak,
               totalActiveDays,
               totalDays: totalActiveDays,
-              lastActiveDate: todayKey,
+              // an unfinished practice must not claim the day, or a later full
+              // session today would be treated as already counted
+              ...(isFullSession ? { lastActiveDate: todayKey } : {}),
               lastSessionAt: fieldValue.serverTimestamp(),
               updatedAt: fieldValue.serverTimestamp(),
             }, { merge: true });
@@ -3632,7 +4728,11 @@ loadLocalSettings();
       auth.onAuthStateChanged((user) => {
         state.authenticated = !!user;
         state.currentUser = user || null;
-        if (user) state.authScreen = "signin";
+        loadMoodState(user);
+        if (user) {
+          state.authScreen = "signin";
+          state.languageModalVisible = false;
+        }
         void syncAvatarAuthState();
         if (typeof state.userStatsUnsubscribe === "function") {
           state.userStatsUnsubscribe();
@@ -3649,7 +4749,14 @@ loadLocalSettings();
             user.uid,
             (data) => {
               state.userStats = data;
+              if (typeof data.guideProfile === "string") {
+                state.guideProfile = data.guideProfile;
+                void syncAvatarAuthState();
+              }
               state.userStatsLoading = false;
+              if (state.screen === "personal-info" && !state.personalInfoDirty && !state.personalInfoSaving && !state.personalInfoStatus.text) {
+                initializePersonalInfoDraft();
+              }
               if (data && data.settings && typeof data.settings === "object") {
                 const incoming = data.settings;
                 const merged = { ...state.settings };
@@ -3659,20 +4766,38 @@ loadLocalSettings();
                 applyTheme(merged.theme);
                 persistLocalSettings();
               }
-              if (data && LANGUAGES.some(l => l.code === data.locale)) {
-                const localeChanged = state.locale !== data.locale;
-                state.locale = data.locale;
-                applyLocaleToDocument(data.locale);
+              const remoteLocale = data && isSupportedLocale(data.locale)
+                ? data.locale
+                : data && isSupportedLocale(data.languagePreference)
+                  ? data.languagePreference
+                  : "";
+              if (remoteLocale) {
+                const localeChanged = state.locale !== remoteLocale;
+                state.locale = remoteLocale;
+                state.languageModalVisible = false;
+                persistLocalLanguagePreference(remoteLocale);
+                applyLocaleToDocument(remoteLocale);
                 if (localeChanged) {
                   scheduleGoogleRetranslate();
                   render();
                 }
+              } else {
+                const localLocale = getLocalLanguagePreference();
+                if (localLocale) {
+                  state.locale = localLocale;
+                  state.languageModalVisible = false;
+                  applyLocaleToDocument(localLocale);
+                  void persistRemoteSettings({ locale: localLocale });
+                } else {
+                  state.languageModalVisible = true;
+                }
               }
-              if (state.screen === "stats" || state.screen === "settings" || state.screen === "personal-info") render();
+              if (["home", "stats", "settings", "personal-info"].includes(state.screen)) render();
             },
             () => {
               state.userStats = {};
               state.userStatsLoading = false;
+              state.languageModalVisible = !getLocalLanguagePreference();
               if (state.screen === "stats") render();
             }
           );
@@ -3683,12 +4808,13 @@ loadLocalSettings();
             (sessions) => {
               state.userSessions = sessions;
               state.userSessionsLoading = false;
-              if (state.screen === "stats") render();
+              // home reads this too now, for the suggestion and the done badges
+              if (state.screen === "stats" || state.screen === "home") render();
             },
             () => {
               state.userSessions = [];
               state.userSessionsLoading = false;
-              if (state.screen === "stats") render();
+              if (state.screen === "stats" || state.screen === "home") render();
             }
           );
         } else {
@@ -3696,6 +4822,7 @@ loadLocalSettings();
           state.userStatsLoading = false;
           state.userSessions = [];
           state.userSessionsLoading = false;
+          state.languageModalVisible = false;
         }
         render();
       });

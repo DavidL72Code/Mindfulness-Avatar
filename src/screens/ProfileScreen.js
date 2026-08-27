@@ -18,7 +18,9 @@ import { auth } from '../config/firebaseConfig';
 import { ThemeColor, ThemeRadius } from '../theme/appTheme';
 import { useLanguage } from '../context/LanguageContext';
 
-const SUPPORT_EMAIL = 'davebro876@gmail.com';
+// Set EXPO_PUBLIC_SUPPORT_EMAIL to route support mail somewhere else.
+// Kept out of source so a personal address is not published with the repo.
+const SUPPORT_EMAIL = process.env.EXPO_PUBLIC_SUPPORT_EMAIL || 'support@example.com';
 
 
 

@@ -1,19 +1,26 @@
 import base64
+import binascii
+import hashlib
+import hmac
+import html
 import json
 import os
 import queue
 import re
+import secrets
 import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Thread
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
+from urllib.request import Request as UrlRequest, urlopen
 
 from google.auth.transport.requests import Request as GoogleAuthRequest
 from google.oauth2 import id_token as google_id_token
 
 from chatbot import (
     build_activity_step_message,
+    build_profile_update,
     build_chat_prompt,
     build_session_recap,
     call_gemini,
@@ -61,11 +68,23 @@ TOKEN_CACHE = {}
 TOKEN_CACHE_LOCK = Lock()
 GOOGLE_AUTH_REQUEST = GoogleAuthRequest()
 MAX_CHAT_MESSAGE_LENGTH = 4000
+MAX_PROFILE_LENGTH = 2000
 MAX_TTS_TEXT_LENGTH = 1200
 MAX_PREWARM_ITEMS = 100
 MAX_PREWARM_TEXT_LENGTH = 500
 MAX_PREWARM_TOTAL_CHARS = 12000
 TOKEN_CACHE_TTL_SECONDS = 300
+ACCOUNT_DELETION_TOKEN_TTL_SECONDS = 30 * 60
+ACCOUNT_DELETION_SECRET = os.getenv("ACCOUNT_DELETION_SECRET", "").strip()
+ACCOUNT_DELETION_BASE_URL = os.getenv(
+    "ACCOUNT_DELETION_BASE_URL",
+    "https://mindfulness-avatar.onrender.com",
+).strip().rstrip("/")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+ACCOUNT_DELETION_FROM_EMAIL = os.getenv("ACCOUNT_DELETION_FROM_EMAIL", "").strip()
+FIREBASE_SERVICE_ACCOUNT_JSON = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON", "").strip()
+FIREBASE_ADMIN_LOCK = Lock()
+FIREBASE_ADMIN_SERVICES = None
 
 RATE_LIMIT_POLICIES = {
     "activities": (60, 60),
@@ -76,6 +95,8 @@ RATE_LIMIT_POLICIES = {
     "session_end": (10, 60),
     "activity_select": (20, 60),
     "activity_step": (30, 60),
+    "account_deletion_request": (3, 60 * 60),
+    "account_deletion_confirm": (8, 60 * 60),
 }
 
 DEFAULT_ALLOWED_ORIGINS = {
@@ -216,6 +237,185 @@ def send_bytes(handler, payload, content_type, status=200):
     handler.wfile.write(payload)
 
 
+def send_html(handler, markup, status=200):
+    payload = markup.encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "text/html; charset=utf-8")
+    handler.send_header("Cache-Control", "no-store")
+    handler.send_header("Content-Length", str(len(payload)))
+    handler.end_headers()
+    handler.wfile.write(payload)
+
+
+def _base64url_encode(value):
+    return base64.urlsafe_b64encode(value).rstrip(b"=").decode("ascii")
+
+
+def _base64url_decode(value):
+    padding = "=" * (-len(value) % 4)
+    return base64.urlsafe_b64decode((value + padding).encode("ascii"))
+
+
+def create_account_deletion_token(user_id, email_address):
+    if len(ACCOUNT_DELETION_SECRET) < 32:
+        raise RuntimeError("Account deletion signing is not configured.")
+    payload = {
+        "purpose": "account-deletion",
+        "uid": user_id,
+        "email": email_address,
+        "exp": int(time.time()) + ACCOUNT_DELETION_TOKEN_TTL_SECONDS,
+        "jti": secrets.token_urlsafe(18),
+    }
+    encoded = _base64url_encode(
+        json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    )
+    signature = hmac.new(
+        ACCOUNT_DELETION_SECRET.encode("utf-8"),
+        encoded.encode("ascii"),
+        hashlib.sha256,
+    ).digest()
+    return f"{encoded}.{_base64url_encode(signature)}"
+
+
+def verify_account_deletion_token(token):
+    if len(ACCOUNT_DELETION_SECRET) < 32:
+        raise ValueError("Account deletion is not configured.")
+    try:
+        encoded, supplied_signature = token.split(".", 1)
+        expected_signature = hmac.new(
+            ACCOUNT_DELETION_SECRET.encode("utf-8"),
+            encoded.encode("ascii"),
+            hashlib.sha256,
+        ).digest()
+        if not hmac.compare_digest(
+            expected_signature,
+            _base64url_decode(supplied_signature),
+        ):
+            raise ValueError("Invalid token signature.")
+        payload = json.loads(_base64url_decode(encoded).decode("utf-8"))
+    except (
+        ValueError,
+        TypeError,
+        AttributeError,
+        binascii.Error,
+        json.JSONDecodeError,
+        UnicodeDecodeError,
+    ) as exc:
+        raise ValueError("Invalid deletion token.") from exc
+
+    if not isinstance(payload, dict):
+        raise ValueError("Invalid deletion token payload.")
+    if payload.get("purpose") != "account-deletion":
+        raise ValueError("Invalid deletion token purpose.")
+    if not payload.get("uid") or not payload.get("email") or not payload.get("jti"):
+        raise ValueError("Incomplete deletion token.")
+    if int(payload.get("exp", 0)) < int(time.time()):
+        raise ValueError("Deletion token has expired.")
+    return payload
+
+
+def send_transactional_email(to_address, subject, html_body, text_body):
+    if not RESEND_API_KEY or not ACCOUNT_DELETION_FROM_EMAIL:
+        raise RuntimeError("Account deletion email is not configured.")
+    payload = json.dumps({
+        "from": ACCOUNT_DELETION_FROM_EMAIL,
+        "to": [to_address],
+        "subject": subject,
+        "html": html_body,
+        "text": text_body,
+    }).encode("utf-8")
+    request = UrlRequest(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+            "User-Agent": "MindfulnessConnected/1.0",
+        },
+        method="POST",
+    )
+    with urlopen(request, timeout=15) as response:
+        if response.status < 200 or response.status >= 300:
+            raise RuntimeError("Email provider rejected the request.")
+
+
+def get_firebase_admin_services():
+    global FIREBASE_ADMIN_SERVICES
+    with FIREBASE_ADMIN_LOCK:
+        if FIREBASE_ADMIN_SERVICES is not None:
+            return FIREBASE_ADMIN_SERVICES
+
+        import firebase_admin
+        from firebase_admin import auth as admin_auth
+        from firebase_admin import credentials, firestore
+
+        if not firebase_admin._apps:
+            if FIREBASE_SERVICE_ACCOUNT_JSON:
+                credential_data = json.loads(FIREBASE_SERVICE_ACCOUNT_JSON)
+                firebase_admin.initialize_app(credentials.Certificate(credential_data))
+            else:
+                firebase_admin.initialize_app(options={"projectId": FIREBASE_PROJECT_ID})
+        FIREBASE_ADMIN_SERVICES = (admin_auth, firestore.client(), firestore)
+        return FIREBASE_ADMIN_SERVICES
+
+
+def delete_firebase_account_data(user_id):
+    admin_auth, database, firestore_module = get_firebase_admin_services()
+    user_ref = database.collection("users").document(user_id)
+    # Block still-valid client ID tokens from recreating data during deletion.
+    database.collection("_account_deletions").document(user_id).set({
+        "deletedAt": firestore_module.SERVER_TIMESTAMP,
+    })
+    if hasattr(database, "recursive_delete"):
+        database.recursive_delete(user_ref)
+    else:
+        for session in user_ref.collection("sessions").stream():
+            session.reference.delete()
+        user_ref.delete()
+    try:
+        admin_auth.delete_user(user_id)
+    except admin_auth.UserNotFoundError:
+        pass
+    with SESSIONS_LOCK:
+        stale_keys = [key for key in SESSIONS if key.startswith(f"{user_id}:")]
+        for key in stale_keys:
+            SESSIONS.pop(key, None)
+    with TOKEN_CACHE_LOCK:
+        stale_tokens = [
+            token for token, entry in TOKEN_CACHE.items()
+            if entry.get("claims", {}).get("uid") == user_id
+        ]
+        for token in stale_tokens:
+            TOKEN_CACHE.pop(token, None)
+
+
+def account_deletion_page(title, body, form_token=None, success=False):
+    safe_title = html.escape(title)
+    safe_body = html.escape(body)
+    form = ""
+    if form_token:
+        safe_token = html.escape(form_token, quote=True)
+        form = f"""
+          <form method="post" action="/account-deletion/confirm">
+            <input type="hidden" name="token" value="{safe_token}">
+            <button type="submit">Permanently delete my account</button>
+          </form>
+        """
+    icon = (
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>'
+        if success
+        else '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5c0 4.8 3.2 8.4 7.5 10 4.3-1.6 7.5-5.2 7.5-10V6L12 3Z"/><path d="M9 12h6M12 9v6"/></svg>'
+    )
+    return f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{safe_title} · Mindfulness Connected</title>
+<style>
+*{{box-sizing:border-box}}body{{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f0f5f3;color:#152a43;font-family:ui-rounded,"Avenir Next",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}
+main{{width:min(100%,560px);padding:clamp(28px,7vw,52px);background:#fff;border:1px solid #dbe6e2;border-radius:24px;box-shadow:0 20px 60px rgba(34,64,62,.1)}}
+.icon{{width:52px;height:52px;display:grid;place-items:center;border-radius:17px;background:#e7f1ed;color:#2d6b62}}.icon svg{{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}}h1{{margin:22px 0 12px;font-size:clamp(2rem,7vw,3rem);line-height:1.05;letter-spacing:-.04em}}p{{color:#586d7c;line-height:1.65}}.notice{{margin:22px 0;padding:15px;border-radius:14px;background:#fff4f2;color:#7c3a38;font-size:.9rem}}button{{width:100%;min-height:52px;border:0;border-radius:14px;background:#9b3b3b;color:#fff;font:inherit;font-weight:800;cursor:pointer}}button:hover{{background:#812f2f}}button:focus-visible{{outline:3px solid #e2aaa4;outline-offset:3px}}a{{color:#245d71}}
+</style></head><body><main><div class="icon">{icon}</div><h1>{safe_title}</h1><p>{safe_body}</p>{'<p class="notice">This action cannot be undone. Your profile, session history, activity statistics, and sign-in account will be removed.</p>' if form_token else ''}{form}<p><a href="https://mindfulness-avatar.vercel.app/privacy">Privacy policy</a></p></main></body></html>"""
+
+
 def load_allowed_origins():
     configured = []
     for env_key in ("ALLOWED_ORIGINS", "ALLOWED_ORIGIN"):
@@ -241,7 +441,10 @@ CSP_HEADER = "; ".join(
         "object-src 'none'",
         "frame-ancestors 'self'",
         "form-action 'self'",
-        "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://translate.google.com https://translate.googleapis.com",
+        # 'wasm-unsafe-eval' lets the meshopt decoder compile its WebAssembly.
+        # It permits WASM only — it does NOT enable eval() of JavaScript strings,
+        # which 'unsafe-eval' would.
+        "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com https://translate.google.com https://translate.googleapis.com",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com data:",
         "img-src 'self' data: blob: https:",
@@ -255,6 +458,23 @@ CSP_HEADER = "; ".join(
 class ChatHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=WEB_DIR, **kwargs)
+
+    def guess_type(self, path):
+        # Keep module responses compatible with strict MIME checking in browsers.
+        if path.endswith((".js", ".mjs")):
+            return "application/javascript"
+        return super().guess_type(path)
+
+    def log_message(self, format_string, *args):
+        # Confirmation tokens are credentials and must never appear in request logs.
+        sanitized = list(args)
+        if sanitized and isinstance(sanitized[0], str):
+            sanitized[0] = re.sub(
+                r"([?&]token=)[^& ]+",
+                r"\1[redacted]",
+                sanitized[0],
+            )
+        super().log_message(format_string, *sanitized)
 
     def get_request_origin(self):
         origin = (self.headers.get("Origin") or "").strip()
@@ -374,6 +594,11 @@ class ChatHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        parsed_path = urlparse(self.path)
+        if parsed_path.path == "/account-deletion/confirm":
+            self.handle_account_deletion_confirmation(parsed_path)
+            return
+
         if self.path == "/health":
             send_json(self, {"status": "ok"})
             return
@@ -408,6 +633,16 @@ class ChatHandler(SimpleHTTPRequestHandler):
         if not self.require_allowed_origin():
             return
 
+        parsed_path = urlparse(self.path).path
+
+        if parsed_path == "/account-deletion/request":
+            self.handle_account_deletion_request()
+            return
+
+        if parsed_path == "/account-deletion/confirm":
+            self.handle_account_deletion_commit()
+            return
+
         if self.path == "/chat":
             self.handle_chat()
             return
@@ -432,11 +667,148 @@ class ChatHandler(SimpleHTTPRequestHandler):
             self.handle_complete_step()
             return
 
+        if self.path == "/profile/summarize":
+            self.handle_profile_summarize()
+            return
+
         if self.path == "/chat/stream":
             self.handle_chat_stream()
             return
 
         self.send_error(404)
+
+    def handle_account_deletion_request(self):
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("account_deletion_request", claims["uid"]):
+            return
+
+        email_address = str(claims.get("email") or "").strip().lower()
+        if not email_address or "@" not in email_address:
+            send_error_json(self, 400, "The account does not have a valid email address.")
+            return
+
+        try:
+            if not ACCOUNT_DELETION_BASE_URL.startswith("https://"):
+                raise RuntimeError("Account deletion URL must use HTTPS.")
+            token = create_account_deletion_token(claims["uid"], email_address)
+            confirmation_url = (
+                f"{ACCOUNT_DELETION_BASE_URL}/account-deletion/confirm?token={token}"
+            )
+            safe_url = html.escape(confirmation_url, quote=True)
+            safe_email = html.escape(email_address)
+            send_transactional_email(
+                email_address,
+                "Confirm your Mindfulness Connected account deletion",
+                f"""<div style="font-family:'Avenir Next',Avenir,sans-serif;line-height:1.6;color:#162846;max-width:560px;margin:auto">
+                <h1 style="font-size:28px">Confirm account deletion</h1>
+                <p>A request was made to delete the Mindfulness Connected account for {safe_email}.</p>
+                <p><a href="{safe_url}" style="display:inline-block;background:#9b3b3b;color:white;padding:13px 18px;border-radius:10px;text-decoration:none;font-weight:bold">Review deletion request</a></p>
+                <p>This link expires in 30 minutes. Opening it does not immediately delete your account; you must confirm on the page.</p>
+                <p>If you did not request this, ignore this email and your account will remain unchanged.</p></div>""",
+                "Confirm your Mindfulness Connected account deletion:\n\n"
+                f"{confirmation_url}\n\nThis link expires in 30 minutes. "
+                "If you did not request this, ignore this email.",
+            )
+        except Exception as exc:
+            print(f"Account deletion email failed: {type(exc).__name__}")
+            send_error_json(self, 503, "Deletion email could not be sent right now.")
+            return
+
+        send_json(
+            self,
+            {"sent": True, "expires_in": ACCOUNT_DELETION_TOKEN_TTL_SECONDS},
+            status=202,
+        )
+
+    def handle_account_deletion_confirmation(self, parsed_path):
+        token = (parse_qs(parsed_path.query).get("token") or [""])[0].strip()
+        try:
+            payload = verify_account_deletion_token(token)
+        except ValueError:
+            send_html(
+                self,
+                account_deletion_page(
+                    "This link is no longer valid",
+                    "Request a new deletion email from the mobile app. Your account has not been changed.",
+                ),
+                status=400,
+            )
+            return
+        masked_email = payload["email"][:2] + "…@" + payload["email"].split("@", 1)[1]
+        send_html(
+            self,
+            account_deletion_page(
+                "Confirm account deletion",
+                f"You are deleting the Mindfulness Connected account for {masked_email}.",
+                form_token=token,
+            ),
+        )
+
+    def handle_account_deletion_commit(self):
+        if not self.require_rate_limit("account_deletion_confirm", self.get_client_ip()):
+            return
+        if not self.headers.get("Content-Type", "").lower().startswith(
+            "application/x-www-form-urlencoded"
+        ):
+            send_error_json(self, 415, "Unsupported form submission.")
+            return
+        try:
+            content_length = max(
+                0,
+                min(int(self.headers.get("Content-Length", "0")), 8192),
+            )
+        except ValueError:
+            send_error_json(self, 400, "Invalid content length.")
+            return
+        body = self.rfile.read(content_length).decode("utf-8", errors="replace")
+        token = (parse_qs(body).get("token") or [""])[0].strip()
+        try:
+            payload = verify_account_deletion_token(token)
+        except ValueError:
+            send_html(
+                self,
+                account_deletion_page(
+                    "This link is no longer valid",
+                    "Request a new deletion email from the mobile app. Your account has not been changed.",
+                ),
+                status=400,
+            )
+            return
+
+        try:
+            delete_firebase_account_data(payload["uid"])
+        except Exception as exc:
+            print(f"Account deletion failed: {type(exc).__name__}")
+            send_html(
+                self,
+                account_deletion_page(
+                    "We could not finish deletion",
+                    "No additional action is needed right now. Please try the link again or contact support.",
+                ),
+                status=503,
+            )
+            return
+
+        try:
+            send_transactional_email(
+                payload["email"],
+                "Your Mindfulness Connected account was deleted",
+                "<div style=\"font-family:'Avenir Next',Avenir,sans-serif;line-height:1.6;color:#162846;max-width:560px;margin:auto\"><h1>Account deleted</h1><p>Your Mindfulness Connected account and account-linked activity data were deleted.</p><p>If you did not authorize this, contact support@mindfulnessconnected.app.</p></div>",
+                "Your Mindfulness Connected account and account-linked activity data were deleted. If you did not authorize this, contact support@mindfulnessconnected.app.",
+            )
+        except Exception as exc:
+            print(f"Account deletion receipt failed: {type(exc).__name__}")
+
+        send_html(
+            self,
+            account_deletion_page(
+                "Your account was deleted",
+                "Your sign-in account and account-linked mindfulness data have been removed. You can close this page.",
+                success=True,
+            ),
+        )
 
     def handle_activities(self):
         params = parse_qs(urlparse(self.path).query)
@@ -483,6 +855,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
             user_message = payload.get("message", "").strip()
             session_id = payload.get("session_id", "").strip()
             lang = payload.get("lang", "en").strip()
+            profile = str(payload.get("profile", ""))[:MAX_PROFILE_LENGTH]
         except json.JSONDecodeError:
             send_error_json(self, 400, "Invalid JSON")
             return
@@ -517,6 +890,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 else None
             ),
             language=lang,
+            profile=profile,
         )
 
         try:
@@ -775,6 +1149,48 @@ class ChatHandler(SimpleHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             raise _ClientDisconnected()
 
+    def handle_profile_summarize(self):
+        """Fold a finished conversation into the caller's durable profile.
+
+        The server has no Firestore write access, so it returns the merged
+        profile and the client persists it on the user document.
+        """
+        claims = self.require_auth()
+        if not claims:
+            return
+        if not self.require_rate_limit("chat", claims["uid"]):
+            return
+
+        content_length = int(self.headers.get("Content-Length", "0"))
+        body = self.rfile.read(content_length)
+        try:
+            payload = json.loads(body.decode("utf-8"))
+        except json.JSONDecodeError:
+            send_error_json(self, 400, "Invalid JSON")
+            return
+
+        transcript = payload.get("transcript") or []
+        if not isinstance(transcript, list):
+            send_error_json(self, 400, "transcript must be a list")
+            return
+        prior = str(payload.get("profile", ""))[:MAX_PROFILE_LENGTH]
+
+        clean = []
+        for item in transcript[-80:]:
+            if not isinstance(item, dict):
+                continue
+            text = str(item.get("text") or item.get("content") or "")[:1000]
+            if text:
+                clean.append({"role": item.get("role", "user"), "text": text})
+
+        try:
+            updated = build_profile_update(clean, prior)
+        except Exception as exc:  # noqa: BLE001
+            send_error_json(self, 500, f"Model error: {exc}")
+            return
+
+        send_json(self, {"profile": (updated or "")[:MAX_PROFILE_LENGTH]})
+
     def handle_chat_stream(self):
         claims = self.require_auth()
         if not claims:
@@ -789,6 +1205,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
             user_message = payload.get("message", "").strip()
             session_id = payload.get("session_id", "").strip()
             lang = payload.get("lang", "en").strip()
+            profile = str(payload.get("profile", ""))[:MAX_PROFILE_LENGTH]
         except json.JSONDecodeError:
             send_error_json(self, 400, "Invalid JSON")
             return
@@ -822,6 +1239,7 @@ class ChatHandler(SimpleHTTPRequestHandler):
                 else None
             ),
             language=lang,
+            profile=profile,
         )
 
         self.send_response(200)

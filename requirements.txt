@@ -1,6 +1,7 @@
 trafilatura
 google-generativeai
 google-auth
+firebase-admin
 python-dotenv
 edge-tts
 imageio-ffmpeg

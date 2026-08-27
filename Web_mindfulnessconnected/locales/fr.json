@@ -1,0 +1,1514 @@
+{
+  "locale": "fr",
+  "name": "French",
+  "direction": "ltr",
+  "ui": {
+    "signUpHeader": "Créer un compte",
+    "createAccountTitle": "Créer un compte",
+    "fullName": "Nom complet",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "dateOfBirth": "Date de naissance",
+    "languageLabel": "Préférence de langue",
+    "langEnglish": "Anglais",
+    "langKorean": "Coréen",
+    "createAccountButton": "Créer un compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ? Connectez-vous",
+    "errorTitle": "Erreur",
+    "errorFillAll": "Veuillez remplir tous les champs.",
+    "signUpFailed": "Échec de l'inscription",
+    "emailInUse": "Cette adresse e-mail est déjà utilisée.",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+    "passwordTooShort": "Utilisez au moins 8 caractères pour votre mot de passe.",
+    "signUpGenericError": "Nous n'avons pas pu créer votre compte. Vérifiez vos informations et réessayez.",
+    "homeTitle": "Bonjour, {name} !",
+    "homeSubtitle": "Assistant virtuel de pleine conscience",
+    "homeTodaysSession": "Session d'aujourd'hui",
+    "homeSessionOfTheDay": "Session du jour",
+    "homeAllSessions": "Toutes les sessions",
+    "homeSession": "Session",
+    "chatPlaceholder": "Posez une question sur la pleine conscience, les fonctionnalités de l'application ou cette session…",
+    "cardAboutTitle": "À propos de l'assistant",
+    "cardAboutText": "Notre IA est conçue pour vous guider à travers des exercices de pleine conscience.",
+    "cardUsageTitle": "Instructions d'utilisation",
+    "cardUsageText": "Trouvez un endroit calme et suivez les instructions de respiration.",
+    "cardUpdatesTitle": "Mises à jour récentes",
+    "cardUpdatesText": "La gestion de la langue coréenne a été récemment améliorée.",
+    "cardSettingsTitle": "Paramètres rapides",
+    "cardSettingsText": "Personnalisez votre interface et vos options d'accessibilité ici.",
+    "aboutAssistantSection": "À propos de l'assistant",
+    "languageHeading": "Langue",
+    "sessionTimeHeading": "Votre temps",
+    "sessionTimeValue": "Temps total de session",
+    "logOut": "Se déconnecter",
+    "homeTab": "Accueil",
+    "homeSelectionIntro": "Choisissez une pratique qui correspond à votre état actuel.",
+    "homeReadyCount": "{total} sessions disponibles",
+    "homeFeaturedLabel": "Suggéré pour aujourd'hui",
+    "homeOpenPractice": "Pratique libre",
+    "homeComingSoonHint": "Cette pratique sera bientôt disponible.",
+    "homeTapToChoose": "Appuyez pour choisir",
+    "myStatsTab": "Mes statistiques",
+    "profileTab": "Profil",
+    "signInWelcome": "Bienvenue",
+    "signInSubtitle": "Connectez-vous pour continuer",
+    "signInButton": "Se connecter",
+    "signInErrorBothFields": "Veuillez saisir votre e-mail et votre mot de passe.",
+    "signInFailedTitle": "Échec de la connexion",
+    "signInFailedBody": "E-mail ou mot de passe invalide. Veuillez réessayer.",
+    "signUpPrompt": "Besoin d'un compte ? Inscrivez-vous",
+    "signInFooter": "Aperçu interne — Université du Massachusetts à Boston. Non destiné à la distribution publique.",
+    "profileTitle": "Profil",
+    "personalInformation": "Informations personnelles",
+    "personalInfoBack": "Retour",
+    "personalInfoSave": "Enregistrer les modifications",
+    "personalInfoSaving": "Enregistrement…",
+    "personalInfoSavedTitle": "Enregistré",
+    "personalInfoSavedBody": "Vos informations personnelles ont été mises à jour.",
+    "personalInfoSaveFailedTitle": "Échec de l'enregistrement",
+    "personalInfoSaveFailedBody": "Une erreur est survenue. Veuillez réessayer.",
+    "personalInfoInvalidDob": "Saisissez une date de naissance valide au format AAAA-MM-JJ.",
+    "personalInfoEmailNotUpdatedTitle": "E-mail non modifié",
+    "personalInfoEmailNotUpdatedBody": "Votre profil a été enregistré, mais la modification de votre e-mail de connexion peut nécessiter une nouvelle connexion. Essayez de vous déconnecter puis de vous reconnecter, ou contactez le support.",
+    "settings": "Paramètres",
+    "support": "Support",
+    "supportFirstName": "Prénom",
+    "supportLastName": "Nom",
+    "supportEmail": "E-mail",
+    "supportMessage": "Message",
+    "supportMessagePlaceholder": "Comment pouvons-nous vous aider ?",
+    "supportSend": "Envoyer le message",
+    "supportSending": "Envoi en cours…",
+    "supportMissingTitle": "Informations manquantes",
+    "supportMissingBody": "Remplissez tous les champs avant d'envoyer.",
+    "supportInvalidEmailTitle": "Vérifiez votre e-mail",
+    "supportInvalidEmailBody": "Saisissez une adresse e-mail valide.",
+    "supportUnavailableTitle": "Le support n'est pas configuré",
+    "supportUnavailableBody": "Contactez l'administrateur de l'application pour activer les messages de support.",
+    "supportSentTitle": "Message envoyé",
+    "supportSentBody": "Nous avons reçu votre message et nous vous répondrons par e-mail.",
+    "supportErrorTitle": "Message non envoyé",
+    "supportErrorBody": "Vérifiez votre connexion et réessayez.",
+    "accountEyebrow": "COMPTE",
+    "signedInAccount": "Compte connecté",
+    "privateToAccount": "Privé pour votre compte",
+    "accountDataScope": "Vos données sont liées à votre compte connecté. Les autres comptes ne peuvent pas les lire.",
+    "accountSection": "Votre compte",
+    "privacySection": "Confidentialité",
+    "personalInfoDetail": "Nom, date de naissance, e-mail et langue",
+    "supportDetail": "Obtenir de l'aide ou envoyer des commentaires",
+    "signOutDetail": "Effacer la session active de cet appareil",
+    "signOutTitle": "Se déconnecter ?",
+    "signOutBody": "Votre compte reste en sécurité. Cet appareil oubliera la discussion actuelle.",
+    "cancel": "Annuler",
+    "signOutConfirm": "Se déconnecter",
+    "privacyPolicy": "Politique de confidentialité",
+    "privacyPolicyDetail": "Lisez comment vos informations sont traitées",
+    "accountDeletionInfo": "Informations sur la suppression du compte",
+    "deleteAccountEyebrow": "ACTION PERMANENTE",
+    "deleteAccountTitle": "Supprimer le compte",
+    "deleteAccountDetail": "Supprimer définitivement votre compte et votre activité",
+    "deleteAccountIntro": "Nous enverrons un lien de confirmation sécurisé à l'e-mail associé à votre compte. Rien n'est supprimé tant que vous ne confirmez pas depuis cet e-mail.",
+    "deleteAccountRemoves": "Ceci supprime définitivement",
+    "deleteAccountProfileData": "Votre profil et vos informations personnelles",
+    "deleteAccountActivityData": "L'historique des sessions, les séries et les statistiques d'activité",
+    "deleteAccountMoodData": "Les suivis d'humeur enregistrés sur cet appareil",
+    "deleteAccountEmailDestination": "La confirmation sera envoyée à",
+    "deleteAccountSendEmail": "Envoyer l'e-mail de confirmation de suppression",
+    "deleteAccountLinkExpiry": "Pour votre sécurité, le lien de confirmation expire dans 30 minutes.",
+    "deleteAccountEmailSentEyebrow": "VÉRIFIEZ VOTRE E-MAIL",
+    "deleteAccountEmailSentTitle": "Confirmation envoyée",
+    "deleteAccountEmailSentBody": "Nous avons envoyé un lien de suppression sécurisé à {email}. Ouvrez-le et confirmez pour supprimer définitivement votre compte.",
+    "deleteAccountNextSteps": "Et ensuite ?",
+    "deleteAccountNextStepsBody": "L'ouverture de l'e-mail ne supprime rien. Examinez les détails sur la page sécurisée, puis choisissez le bouton de suppression finale.",
+    "deleteAccountResend": "Envoyer un autre e-mail",
+    "deleteAccountNeedHelp": "Besoin d'aide ? Contactez le support",
+    "deleteAccountTooManyAttempts": "Trop de tentatives. Attendez quelques minutes, puis réessayez.",
+    "deleteAccountNetworkError": "Vérifiez votre connexion et réessayez.",
+    "deleteAccountRecentLogin": "Pour des raisons de sécurité, déconnectez-vous, reconnectez-vous et réessayez.",
+    "deleteAccountEmailUnavailable": "Le service d'e-mail de confirmation n'est pas disponible pour le moment. Réessayez sous peu.",
+    "deleteAccountGenericError": "L'e-mail de confirmation n'a pas pu être envoyé. Réessayez ou contactez le support.",
+    "statsEyebrow": "VOTRE PRATIQUE",
+    "statsTitle": "Un progrès tout en douceur",
+    "statsLoading": "Chargement de votre activité…",
+    "statsSignedOut": "Connectez-vous pour voir votre activité.",
+    "statsSubtitle": "Votre activité de pleine conscience sur toutes les sessions.",
+    "currentRhythm": "Rythme actuel",
+    "dayCountOne": "{count} jour",
+    "dayCountMany": "{count} jours",
+    "keepReturning": "Continuez à revenir quand cela vous aide.",
+    "startPractice": "Commencez par une courte pratique aujourd'hui.",
+    "statsNumbers": "Vos chiffres",
+    "dayStreak": "Série de jours",
+    "longestStreak": "Plus longue : {count} jour{suffix}",
+    "daysActive": "Jours actifs",
+    "totalUniqueDays": "Total de jours uniques",
+    "timeInSessions": "Temps passé en sessions",
+    "sessionsCompleted": "Sessions terminées",
+    "recentPractice": "Pratique récente",
+    "noRecentPractice": "Vos pratiques terminées apparaîtront ici.",
+    "activityCalendar": "Calendrier d'activité",
+    "activityCalendarSummary": "{days} jours actifs sur {weeks} semaines",
+    "weekdaySun": "D",
+    "weekdayMon": "L",
+    "weekdayTue": "M",
+    "weekdayWed": "M",
+    "weekdayThu": "J",
+    "weekdayFri": "V",
+    "weekdaySat": "S",
+    "calendarWeek": "Semaine {week}",
+    "lessActivity": "Moins",
+    "moreActivity": "Plus",
+    "calendarPrevious": "Voir {month}",
+    "calendarNext": "Voir {month}",
+    "activityTooltip": "{date} · {count} session{suffix}",
+    "syncErrorTitle": "L'activité est indisponible",
+    "syncErrorBody": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer",
+    "welcomeBackNamed": "Bon retour, {name}.",
+    "welcomeBack": "Bon retour.",
+    "homeWelcomeBody": "Installez-vous et choisissez une pratique. Votre guide est prêt à vous aider.",
+    "homeWelcomeQuestion": "Comment vous sentez-vous aujourd'hui ?",
+    "beginPractice": "Commencer {title}",
+    "askGuide": "Demander au guide",
+    "dayStreakValue": "{count} jours de série",
+    "activeDaysValue": "{count} jours actifs",
+    "quickCheckIn": "Suivi rapide",
+    "sevenDayAverage": "Moyenne sur 7 jours",
+    "fortuneMachine": "Machine à fortune",
+    "fortuneDescription": "Faites tourner pour une petite pensée à emporter dans votre journée.",
+    "spinFortune": "Faire tourner une fortune",
+    "yourMessageToday": "Votre message pour aujourd'hui",
+    "yourActivity": "Votre activité",
+    "recommendedStartingPoint": "Point de départ recommandé",
+    "exploreAllPractices": "Explorer toutes les pratiques",
+    "availableCount": "{count} disponibles",
+    "start": "Commencer",
+    "endSession": "Terminer la session",
+    "statusNotStarted": "Non commencé",
+    "sessionActive": "Session active",
+    "next": "Suivant",
+    "finish": "Terminer",
+    "passageProgress": "Passage {current} sur {total}",
+    "welcomeGuideNamed": "Bon retour, {name}. Installez-vous et choisissez une pratique. Votre guide est prêt à vous aider. Comment vous sentez-vous aujourd'hui ?",
+    "welcomeGuide": "Bon retour. Installez-vous et choisissez une pratique. Votre guide est prêt à vous aider. Comment vous sentez-vous aujourd'hui ?",
+    "assistantWelcome": "Bonjour, je suis votre assistant de pleine conscience. Je suis là pour vous soutenir. Comment allez-vous aujourd'hui ?",
+    "assistantReady": "Votre guide de pleine conscience est là.",
+    "moodLow": "Bas",
+    "moodTender": "Sensible",
+    "moodSteady": "Stable",
+    "moodGood": "Bien",
+    "moodBright": "Rayonnant",
+    "moodSaved": "Enregistré pour aujourd'hui.",
+    "loadingTranslations": "Chargement de votre langue…",
+    "translationFallback": "Ce contenu n'est pas encore disponible dans votre langue. Affichage en anglais.",
+    "guideButton": "Guide",
+    "mindfulnessAssistant": "Assistant de pleine conscience",
+    "hideGuide": "Masquer le guide",
+    "sessionCompleteTitle": "Vous avez pris du temps pour vous",
+    "sessionLength": "Durée de la session : {duration}",
+    "sessionReflection": "Remarquez ce qui semble différent avant de continuer.",
+    "returnHome": "Retour à l'accueil",
+    "mindfulnessChat": "Discussion pleine conscience",
+    "assistantStatus": "Assistant : {status}",
+    "typeMessage": "Tapez un message…",
+    "send": "Envoyer",
+    "completed": "Terminé",
+    "continuePractice": "Continuez votre pratique",
+    "practiceStillActive": "{title} est toujours active.",
+    "guideFollowUpReady": "Votre guide est prêt avec un suivi.",
+    "tapFeeling": "Appuyez sur une émotion pour faire le point avec votre guide.",
+    "guidePreparingFollowUp": "Votre guide prépare un suivi.",
+    "chooseClosestFeeling": "Choisissez l'émotion qui se rapproche le plus de votre état actuel.",
+    "spinning": "En rotation…",
+    "voicePlayback": "Lecture vocale",
+    "enterSendHint": "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne",
+    "listening": "À l'écoute…",
+    "generatingVoice": "Génération de la voix…",
+    "speaking": "En train de parler…",
+    "voiceUnavailable": "Voix indisponible. Réessayez.",
+    "preparingVoice": "Préparation de la voix…",
+    "typing": "En train d'écrire…",
+    "preparingWelcome": "Préparation de l'accueil…",
+    "tapToTalk": "Appuyez pour parler",
+    "loadingTexture": "Chargement de la texture de l'avatar {current} sur {total}…",
+    "cachingGeometry": "Mise en cache de la géométrie de l'avatar…",
+    "loadError": "L'avatar n'a pas pu être chargé.",
+    "compactGuideSubtitle": "Un guide avatar compact avec voix et discussion rapide.",
+    "viewActivity": "Voir votre activité",
+    "backToSessions": "Retour aux sessions",
+    "sessions": "Sessions",
+    "templateReserved": "Modèle réservé",
+    "closeLanguageSelector": "Fermer le sélecteur de langue",
+    "dailyMindfulnessTools": "Outils de pleine conscience quotidiens",
+    "chooseFeeling": "Choisissez comment vous vous sentez aujourd'hui",
+    "feelingLabel": "Sentiment {feeling}",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "calendarLabel": "Calendrier d'activité de {month}",
+    "toggleTheme": "Changer de thème",
+    "toggleNotifications": "Changer les notifications",
+    "stopRecording": "Arrêter l'enregistrement",
+    "startVoiceInput": "Démarrer la saisie vocale",
+    "openMindfulnessChat": "Ouvrir la discussion de pleine conscience",
+    "chat": "Discussion",
+    "loadingAvatar": "Chargement de l'avatar…",
+    "collapse": "Réduire",
+    "expand": "Développer",
+    "ready": "Prêt",
+    "thinking": "En réflexion…",
+    "offlineFallback": "Mode hors ligne",
+    "contextSession": "Contexte : {title}",
+    "contextGeneral": "Contexte : aide générale de l'application",
+    "guidedSession": "Session guidée",
+    "assistantLedSession": "Session dirigée par l'assistant",
+    "finishSession": "Terminer la session",
+    "nextPassage": "Passage suivant",
+    "startNamed": "Commencer {title}",
+    "personMeditating": "Personne en méditation",
+    "brandLogo": "Bien-être multilingue",
+    "useLanguageOption": "Utiliser {language}",
+    "languageCurrent": "Langue : {language}",
+    "opensLanguageSelector": "Ouvre le sélecteur de langue",
+    "moodPromptLow": "Qu'est-ce qui vous pèse aujourd'hui ? Vous n'avez pas à tout résoudre en une fois.",
+    "moodPromptTender": "Qu'est-ce qui semble un peu plus difficile que d'habitude aujourd'hui ?",
+    "moodPromptSteady": "La stabilité suffit. Qu'est-ce qui vous aiderait à rester ancré aujourd'hui ?",
+    "moodPromptGood": "Quelle est la chose qui vous a aidé à vous sentir bien aujourd'hui ?",
+    "moodPromptBright": "Qu'est-ce qui s'est passé aujourd'hui dont vous voulez vous souvenir ?"
+  },
+  "catalog": {
+    "caregiver-fatigue": {
+      "title": "Fatigue de l'aidant",
+      "description": "Une méditation de compassion pour se ressourcer en prenant soin des autres.",
+      "previewDescription": "Déposez la responsabilité que vous portez depuis quelques minutes. Cette pratique douce vous aide à atténuer l'autocritique, à retrouver de la stabilité et à faire de la place pour vos propres besoins.",
+      "zodiac": "Aries",
+      "kind": "scripted",
+      "duration": "~4 min · 6 segments"
+    },
+    "body-scan": {
+      "title": "Scan corporel",
+      "description": "Un exercice guidé pour se reconnecter à soi, de la tête aux pieds.",
+      "previewDescription": "Portez votre attention lentement à travers le corps, en remarquant la pression, la chaleur, la tension et le confort sans chercher à rien changer. Un choix d'ancrage lorsque votre esprit semble agité ou déconnecté.",
+      "zodiac": "Taurus",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "five-senses": {
+      "title": "Ancrage par les cinq sens",
+      "description": "Un exercice d'ancrage pour se reconnecter au moment présent.",
+      "previewDescription": "Utilisez la vue, l'ouïe, le toucher, l'odorat et le goût pour revenir à ce qui se passe ici et maintenant. Cette courte réinitialisation sensorielle peut aider à interrompre le tourbillon des pensées et à apaiser un système nerveux surmené.",
+      "zodiac": "Gemini",
+      "kind": "scripted",
+      "duration": "~6 min · 24 steps"
+    },
+    "mindful-breathing": {
+      "title": "Respiration consciente",
+      "description": "Une pratique fondamentale de conscience du souffle que vous pouvez utiliser partout.",
+      "previewDescription": "Suivez le rythme naturel de votre inspiration et de votre expiration sans le forcer. Une pratique simple pour créer un peu d'espace avant une réunion, une conversation ou un moment difficile.",
+      "zodiac": "Cancer",
+      "kind": "scripted",
+      "duration": "~5 min · 5 segments"
+    },
+    "loving-kindness": {
+      "title": "Bienveillance",
+      "description": "Une pratique de pleine conscience axée sur la compassion.",
+      "previewDescription": "Répétez des vœux silencieux de sécurité, de confort et de bienveillance pour vous-même et pour les personnes de votre vie. Utilisez-la lorsque vous vous sentez endurci, seul ou que vous avez besoin d'une voix intérieure plus douce.",
+      "zodiac": "Leo",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "mindful-walking": {
+      "title": "Marche consciente",
+      "description": "Une pratique de mouvement léger avec une attention totale sur chaque pas.",
+      "previewDescription": "Laissez le rythme de vos pas devenir un ancrage tandis que vous remarquez l'équilibre, le mouvement et l'espace autour de vous. Une bonne réinitialisation lorsque rester assis est difficile ou que l'agitation a besoin de s'exprimer.",
+      "zodiac": "Virgo",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "seated-stretch": {
+      "title": "Étirements assis",
+      "description": "Des étirements doux en position assise pour libérer les tensions.",
+      "previewDescription": "Soulagez les tensions courantes dans les épaules, le cou, le dos et les hanches avec des mouvements réalisables depuis une chaise. Conçu pour une pause au bureau ou une réinitialisation en douceur l'après-midi.",
+      "zodiac": "Libra",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "mindful-listening": {
+      "title": "Écoute consciente",
+      "description": "Une pratique qui centre l'attention par le son.",
+      "previewDescription": "Remarquez les sons proches et lointains sans les juger ni les poursuivre. Cette pratique d'écoute peut aider à élargir votre attention lorsque les pensées semblent bruyantes et vous ramener à votre environnement.",
+      "zodiac": "Scorpio",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "affirmation-breath": {
+      "title": "Respiration avec affirmation",
+      "description": "Associez une phrase apaisante à votre respiration.",
+      "previewDescription": "Accordez une respiration régulière à une phrase qui vous soutient, telle que « Je peux prendre ce moment étape par étape ». Un petit rituel pour renforcer la confiance avant que la journée ne s'accélère.",
+      "zodiac": "Sagittarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "stress-release": {
+      "title": "Libération du stress",
+      "description": "Remarquer, nommer et adoucir ce que vous portez.",
+      "previewDescription": "Faites une pause assez longue pour identifier ce qui demande votre attention au lieu de le porter comme un poids indifférencié. Cette réinitialisation réflexive vous aide à nommer la pression et à choisir une prochaine étape plus douce.",
+      "zodiac": "Capricorn",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "morning-intention": {
+      "title": "Intention matinale",
+      "description": "Une pratique simple pour définir une intention pour la journée.",
+      "previewDescription": "Commencez par une qualité que vous souhaitez apporter aux prochaines heures : patience, concentration, ouverture ou bienveillance. C'est un moyen bref de choisir comment vous voulez aborder la journée plutôt que de vous y précipiter.",
+      "zodiac": "Aquarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "sleep-wind-down": {
+      "title": "Préparation au sommeil",
+      "description": "Une pratique calme pour préparer votre corps au repos.",
+      "previewDescription": "Ralentissez la transition d'une journée bien remplie vers un état plus doux et plus calme. Une conscience corporelle douce et une respiration lente vous aident à lâcher prise sur le besoin de tout résoudre avant de dormir.",
+      "zodiac": "Pisces",
+      "kind": "scripted",
+      "duration": "~7 min · 24 steps"
+    }
+  },
+  "sessions": {
+    "caregiver-fatigue": [
+      {
+        "key": "cf1",
+        "text": "Merci de vous joindre à moi pour cette courte méditation."
+      },
+      {
+        "key": "cf2",
+        "text": "Dans cette brève pratique, nous explorerons quelques étapes simples pour nous ressourcer lorsque nous nous sentons épuisés ou dépassés par nos efforts pour aider les autres."
+      },
+      {
+        "key": "cf3",
+        "text": "Installez-vous confortablement. Vous pouvez fermer les yeux si vous le souhaitez, ou les garder doucement ouverts avec un regard doux et détendu."
+      },
+      {
+        "key": "cf4",
+        "text": "En vous installant, prenez quelques respirations lentes et apaisantes. Et remarquez ce que cela fait de respirer."
+      },
+      {
+        "key": "cf5",
+        "text": "Maintenant, laissez votre respiration reprendre son rythme normal. Accordez-vous quelques instants pour vous reposer et vous ressourcer en vous ancrant pleinement dans l'ici et maintenant."
+      },
+      {
+        "key": "cf6",
+        "text": "Très bien. Maintenant, nous allons changer de perspective et puiser dans notre capacité à accueillir la souffrance des autres de manière saine."
+      },
+      {
+        "key": "cf7",
+        "text": "L'empathie peut être un pont vers le soin et la compassion, mais elle peut aussi nous conduire à un état de submersion — ce que les scientifiques appellent la détresse empathique."
+      },
+      {
+        "key": "cf8",
+        "text": "Un moyen simple d'éviter ce sentiment d'être dépassé est de vous ancrer dans une motivation bienveillante. Essayons cela."
+      },
+      {
+        "key": "cf9",
+        "text": "Commencez par penser à quelqu'un qui vous est cher. Il peut s'agir de la personne dont vous vous occupez ou de toute autre personne qui vous est chère."
+      },
+      {
+        "key": "cf10",
+        "text": "Prenez un moment pour imaginer qu'elle est réellement ici avec vous, et voyez si vous pouvez ressentir le lien profond qui vous unit."
+      },
+      {
+        "key": "cf11",
+        "text": "En vous connectant à ce sentiment, voyez si vous pouvez remarquer votre élan de bienveillance envers cette personne, ou peut-être votre souhait naturel qu'elle soit heureuse et libérée de toute souffrance."
+      },
+      {
+        "key": "cf12",
+        "text": "Si cela vous aide, vous pouvez exprimer cela dans votre esprit. Vous pouvez vous dire : Puisse tu être libéré de la souffrance et des difficultés. Puisse tu avoir tout le bonheur du monde."
+      },
+      {
+        "key": "cf13",
+        "text": "N'hésitez pas à créer vos propres phrases de compassion et à imaginer les partager avec cette personne qui vous est chère."
+      },
+      {
+        "key": "cf14",
+        "text": "Maintenant, pensez à d'autres personnes — ou peut-être à des groupes de personnes, ou même à la Terre elle-même."
+      },
+      {
+        "key": "cf15",
+        "text": "Reconnaissez leur douleur et leur souffrance, ainsi que l'immense résilience que nous possédons tous."
+      },
+      {
+        "key": "cf16",
+        "text": "Imaginez un monde où ils sont libérés de la souffrance et de l'adversité. Voyez si vous pouvez les imaginer heureux, sereins, en bonne santé et équilibrés."
+      },
+      {
+        "key": "cf17",
+        "text": "Laissez votre esprit vagabonder ici et continuez à envoyer des pensées et des phrases bienveillantes et attentionnées dans le monde."
+      },
+      {
+        "key": "cf18",
+        "text": "Ensuite, incluez-vous dans ce cercle de compassion."
+      },
+      {
+        "key": "cf19",
+        "text": "Imaginez les personnes dans votre vie qui prennent soin de vous, ou même des inconnus qui envoient de l'amour et de la compassion dans le monde, tout comme vous le faites."
+      },
+      {
+        "key": "cf20",
+        "text": "Imaginez que toute cette énergie bienveillante coule en vous, et voyez si vous pouvez être ouvert à la recevoir."
+      },
+      {
+        "key": "cf21",
+        "text": "Pour ces derniers instants, remarquez comment vous vous sentez en ce moment, sans aucun jugement."
+      },
+      {
+        "key": "cf22",
+        "text": "Apportez un sentiment d'ouverture, de curiosité et de bienveillance à vos propres pensées et sentiments, quels qu'ils soient."
+      },
+      {
+        "key": "cf23",
+        "text": "Lorsque nous ressentons la souffrance des autres et celle du monde de manière très directe, nos propres sentiments et réactions peuvent facilement nous submerger."
+      },
+      {
+        "key": "cf24",
+        "text": "Ici, nous pratiquons la compétence de nous ancrer dans une motivation bienveillante. Avec cette motivation, nous obtenons un peu plus d'espace pour être avec nos sentiments et nos réactions sans nous laisser emporter par eux."
+      },
+      {
+        "key": "cf25",
+        "text": "J'espère que vous avez trouvé cela utile. Si c'est le cas, voyez si vous pouvez continuer à pratiquer par courts moments au cours des un ou deux prochains jours. Prenez soin de vous et bonne chance dans votre pratique."
+      }
+    ],
+    "mindful-breathing": [
+      {
+        "key": "mb1",
+        "text": "Bonjour et bon retour. Aujourd'hui, nous allons nous concentrer sur une pratique fondamentale : la respiration consciente."
+      },
+      {
+        "key": "mb2",
+        "text": "C'est un outil que vous pouvez utiliser n'importe où, à tout moment, pour vous ancrer et trouver un moment de calme."
+      },
+      {
+        "key": "mb3",
+        "text": "Commencez par trouver une assise confortable. Laissez votre dos droit mais pas rigide."
+      },
+      {
+        "key": "mb4",
+        "text": "Laissez vos mains reposer doucement sur vos genoux ou vos cuisses. Si cela vous convient, fermez les yeux, ou baissez simplement le regard et laissez-le s'adoucir."
+      },
+      {
+        "key": "mb5",
+        "text": "Maintenant, prenez une profonde inspiration par le nez, en sentant vos poumons se gonfler. Et expirez lentement par la bouche."
+      },
+      {
+        "key": "mb6",
+        "text": "Faites-le encore une fois — une inspiration profonde... et une longue expiration."
+      },
+      {
+        "key": "mb7",
+        "text": "Maintenant, laissez votre respiration retrouver son rythme naturel. Vous n'avez pas besoin de la changer ou de la contrôler. Contentez-vous de l'observer."
+      },
+      {
+        "key": "mb8",
+        "text": "Remarquez où vous ressentez le mieux la respiration. Cela peut être l'air frais au bout de votre nez, le soulèvement et l'abaissement de votre poitrine, ou l'expansion et la contraction de votre ventre."
+      },
+      {
+        "key": "mb9",
+        "text": "Pendant que vous êtes assis ici, vous remarquerez peut-être que votre esprit commence à vagabonder. C'est tout à fait normal. C'est ce que font les esprits."
+      },
+      {
+        "key": "mb10",
+        "text": "Lorsque vous réalisez que vos pensées ont dérivé vers le passé, le futur ou une liste de choses à faire, reconnaissez simplement la pensée sans jugement."
+      },
+      {
+        "key": "mb11",
+        "text": "Considérez-la comme un nuage passant dans le ciel. Puis, doucement et avec bienveillance, ramenez votre attention sur la sensation physique de votre respiration."
+      },
+      {
+        "key": "mb12",
+        "text": "De retour à l'inspiration... et à l'expiration."
+      },
+      {
+        "key": "mb13",
+        "text": "Restons ainsi quelques instants en silence. En suivant chaque respiration du début de l'inspiration, à travers la brève pause, jusqu'à la fin de l'expiration."
+      },
+      {
+        "key": "mb14",
+        "text": "Si vous êtes distrait dix fois, ramenez-vous simplement dix fois. Chaque fois que vous revenez à la respiration, vous renforcez votre muscle de pleine conscience."
+      },
+      {
+        "key": "mb15",
+        "text": "Alors que nous terminons cette pratique, prenez un moment pour remarquer comment vous vous sentez. Y a-t-il un sentiment de calme ? Un peu plus d'espace dans votre esprit ?"
+      },
+      {
+        "key": "mb16",
+        "text": "Sachez que cette respiration est toujours disponible pour vous comme une ancre."
+      },
+      {
+        "key": "mb17",
+        "text": "Lorsque vous êtes prêt, remuez doucement vos doigts et vos orteils, et ouvrez lentement les yeux."
+      },
+      {
+        "key": "mb18",
+        "text": "Merci d'avoir pratiqué avec moi aujourd'hui. Emportez ce sentiment de présence avec vous tout au long du reste de votre journée."
+      }
+    ],
+    "body-scan": [
+      {
+        "key": "bs1",
+        "text": "Bienvenue. Trouvez une position confortable — allongé si possible, ou assis avec le dos doucement soutenu."
+      },
+      {
+        "key": "bs2",
+        "text": "Laissez vos yeux se fermer, ou laissez votre regard reposer doucement vers le bas. Donnez-vous la permission d'arriver ici."
+      },
+      {
+        "key": "bs3",
+        "text": "Prenez une profonde inspiration par le nez... et relâchez-la lentement par la bouche. Commencez à lâcher prise."
+      },
+      {
+        "key": "bs4",
+        "text": "Laissez votre respiration reprendre son rythme naturel. Dans cette pratique, nous déplacerons lentement l'attention à travers le corps — simplement en observant, sans essayer de réparer ou de changer quoi que ce soit."
+      },
+      {
+        "key": "bs5",
+        "text": "Portez votre attention jusqu'à vos pieds. Remarquez la plante de vos pieds — toute chaleur, fraîcheur, picotement ou pression. Contentez-vous d'observer."
+      },
+      {
+        "key": "bs6",
+        "text": "Déplacez votre attention vers vos chevilles et vos mollets. Retiennent-ils une tension ? Vous n'avez pas besoin de la changer — soyez simplement conscient de celle-ci."
+      },
+      {
+        "key": "bs7",
+        "text": "Maintenant, portez votre attention sur vos genoux et vos cuisses. Ressentez le poids de vos jambes. Remarquez où elles entrent en contact avec la surface sous vous."
+      },
+      {
+        "key": "bs8",
+        "text": "Laissez votre attention voyager vers vos hanches et le bas de votre dos. Cette zone retient beaucoup de choses pour beaucoup d'entre nous. Respirez ici un instant."
+      },
+      {
+        "key": "bs9",
+        "text": "Remarquez votre ventre. À chaque inspiration, sentez-le se soulever. À chaque expiration, sentez-le s'abaisser. Laissez-le être souple et détendu."
+      },
+      {
+        "key": "bs10",
+        "text": "Portez votre attention sur votre poitrine et la zone autour de votre cœur. Remarquez le doux soulèvement et l'abaissement de votre respiration. Ressentez les battements de votre cœur si vous le pouvez."
+      },
+      {
+        "key": "bs11",
+        "text": "Déplacez votre attention vers le haut de votre dos et vos épaules. Imaginez toute tension retenue commencer à s'apaiser et à se dissoudre à chaque expiration."
+      },
+      {
+        "key": "bs12",
+        "text": "Laissez l'attention couler à travers vos bras — vos coudes, vos avant-bras, vos poignets — jusqu'à vos mains et vos doigts. Remarquez toute chaleur ou pulsation ici."
+      },
+      {
+        "key": "bs13",
+        "text": "Maintenant, portez votre attention sur votre cou et votre gorge. Remarquez s'il y a une quelconque tension. Respirez-y doucement et laissez-la s'adoucir."
+      },
+      {
+        "key": "bs14",
+        "text": "Déplacez votre attention vers votre mâchoire. Laissez-la se desserrer. Laissez votre langue reposer doucement dans votre bouche, vos lèvres s'entrouvrir légèrement."
+      },
+      {
+        "key": "bs15",
+        "text": "Remarquez les muscles autour de vos yeux et sur votre front. Permettez-leur de se lisser et de se détendre, comme si une main douce y reposait."
+      },
+      {
+        "key": "bs16",
+        "text": "Maintenant, élargissez votre conscience pour englober tout votre corps à la fois — du sommet de votre tête jusqu'au bout de vos orteils."
+      },
+      {
+        "key": "bs17",
+        "text": "Tout votre corps, qui respire. Au repos. Vivant."
+      },
+      {
+        "key": "bs18",
+        "text": "Si vous avez remarqué des zones de tension ou d'inconfort, c'est tout à fait naturel. La pratique consiste à remarquer avec bienveillance — pas à juger."
+      },
+      {
+        "key": "bs19",
+        "text": "Restez ici dans cette conscience de tout le corps pendant un moment. Laissez votre respiration être facile. Laissez votre corps être soutenu par la surface sur laquelle vous reposez."
+      },
+      {
+        "key": "bs20",
+        "text": "Vous êtes exactement là où vous devez être, en ce moment."
+      },
+      {
+        "key": "bs21",
+        "text": "Prenez une inspiration lente et profonde... et laissez tout aller."
+      },
+      {
+        "key": "bs22",
+        "text": "Commencez à approfondir doucement votre respiration. Remuez vos doigts et vos orteils pour commencer à réveiller le corps."
+      },
+      {
+        "key": "bs23",
+        "text": "Roulez lentement votre cou d'un côté à l'autre si cela vous semble confortable. Prenez votre temps."
+      },
+      {
+        "key": "bs24",
+        "text": "Lorsque vous êtes prêt, ouvrez doucement les yeux. Il n'y a aucune raison de se précipiter."
+      },
+      {
+        "key": "bs25",
+        "text": "Merci d'avoir pris ce temps pour écouter votre corps. Emportez ce sentiment de sérénité avec vous tout au long du reste de votre journée."
+      }
+    ],
+    "five-senses": [
+      {
+        "key": "fs1",
+        "text": "Bienvenue dans cet exercice d'ancrage. Chaque fois que votre esprit semble dispersé ou anxieux, cet exercice peut vous ramener au moment présent."
+      },
+      {
+        "key": "fs2",
+        "text": "Trouvez une position confortable — assis, debout ou allongé. Sentez vos pieds en contact avec le sol."
+      },
+      {
+        "key": "fs3",
+        "text": "Prenez une inspiration lente par le nez... et une longue expiration. Très bien. Commençons."
+      },
+      {
+        "key": "fs4",
+        "text": "Nous allons explorer vos cinq sens, un par un. Chacun est une ancre vers le moment présent — ici et maintenant."
+      },
+      {
+        "key": "fs5",
+        "text": "Commencez par la vue. Regardez autour de vous et remarquez cinq choses que vous pouvez voir. Prenez votre temps — observez vraiment chacune d'elles."
+      },
+      {
+        "key": "fs6",
+        "text": "Remarquez les couleurs, les textures, les ombres, les formes. Laissez vos yeux se poser sur chaque chose un instant. Un... Deux... Trois... Quatre... Cinq."
+      },
+      {
+        "key": "fs7",
+        "text": "Portez maintenant votre attention sur le toucher. Remarquez quatre sensations que vous pouvez ressentir physiquement — dans votre corps ou sur votre peau."
+      },
+      {
+        "key": "fs8",
+        "text": "Peut-être le poids de vos mains sur vos genoux. La température de l'air. La pression de la chaise sous vous. La texture d'un tissu contre votre peau. Remarquez-en quatre."
+      },
+      {
+        "key": "fs9",
+        "text": "Tournez maintenant votre attention vers l'ouïe. Remarquez trois sons dans votre environnement en ce moment."
+      },
+      {
+        "key": "fs10",
+        "text": "Laissez votre ouïe s'ouvrir — aux sons proches et lointains, forts et faibles. Contentez-vous d'en remarquer trois sans jugement."
+      },
+      {
+        "key": "fs11",
+        "text": "Passez maintenant à l'odorat. Portez votre attention sur ce que vous pouvez sentir — ou simplement sur la qualité de l'air lorsque vous inspirez."
+      },
+      {
+        "key": "fs12",
+        "text": "Prenez une inspiration lente. Peut-être remarquez-vous quelque chose de léger — un parfum dans la pièce, la fraîcheur de l'air, ou simplement la chaleur de votre souffle. Remarquez deux choses."
+      },
+      {
+        "key": "fs13",
+        "text": "Et enfin, remarquez une chose que vous pouvez goûter. Peut-être une saveur persistante, ou simplement la sensation neutre de votre bouche et de votre langue."
+      },
+      {
+        "key": "fs14",
+        "text": "Prenez maintenant un moment pour réunir les cinq sens. Vous voyez, ressentez, entendez, sentez et goûtez — tout à la fois."
+      },
+      {
+        "key": "fs15",
+        "text": "Vous êtes pleinement, complètement ici. Juste dans ce moment."
+      },
+      {
+        "key": "fs16",
+        "text": "Remarquez à quel point cela semble différent de quand nous avons commencé. Ce léger sentiment de stabilité, d'être ancré — c'est réel."
+      },
+      {
+        "key": "fs17",
+        "text": "Cette technique fonctionne en redirigeant votre système nerveux d'une réponse au stress vers une conscience du moment présent."
+      },
+      {
+        "key": "fs18",
+        "text": "Vous pouvez l'utiliser n'importe où — avant une réunion difficile, dans un moment de panique, ou simplement comme une réinitialisation quotidienne."
+      },
+      {
+        "key": "fs19",
+        "text": "Terminons par trois respirations lentes et intentionnelles. Inspirez par le nez... et expirez par la bouche."
+      },
+      {
+        "key": "fs20",
+        "text": "Encore une fois. Inspirez par le nez... et expirez lentement."
+      },
+      {
+        "key": "fs21",
+        "text": "Une dernière fois. Une longue inspiration... et une expiration complète."
+      },
+      {
+        "key": "fs22",
+        "text": "Lorsque vous vous sentez instable, revenez à vos sens. Cinq choses que vous voyez, quatre que vous ressentez, trois que vous entendez, deux que vous sentez, une que vous goûtez."
+      },
+      {
+        "key": "fs23",
+        "text": "Le moment présent est toujours là, à vous attendre."
+      },
+      {
+        "key": "fs24",
+        "text": "Très bien. Merci d'avoir pratiqué aujourd'hui."
+      }
+    ],
+    "loving-kindness": [
+      {
+        "key": "lk1",
+        "text": "Bienvenue dans cette méditation de bienveillance, parfois appelée pratique de Metta."
+      },
+      {
+        "key": "lk2",
+        "text": "Dans cette pratique, nous cultivons doucement des sentiments de chaleur et de bienveillance — envers nous-mêmes d'abord, puis vers les autres."
+      },
+      {
+        "key": "lk3",
+        "text": "Trouvez une assise confortable. Laissez vos mains reposer sur vos genoux et fermez les yeux."
+      },
+      {
+        "key": "lk4",
+        "text": "Prenez quelques respirations lentes et naturelles. Laissez chaque expiration libérer un peu de ce que vous portez aujourd'hui."
+      },
+      {
+        "key": "lk5",
+        "text": "Nous commençons par nous-mêmes — non par égoïsme, mais parce qu'une compassion authentique doit nous inclure pour être entière."
+      },
+      {
+        "key": "lk6",
+        "text": "Visualisez-vous tel que vous êtes en ce moment. Vous pouvez trouver cela facile, ou cela peut sembler un peu inconfortable. Les deux sont acceptables."
+      },
+      {
+        "key": "lk7",
+        "text": "Répétez silencieusement ces phrases pour vous-même : Puis-je être en sécurité. Puis-je être en bonne santé. Puis-je être heureux. Puis-je vivre avec aisance."
+      },
+      {
+        "key": "lk8",
+        "text": "Laissez les mots s'installer sans forcer aucun sentiment particulier. Le simple fait de poser l'intention suffit."
+      },
+      {
+        "key": "lk9",
+        "text": "Encore une fois : Puis-je être en sécurité. Puis-je être en bonne santé. Puis-je être heureux. Puis-je vivre avec aisance."
+      },
+      {
+        "key": "lk10",
+        "text": "Pensez maintenant à quelqu'un que vous aimez facilement — un ami proche, un membre de votre famille, un enfant ou un animal dont la présence vous remplit de chaleur."
+      },
+      {
+        "key": "lk11",
+        "text": "Visualisez-les clairement. Laissez-vous ressentir l'affection naturelle que vous avez pour eux."
+      },
+      {
+        "key": "lk12",
+        "text": "Envoyez-leur ces mêmes vœux : Puissiez-vous être en sécurité. Puissiez-vous être en bonne santé. Puissiez-vous être heureux. Puissiez-vous vivre avec aisance."
+      },
+      {
+        "key": "lk13",
+        "text": "Ressentez cette chaleur couler de votre cœur vers eux, comme une douce lumière traversant la distance entre vous."
+      },
+      {
+        "key": "lk14",
+        "text": "Pensez maintenant à une personne neutre — quelqu'un que vous croisez dans la vie quotidienne mais que vous ne connaissez pas bien. Un voisin, un caissier, un inconnu dans la rue."
+      },
+      {
+        "key": "lk15",
+        "text": "Cette personne, comme vous, a une vie intérieure riche — joies et peines, espoirs et peurs. Offrez-lui la même bienveillance : Puissiez-vous être en sécurité. Puissiez-vous être en bonne santé. Puissiez-vous être heureux. Puissiez-vous vivre avec aisance."
+      },
+      {
+        "key": "lk16",
+        "text": "Maintenant, si vous vous sentez prêt, pensez à quelqu'un avec qui la relation est difficile. Vous n'avez pas besoin d'approuver ce qu'ils ont fait."
+      },
+      {
+        "key": "lk17",
+        "text": "Reconnaissez simplement qu'ils portent aussi une souffrance. Ils souhaitent aussi être libérés de la douleur. Du mieux que vous pouvez, offrez : Puissiez-vous être en sécurité. Puissiez-vous être en bonne santé. Puissiez-vous être heureux. Puissiez-vous vivre avec aisance."
+      },
+      {
+        "key": "lk18",
+        "text": "Si cela semble trop difficile aujourd'hui, revenez simplement à vous-même. La compassion est une pratique, pas un test."
+      },
+      {
+        "key": "lk19",
+        "text": "Enfin, laissez votre conscience s'étendre pour inclure tous les êtres partout — chaque personne, chaque créature sur cette Terre."
+      },
+      {
+        "key": "lk20",
+        "text": "Que tous les êtres soient en sécurité. Que tous les êtres soient en bonne santé. Que tous les êtres soient heureux. Que tous les êtres vivent avec aisance."
+      },
+      {
+        "key": "lk21",
+        "text": "Ressentez le cercle complet de cette compassion — commençant par votre propre cœur, se propageant vers toute la vie."
+      },
+      {
+        "key": "lk22",
+        "text": "Reposez-vous là un instant. Respirant. Ouvert. Bienveillant."
+      },
+      {
+        "key": "lk23",
+        "text": "Remarquez comment vous vous sentez. Peut-être y a-t-il une douce chaleur, ou un sentiment d'ouverture, ou simplement du calme."
+      },
+      {
+        "key": "lk24",
+        "text": "Prenez une inspiration lente et complète... et relâchez doucement."
+      },
+      {
+        "key": "lk25",
+        "text": "La bienveillance que vous avez offerte aujourd'hui est réelle. Emportez-la avec vous. Merci d'avoir pratiqué."
+      }
+    ],
+    "mindful-walking": [
+      {
+        "key": "mw1",
+        "text": "Bienvenue dans cette pratique de marche en pleine conscience. Vous aurez besoin d'un espace calme pour marcher lentement — même quelques pas en arrière et en avant suffisent."
+      },
+      {
+        "key": "mw2",
+        "text": "Avant de commencer à bouger, restez immobile un instant. Sentez vos pieds fermement sur le sol."
+      },
+      {
+        "key": "mw3",
+        "text": "Prenez une inspiration lente... et relâchez. Laissez votre corps arriver ici."
+      },
+      {
+        "key": "mw4",
+        "text": "Prenez conscience de votre posture. Tenez-vous droit avec douceur, les épaules détendues et le regard doux — tourné légèrement vers l'avant et vers le bas."
+      },
+      {
+        "key": "mw5",
+        "text": "Portez maintenant toute votre attention sur vos pieds. Remarquez le poids de votre corps couler à travers vos jambes et dans le sol sous vous."
+      },
+      {
+        "key": "mw6",
+        "text": "Commencez à marcher très lentement. Beaucoup plus lentement que vous ne le feriez normalement. À chaque pas, remarquez les mouvements subtils impliqués."
+      },
+      {
+        "key": "mw7",
+        "text": "Lorsque vous levez le pied — sentez le talon se soulever, puis la plante du pied, puis les orteils."
+      },
+      {
+        "key": "mw8",
+        "text": "Lorsque vous posez le pied — sentez le talon entrer en contact en premier, puis la voûte plantaire, puis les orteils qui se posent."
+      },
+      {
+        "key": "mw9",
+        "text": "Lever. Déplacer. Poser. C'est tout. Lever. Déplacer. Poser."
+      },
+      {
+        "key": "mw10",
+        "text": "Si votre esprit s'égare — vers des tâches, des soucis, ou un sentiment de gêne — remarquez-le simplement et ramenez doucement votre attention sur vos pieds."
+      },
+      {
+        "key": "mw11",
+        "text": "Commencez maintenant à coordonner votre respiration avec vos pas. Inspirez pendant deux ou trois pas... et expirez pendant deux ou trois pas."
+      },
+      {
+        "key": "mw12",
+        "text": "Laissez vos bras pendre naturellement le long de votre corps. Vous n'avez rien à faire avec eux. Marchez simplement."
+      },
+      {
+        "key": "mw13",
+        "text": "Remarquez le sol sous vous. Dur ou mou. Chaud ou froid. Stable."
+      },
+      {
+        "key": "mw14",
+        "text": "Remarquez votre environnement sans vous laisser entraîner par lui. Laissez-le simplement être la toile de fond de votre mouvement."
+      },
+      {
+        "key": "mw15",
+        "text": "Continuez à marcher lentement. Chaque pas est complet en soi. Chaque pas est une arrivée."
+      },
+      {
+        "key": "mw16",
+        "text": "Si vous vous sentez agité ou ridicule, c'est tout à fait naturel. Remarquez simplement ce sentiment et continuez à marcher."
+      },
+      {
+        "key": "mw17",
+        "text": "Cette pratique consiste à remarquer ce qui se passe toujours mais qui est généralement ignoré — le miracle du mouvement, le cadeau d'un corps qui vous porte à travers le monde."
+      },
+      {
+        "key": "mw18",
+        "text": "Commencez à ralentir encore plus votre rythme. Faites une dernière marche lente dans votre espace, avec une attention totale."
+      },
+      {
+        "key": "mw19",
+        "text": "Arrêtez-vous maintenant doucement. Restez immobile une fois de plus. Sentez vos pieds sur le sol."
+      },
+      {
+        "key": "mw20",
+        "text": "Prenez une inspiration lente... et une longue expiration."
+      },
+      {
+        "key": "mw21",
+        "text": "Remarquez comment vous vous sentez en ce moment par rapport à quand vous avez commencé. Même une courte période de mouvement conscient peut changer quelque chose."
+      },
+      {
+        "key": "mw22",
+        "text": "Merci de vous être déplacé avec intention aujourd'hui. Vous pouvez emporter cette qualité d'attention dans n'importe quelle marche que vous faites."
+      }
+    ],
+    "seated-stretch": [
+      {
+        "key": "ss1",
+        "text": "Bienvenue dans cette séance d'étirements assis. Cette pratique libère les tensions accumulées dans le corps — aucun équipement n'est nécessaire, juste votre chaise."
+      },
+      {
+        "key": "ss2",
+        "text": "Asseyez-vous vers le bord avant de votre siège, les pieds à plat sur le sol, écartés à la largeur des hanches."
+      },
+      {
+        "key": "ss3",
+        "text": "Prenez une inspiration lente... et relâchez. Laissez vos épaules s'éloigner de vos oreilles."
+      },
+      {
+        "key": "ss4",
+        "text": "Commençons par vos épaules. Inspirez en les montant vers vos oreilles... puis roulez-les vers l'arrière et vers le bas en expirant. Répétez ce mouvement quelques fois à votre propre rythme."
+      },
+      {
+        "key": "ss5",
+        "text": "Maintenant, roulez-les vers l'avant — en haut, vers l'avant et vers le bas. Laissez toute tension commencer à se dissiper."
+      },
+      {
+        "key": "ss6",
+        "text": "Tournez doucement la tête vers la droite, comme si vous regardiez par-dessus votre épaule. Maintenez la position pendant une ou deux respirations. Puis revenez lentement au centre."
+      },
+      {
+        "key": "ss7",
+        "text": "Tournez maintenant la tête vers la gauche. Maintenez. Revenez au centre."
+      },
+      {
+        "key": "ss8",
+        "text": "Abaissez doucement votre oreille droite vers votre épaule droite, en étirant le côté gauche de votre cou. Gardez votre épaule gauche détendue. Respirez dans l'étirement."
+      },
+      {
+        "key": "ss9",
+        "text": "Revenez lentement au centre, puis abaissez votre oreille gauche vers votre épaule gauche. Respirez dans le côté droit de votre cou."
+      },
+      {
+        "key": "ss10",
+        "text": "Revenez au centre. Prenez une inspiration."
+      },
+      {
+        "key": "ss11",
+        "text": "Entrelacez vos doigts et étirez vos bras devant vous, paumes tournées vers l'extérieur. Sentez l'étirement dans le haut du dos et les épaules."
+      },
+      {
+        "key": "ss12",
+        "text": "Puis levez vos bras au-dessus de votre tête, paumes tournées vers le haut. Prenez une inspiration complète en vous étirant vers le haut... et relâchez vos bras en expirant."
+      },
+      {
+        "key": "ss13",
+        "text": "Tournez doucement vers la droite, en plaçant votre main gauche sur votre genou droit et votre main droite sur le dossier de la chaise. Respirez dans la torsion."
+      },
+      {
+        "key": "ss14",
+        "text": "Revenez lentement et répétez de l'autre côté — tournez vers la gauche, main droite sur le genou gauche, main gauche derrière. Respirez."
+      },
+      {
+        "key": "ss15",
+        "text": "Revenez au centre."
+      },
+      {
+        "key": "ss16",
+        "text": "Étendez votre jambe droite devant vous, en fléchissant et en pointant le pied quelques fois pour réveiller la cheville et le mollet. Puis reposez-la."
+      },
+      {
+        "key": "ss17",
+        "text": "Maintenant la jambe gauche — étendez, fléchissez, pointez. Puis revenez."
+      },
+      {
+        "key": "ss18",
+        "text": "Entrelacez vos doigts derrière le bas de votre dos si cela est confortable, et ouvrez doucement la poitrine en rapprochant les omoplates. Prenez une inspiration ici."
+      },
+      {
+        "key": "ss19",
+        "text": "Relâchez. Laissez vos mains reposer sur vos genoux. Arrondissez doucement votre colonne vertébrale en rentrant le menton — comme si vous vous faisiez un câlin de l'intérieur. Prenez une inspiration."
+      },
+      {
+        "key": "ss20",
+        "text": "Revenez lentement à une position assise neutre et droite."
+      },
+      {
+        "key": "ss21",
+        "text": "Prenez une dernière inspiration complète par le nez — en laissant votre ventre se gonfler, puis votre poitrine — et une longue expiration lente."
+      },
+      {
+        "key": "ss22",
+        "text": "Très bien. Vous avez offert une pause à votre corps. Gardez ce sentiment de légèreté pour tout ce qui suit."
+      }
+    ],
+    "mindful-listening": [
+      {
+        "key": "ml1",
+        "text": "Bienvenue dans cette pratique d'écoute attentive. Le son est toujours présent, mais nous lui accordons rarement toute notre attention."
+      },
+      {
+        "key": "ml2",
+        "text": "Trouvez une position assise confortable. Vous pouvez fermer les yeux pour cette pratique, ce qui vous aidera à vous concentrer plus profondément sur ce que vous entendez."
+      },
+      {
+        "key": "ml3",
+        "text": "Prenez une inspiration lente... et expirez. Laissez votre corps se détendre."
+      },
+      {
+        "key": "ml4",
+        "text": "Pendant un instant, remarquez simplement qu'il y a du son dans votre environnement. Vous n'avez pas besoin de l'identifier ou de l'analyser — remarquez juste que le son existe."
+      },
+      {
+        "key": "ml5",
+        "text": "Maintenant, élargissez votre conscience à tout le paysage sonore qui vous entoure. Comme si vous ouvriez une fenêtre, laissez entrer tous les sons — proches et lointains, forts et doux."
+      },
+      {
+        "key": "ml6",
+        "text": "Remarquez le son le plus proche de vous. Quelle est sa qualité ? Est-il aigu ou doux ? Constant ou intermittent ? Observez simplement."
+      },
+      {
+        "key": "ml7",
+        "text": "Laissez maintenant votre conscience voyager vers le son le plus lointain que vous puissiez détecter. Peut-être une voiture au loin, le vent, ou des voix venant d'une autre pièce. Remarquez-le sans le poursuivre."
+      },
+      {
+        "key": "ml8",
+        "text": "Laissez votre ouïe se déplacer avec fluidité entre le proche et le lointain — comme un objectif grand angle, englobant tout le champ sonore."
+      },
+      {
+        "key": "ml9",
+        "text": "Plutôt que de vous concentrer sur ce qu'est quelque chose, essayez de remarquer les qualités pures des sons. Haut ou bas. Lisse ou saccadé. Fort ou calme."
+      },
+      {
+        "key": "ml10",
+        "text": "Remarquez que les sons apparaissent... et disparaissent. Chaque son a un début, une durée et une fin."
+      },
+      {
+        "key": "ml11",
+        "text": "Si vous vous surprenez à étiqueter les sons — 'c'est une voiture, c'est un oiseau' — remarquez simplement l'étiquette et revenez à l'expérience brute de l'écoute."
+      },
+      {
+        "key": "ml12",
+        "text": "Vous remarquerez peut-être le silence entre les sons. Reposez-vous aussi dans ce silence. C'est une sorte de son en soi."
+      },
+      {
+        "key": "ml13",
+        "text": "Portez maintenant votre attention sur le son de votre propre respiration. Le léger souffle de l'air à l'inspiration. Le relâchement plus doux de l'expiration."
+      },
+      {
+        "key": "ml14",
+        "text": "Remarquez le rythme de votre respiration comme un son. Régulier. Vivant."
+      },
+      {
+        "key": "ml15",
+        "text": "Élargissez à nouveau au paysage sonore complet — votre respiration et l'environnement ensemble."
+      },
+      {
+        "key": "ml16",
+        "text": "Remarquez que tous ces sons se produisent en même temps, et que votre conscience peut les accueillir tous sans effort."
+      },
+      {
+        "key": "ml17",
+        "text": "Pendant un moment, lâchez tout effort. Asseyez-vous simplement, et laissez le son vous envelopper sans saisir ni repousser quoi que ce soit."
+      },
+      {
+        "key": "ml18",
+        "text": "C'est la nature de l'écoute attentive — ouverte, réceptive, sans effort."
+      },
+      {
+        "key": "ml19",
+        "text": "Ramenez lentement votre attention dans la pièce. Prenez une inspiration."
+      },
+      {
+        "key": "ml20",
+        "text": "Remarquez à quel point le son semble différent lorsque vous écoutez avec une attention totale plutôt qu'à moitié."
+      },
+      {
+        "key": "ml21",
+        "text": "Cette qualité d'écoute — spacieuse, ouverte, sans jugement — peut également être offerte aux personnes de votre vie."
+      },
+      {
+        "key": "ml22",
+        "text": "Quand vous êtes prêt, ouvrez doucement les yeux. Merci d'avoir écouté aujourd'hui."
+      }
+    ],
+    "affirmation-breath": [
+      {
+        "key": "ab1",
+        "text": "Bienvenue dans cette pratique de respiration avec affirmations. Nous allons associer une phrase apaisante au rythme naturel de votre respiration."
+      },
+      {
+        "key": "ab2",
+        "text": "Trouvez une position confortable et droite. Laissez vos mains reposer doucement sur vos genoux."
+      },
+      {
+        "key": "ab3",
+        "text": "Fermez les yeux et prenez quelques respirations naturelles. Arrivez simplement ici."
+      },
+      {
+        "key": "ab4",
+        "text": "Dans cette pratique, nous utilisons une courte phrase — une affirmation — comme point de concentration pour chaque inspiration et expiration. Les mots suivent le souffle."
+      },
+      {
+        "key": "ab5",
+        "text": "Commençons. En inspirant, dites silencieusement : 'J'inspire le calme.' En expirant : 'Je relâche la tension.'"
+      },
+      {
+        "key": "ab6",
+        "text": "Inspirez le calme... et expirez la tension. Laissez les mots suivre doucement le souffle."
+      },
+      {
+        "key": "ab7",
+        "text": "Encore. Inspirez le calme... expirez la tension."
+      },
+      {
+        "key": "ab8",
+        "text": "Changeons maintenant de phrase. Inspirez et dites silencieusement : 'Je suis présent.' Expirez : 'Je lâche prise.'"
+      },
+      {
+        "key": "ab9",
+        "text": "Je suis présent... Je lâche prise."
+      },
+      {
+        "key": "ab10",
+        "text": "Je suis présent... Je lâche prise."
+      },
+      {
+        "key": "ab11",
+        "text": "Essayez maintenant : 'Je suis suffisant.' Inspirez ces mots. Et à l'expiration : 'Tout va bien.'"
+      },
+      {
+        "key": "ab12",
+        "text": "Je suis suffisant... Tout va bien."
+      },
+      {
+        "key": "ab13",
+        "text": "Je suis suffisant... Tout va bien."
+      },
+      {
+        "key": "ab14",
+        "text": "Un dernier duo. Inspirez : 'Je choisis la paix.' Expirez : 'Je relâche ce que je ne peux pas contrôler.'"
+      },
+      {
+        "key": "ab15",
+        "text": "Je choisis la paix... Je relâche ce que je ne peux pas contrôler."
+      },
+      {
+        "key": "ab16",
+        "text": "Je choisis la paix... Je relâche ce que je ne peux pas contrôler."
+      },
+      {
+        "key": "ab17",
+        "text": "Maintenant, lâchez toute phrase spécifique. Respirez simplement — naturellement, facilement — et laissez votre corps ressentir la vérité de ces mots."
+      },
+      {
+        "key": "ab18",
+        "text": "Vous êtes calme. Vous êtes présent. Vous êtes suffisant. Vous êtes en paix."
+      },
+      {
+        "key": "ab19",
+        "text": "Prenez une dernière inspiration profonde — en inspirant tout ce dont vous avez besoin... et en relâchant à l'expiration tout ce dont vous n'avez pas besoin."
+      },
+      {
+        "key": "ab20",
+        "text": "Très bien. Ces affirmations sont à vous. Revenez-y chaque fois que vous avez besoin d'un moment de stabilité."
+      }
+    ],
+    "stress-release": [
+      {
+        "key": "sr1",
+        "text": "Bienvenue dans ce moment de libération du stress. Nous allons prendre quelques minutes pour remarquer, nommer et apaiser ce que vous portez en ce moment."
+      },
+      {
+        "key": "sr2",
+        "text": "Trouvez une position confortable. Vous n'avez rien à préparer ni à arranger — arrivez simplement tel que vous êtes."
+      },
+      {
+        "key": "sr3",
+        "text": "Prenez une inspiration lente par le nez... et expirez complètement par la bouche. Laissez cela être un signal pour vous-même qu'il est permis de faire une pause."
+      },
+      {
+        "key": "sr4",
+        "text": "Commençons par faire un point sur votre corps. Scannez depuis vos épaules jusqu'à votre estomac. Où retenez-vous des tensions en ce moment ?"
+      },
+      {
+        "key": "sr5",
+        "text": "Peut-être que votre mâchoire est serrée, ou que vos épaules sont remontées. Peut-être y a-t-il un nœud dans votre poitrine ou une lourdeur dans votre ventre. Remarquez-le simplement."
+      },
+      {
+        "key": "sr6",
+        "text": "Quoi que vous trouviez, permettez-lui d'être là. Vous n'avez pas besoin de le faire disparaître. Reconnaissez simplement : « Je remarque une tension ici. »"
+      },
+      {
+        "key": "sr7",
+        "text": "Maintenant, faites un point sur vos pensées. Qu'est-ce qui a occupé votre esprit aujourd'hui ? Sans analyser, remarquez la tonalité générale — occupé, inquiet, dispersé, engourdi ?"
+      },
+      {
+        "key": "sr8",
+        "text": "Nommez-le. « Mon esprit se sent __. » Nommer une expérience diminue son emprise sur nous."
+      },
+      {
+        "key": "sr9",
+        "text": "Maintenant, faites un point sur vos émotions. Pas ce que vous pensez devoir ressentir, mais ce qui est réellement là. Frustration ? Tristesse ? Anxiété ? Épuisement ?"
+      },
+      {
+        "key": "sr10",
+        "text": "Nommez cela aussi. « En ce moment, je ressens __. » Il n'y a pas de mauvaise réponse."
+      },
+      {
+        "key": "sr11",
+        "text": "Prenez une inspiration. Vous venez de faire quelque chose d'important — vous avez regardé honnêtement votre propre expérience intérieure."
+      },
+      {
+        "key": "sr12",
+        "text": "Maintenant, commençons à nous apaiser. À votre prochaine expiration, imaginez que vous relâchez un peu de la tension dans votre corps. Pas toute, juste un peu."
+      },
+      {
+        "key": "sr13",
+        "text": "Et une autre expiration — laissez-en partir un peu plus."
+      },
+      {
+        "key": "sr14",
+        "text": "Inspirez de la stabilité... et expirez ce dont vous n'avez plus besoin."
+      },
+      {
+        "key": "sr15",
+        "text": "Placez une main sur votre poitrine et l'autre sur votre ventre. Sentez les deux se soulever et s'abaisser au rythme de votre respiration."
+      },
+      {
+        "key": "sr16",
+        "text": "Ce contact — votre propre main sur votre propre corps — est un acte d'auto-compassion. Remarquez ce que cela fait."
+      },
+      {
+        "key": "sr17",
+        "text": "Prenez trois respirations lentes ici, à votre propre rythme. Il n'y a aucune urgence."
+      },
+      {
+        "key": "sr18",
+        "text": "Le stress que vous portez est réel. Les défis sont réels. Et vous, en ce moment, vous les gérez."
+      },
+      {
+        "key": "sr19",
+        "text": "Vous êtes plus capable que vous ne le réalisez. Vous avez déjà traversé des journées difficiles auparavant. Vous traverserez cela aussi."
+      },
+      {
+        "key": "sr20",
+        "text": "Prenez une dernière respiration — complète et lente — et laissez vos mains revenir sur vos genoux."
+      },
+      {
+        "key": "sr21",
+        "text": "Chaque fois que vous vous sentez submergé aujourd'hui, revenez à ceci : trois respirations lentes, une main sur votre cœur, et la certitude que ce moment passera."
+      },
+      {
+        "key": "sr22",
+        "text": "Merci d'avoir pris ce temps pour vous. Cet acte de conscience est le fondement de tout."
+      }
+    ],
+    "morning-intention": [
+      {
+        "key": "mi1",
+        "text": "Bonjour. Bienvenue dans cette pratique de définition d'intention. Quelques minutes de pleine conscience au début de la journée peuvent donner une tonalité complètement différente à tout ce qui suit."
+      },
+      {
+        "key": "mi2",
+        "text": "Trouvez une position assise confortable. Si vous le pouvez, faites cela avant de regarder votre téléphone ou de commencer toute tâche."
+      },
+      {
+        "key": "mi3",
+        "text": "Prenez une inspiration lente par le nez... et une expiration complète. Laissez votre corps s'éveiller en douceur."
+      },
+      {
+        "key": "mi4",
+        "text": "Un instant, remarquez simplement qu'une nouvelle journée a commencé. Ce qui s'est passé hier appartient au passé. Ce moment est frais."
+      },
+      {
+        "key": "mi5",
+        "text": "Faites un bref point sur votre corps. Comment vous sentez-vous ce matin — physiquement ? Reposé, fatigué, quelque part entre les deux ? Remarquez simplement sans jugement."
+      },
+      {
+        "key": "mi6",
+        "text": "Maintenant, faites un point sur votre humeur. Quelle est la tonalité émotionnelle de votre matinée ? Encore une fois, remarquez simplement — pas besoin de changer quoi que ce soit."
+      },
+      {
+        "key": "mi7",
+        "text": "Passons maintenant à l'intention. Une intention est différente d'un objectif. Un objectif est quelque chose que vous atteignez. Une intention est une qualité que vous voulez apporter à votre journée."
+      },
+      {
+        "key": "mi8",
+        "text": "Demandez-vous : comment est-ce que je veux être aujourd'hui ? Quelle qualité est-ce que je souhaite le plus apporter à mes actions et à mes interactions ?"
+      },
+      {
+        "key": "mi9",
+        "text": "Peut-être est-ce la patience. Ou la présence. Ou le courage. Ou la bienveillance. Ou simplement la légèreté."
+      },
+      {
+        "key": "mi10",
+        "text": "Laissez un mot ou une phrase venir à vous. Ne réfléchissez pas trop. Faites confiance à ce qui émerge."
+      },
+      {
+        "key": "mi11",
+        "text": "Gardez cette intention doucement dans votre esprit. Dites-la vous-même une fois : « Aujourd'hui, j'ai l'intention d'être __. » Faites-la vôtre."
+      },
+      {
+        "key": "mi12",
+        "text": "Prenez une respiration et laissez cette intention s'installer dans votre corps. Où la ressentez-vous ? Dans votre poitrine ? Vos épaules ? Votre souffle ?"
+      },
+      {
+        "key": "mi13",
+        "text": "Maintenant, pensez à une petite action concrète que vous pouvez faire ce matin et qui s'aligne avec cette intention. Juste une petite chose."
+      },
+      {
+        "key": "mi14",
+        "text": "Vous n'avez pas besoin de changer toute la journée. Vous avez seulement besoin de faire le prochain pas."
+      },
+      {
+        "key": "mi15",
+        "text": "Prenez une autre respiration. Sentez la calme disponibilité dans votre corps — l'alerte naturelle d'un nouveau matin."
+      },
+      {
+        "key": "mi16",
+        "text": "Quoi que cette journée apporte, vous l'avez déjà commencée avec conscience et intention. Cela change les choses."
+      },
+      {
+        "key": "mi17",
+        "text": "Prenez une dernière inspiration profonde, en remplissant complètement vos poumons... et une longue expiration libératrice."
+      },
+      {
+        "key": "mi18",
+        "text": "Ouvrez doucement les yeux. La journée vous attend."
+      },
+      {
+        "key": "mi19",
+        "text": "Revenez à votre intention chaque fois que vous en avez besoin — écrivez-la, dites-la à voix haute, ou gardez-la simplement dans votre cœur."
+      },
+      {
+        "key": "mi20",
+        "text": "Bonjour. Puisse cette journée être exactement ce dont vous avez besoin."
+      }
+    ],
+    "sleep-wind-down": [
+      {
+        "key": "sw1",
+        "text": "Bienvenue dans cette pratique de préparation au sommeil. Vous avez traversé une autre journée. Il est temps de laisser la journée derrière vous et de préparer votre corps et votre esprit au repos."
+      },
+      {
+        "key": "sw2",
+        "text": "Trouvez une position confortable dans votre lit, allongé sur le dos si possible. Laissez vos jambes décroisées et vos bras reposer le long de votre corps."
+      },
+      {
+        "key": "sw3",
+        "text": "Laissez vos yeux se fermer. Il n'y a rien que vous ayez besoin de faire en ce moment. Rien à vérifier. Nulle part où aller."
+      },
+      {
+        "key": "sw4",
+        "text": "Prenez une inspiration lente par le nez, en laissant votre ventre se soulever... et une longue expiration lente par les lèvres légèrement entrouvertes. Laissez la journée commencer à s'effacer."
+      },
+      {
+        "key": "sw5",
+        "text": "Encore. Inspirez... et expirez complètement."
+      },
+      {
+        "key": "sw6",
+        "text": "Relâchons brièvement toute tension du corps. Commencez par votre visage — laissez votre mâchoire se desserrer, votre front se lisser, vos yeux s'adoucir."
+      },
+      {
+        "key": "sw7",
+        "text": "Sentez votre tête s'enfoncer lourdement dans l'oreiller. Laissez votre cou se relâcher."
+      },
+      {
+        "key": "sw8",
+        "text": "Détendez vos épaules. Sentez-les tomber vers le matelas. Laissez vos bras devenir lourds."
+      },
+      {
+        "key": "sw9",
+        "text": "Votre poitrine et votre ventre — doux. Se soulevant et s'abaissant à chaque respiration, sans effort."
+      },
+      {
+        "key": "sw10",
+        "text": "Votre bas du dos — laissez-le relâcher toute tension et s'enfoncer dans le lit."
+      },
+      {
+        "key": "sw11",
+        "text": "Vos jambes — lourdes, chaudes, complètement détendues. Vos pieds — immobiles."
+      },
+      {
+        "key": "sw12",
+        "text": "Tout votre corps, lourd et au repos."
+      },
+      {
+        "key": "sw13",
+        "text": "Maintenant, apaisons l'esprit. Si des pensées surgissent — soucis, listes de choses à faire, souvenirs de la journée — remarquez-les simplement et laissez-les partir doucement. Vous pourrez y revenir demain."
+      },
+      {
+        "key": "sw14",
+        "text": "Imaginez chaque pensée comme un nuage dérivant lentement dans un ciel nocturne. Vous le regardez passer, et le ciel s'éclaircit à nouveau."
+      },
+      {
+        "key": "sw15",
+        "text": "Laissez votre respiration devenir encore plus lente et plus douce. Vous êtes en sécurité. Vous êtes au chaud. On prend soin de vous."
+      },
+      {
+        "key": "sw16",
+        "text": "À chaque expiration, sentez-vous sombrer un peu plus profondément dans la relaxation."
+      },
+      {
+        "key": "sw17",
+        "text": "Il n'y a nulle part où aller. Rien à résoudre. Vous en avez assez fait aujourd'hui."
+      },
+      {
+        "key": "sw18",
+        "text": "Laissez votre conscience devenir douce et diffuse — comme le moment juste avant le sommeil, quand les pensées commencent à se brouiller."
+      },
+      {
+        "key": "sw19",
+        "text": "Respirez simplement. Inspirez... et expirez. Inspirez... et expirez."
+      },
+      {
+        "key": "sw20",
+        "text": "Vous dérivez. La journée est derrière vous. Le repos est là."
+      },
+      {
+        "key": "sw21",
+        "text": "Lâchez tout effort pour vous endormir. Soyez simplement ici, confortable et immobile."
+      },
+      {
+        "key": "sw22",
+        "text": "Inspirez... et expirez."
+      },
+      {
+        "key": "sw23",
+        "text": "Laissez le sommeil venir à vous naturellement, à son propre rythme. Vous êtes déjà en train de vous reposer."
+      },
+      {
+        "key": "sw24",
+        "text": "Bonne nuit. Vous avez bien fait aujourd'hui."
+      }
+    ]
+  },
+  "fortunes": [
+    "Une petite pause révélera la prochaine étape à suivre.",
+    "Votre attention est une forme de soin — placez-la sur quelque chose de doux aujourd'hui.",
+    "Quelque chose d'ordinaire prendra un sens profond si vous ralentissez pour l'observer.",
+    "Vous n'avez pas besoin d'une journée parfaite pour laisser place à un bon moment.",
+    "Laissez la facilité vous être utile. Vous avez le droit d'avancer à un rythme plus bienveillant.",
+    "L'émotion à laquelle vous faites de la place aujourd'hui aura moins de pouvoir sur vous demain.",
+    "Une conversation aujourd'hui pourrait être plus bienveillante que vous ne l'imaginez.",
+    "La réponse pourrait arriver après que vous ayez cessé de la forcer.",
+    "Protéger votre énergie est aussi une forme de progrès.",
+    "Une respiration honnête peut changer le ton de l'heure suivante.",
+    "Laissez un peu de place dans vos projets pour quelque chose de délicieux.",
+    "Une tâche que vous évitiez pourrait sembler plus légère une fois commencée.",
+    "Quelqu'un appréciera le soin que vous apportez à un petit moment.",
+    "Votre effort silencieux construit quelque chose que vous ne pouvez pas encore voir.",
+    "Choisissez la prochaine étape bienveillante, pas tout l'escalier.",
+    "Une limite claire créera de l'espace pour quelque chose de meilleur.",
+    "Aujourd'hui privilégie la curiosité à la certitude.",
+    "Le chemin ordinaire peut contenir la surprise dont vous avez besoin.",
+    "Le repos vous apportera plus que la précipitation.",
+    "Un choix simple fait calmement vous portera vers l'avant.",
+    "Remarquez ce qui devient plus facile quand vous arrêtez de juger le moment.",
+    "Vous savez peut-être déjà ce qui mérite votre attention en premier.",
+    "Un lieu familier offrira une nouvelle perspective aujourd'hui.",
+    "Laissez une chose inachevée sans culpabilité.",
+    "Une question sincère peut ouvrir une porte que l'effort ne peut franchir.",
+    "Offrez à aujourd'hui un petit souvenir qui vaut la peine d'être gardé.",
+    "Votre rythme n'a pas besoin de correspondre à celui de quelqu'un d'autre.",
+    "Quelque chose que vous lâchez rendra le reste plus léger.",
+    "Faites confiance au progrès qui semble silencieux de l'extérieur.",
+    "Un moment de jeu peut restaurer plus qu'une heure de travail supplémentaire."
+  ]
+}

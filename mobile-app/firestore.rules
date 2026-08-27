@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsUserDoc(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function accountIsActive(userId) {
+      return !exists(/databases/$(database)/documents/_account_deletions/$(userId));
+    }
+
+    match /users/{userId} {
+      allow read, delete: if ownsUserDoc(userId);
+      allow create, update: if ownsUserDoc(userId) && accountIsActive(userId);
+
+      match /sessions/{sessionId} {
+        allow read, delete: if ownsUserDoc(userId);
+        allow create, update: if ownsUserDoc(userId) && accountIsActive(userId);
+      }
+    }
+  }
+}

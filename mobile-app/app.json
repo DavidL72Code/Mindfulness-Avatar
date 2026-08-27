@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Mindfulness Avatar",
+    "slug": "mindfulness-avatar-mobile",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "edu.umb.mindfulness",
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.paulmart.application"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      "expo-font",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow Mindfulness Avatar to hear you when you use push-to-talk.",
+          "speechRecognitionPermission": "Allow Mindfulness Avatar to turn your speech into a message for your guide."
+        }
+      ],
+      "expo-status-bar"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bfdbf887-289b-4acc-8eef-9d0aef4b812d"
+      }
+    }
+  }
+}

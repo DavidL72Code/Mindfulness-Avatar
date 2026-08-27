@@ -1,0 +1,1514 @@
+{
+  "locale": "vi",
+  "name": "Vietnamese",
+  "direction": "ltr",
+  "ui": {
+    "signUpHeader": "Tạo tài khoản",
+    "createAccountTitle": "Tạo tài khoản",
+    "fullName": "Họ và tên",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "dateOfBirth": "Ngày sinh",
+    "languageLabel": "Ngôn ngữ ưu tiên",
+    "langEnglish": "Tiếng Anh",
+    "langKorean": "Tiếng Hàn",
+    "createAccountButton": "Tạo tài khoản",
+    "alreadyHaveAccount": "Đã có tài khoản? Đăng nhập",
+    "errorTitle": "Lỗi",
+    "errorFillAll": "Vui lòng điền vào tất cả các trường.",
+    "signUpFailed": "Đăng ký thất bại",
+    "emailInUse": "Địa chỉ email đó đã được sử dụng.",
+    "passwordsDoNotMatch": "Mật khẩu không khớp.",
+    "passwordTooShort": "Sử dụng ít nhất 8 ký tự cho mật khẩu của bạn.",
+    "signUpGenericError": "Chúng tôi không thể tạo tài khoản của bạn. Hãy kiểm tra lại thông tin và thử lại.",
+    "homeTitle": "Chào {name}!",
+    "homeSubtitle": "Trợ lý ảo chánh niệm",
+    "homeTodaysSession": "Phiên hôm nay",
+    "homeSessionOfTheDay": "Phiên trong ngày",
+    "homeAllSessions": "Tất cả các phiên",
+    "homeSession": "Phiên",
+    "chatPlaceholder": "Hỏi về chánh niệm, tính năng ứng dụng hoặc phiên này…",
+    "cardAboutTitle": "Về Trợ lý",
+    "cardAboutText": "AI của chúng tôi được đào tạo để hướng dẫn bạn thực hiện các bài tập chánh niệm.",
+    "cardUsageTitle": "Hướng dẫn sử dụng",
+    "cardUsageText": "Tìm một không gian yên tĩnh và làm theo các hướng dẫn thở.",
+    "cardUpdatesTitle": "Cập nhật gần đây",
+    "cardUpdatesText": "Khả năng xử lý tiếng Hàn đã được cải thiện gần đây.",
+    "cardSettingsTitle": "Cài đặt nhanh",
+    "cardSettingsText": "Tùy chỉnh giao diện và các tùy chọn hỗ trợ tiếp cận tại đây.",
+    "aboutAssistantSection": "Về Trợ lý",
+    "languageHeading": "Ngôn ngữ",
+    "sessionTimeHeading": "Thời gian của bạn",
+    "sessionTimeValue": "Tổng thời gian phiên",
+    "logOut": "Đăng xuất",
+    "homeTab": "Trang chủ",
+    "homeSelectionIntro": "Chọn một bài tập phù hợp với trạng thái hiện tại của bạn.",
+    "homeReadyCount": "{total} phiên khả dụng",
+    "homeFeaturedLabel": "Đề xuất cho hôm nay",
+    "homeOpenPractice": "Bài tập mở",
+    "homeComingSoonHint": "Bài tập này sắp ra mắt.",
+    "homeTapToChoose": "Chạm để chọn",
+    "myStatsTab": "Số liệu thống kê",
+    "profileTab": "Hồ sơ",
+    "signInWelcome": "Chào mừng",
+    "signInSubtitle": "Đăng nhập để tiếp tục",
+    "signInButton": "Đăng nhập",
+    "signInErrorBothFields": "Vui lòng nhập cả email và mật khẩu.",
+    "signInFailedTitle": "Đăng nhập thất bại",
+    "signInFailedBody": "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
+    "signUpPrompt": "Cần một tài khoản? Đăng ký",
+    "signInFooter": "Bản xem trước nội bộ — Đại học Massachusetts Boston. Không dành cho phân phối công cộng.",
+    "profileTitle": "Hồ sơ",
+    "personalInformation": "Thông tin cá nhân",
+    "personalInfoBack": "Quay lại",
+    "personalInfoSave": "Lưu thay đổi",
+    "personalInfoSaving": "Đang lưu…",
+    "personalInfoSavedTitle": "Đã lưu",
+    "personalInfoSavedBody": "Thông tin cá nhân của bạn đã được cập nhật.",
+    "personalInfoSaveFailedTitle": "Không thể lưu",
+    "personalInfoSaveFailedBody": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+    "personalInfoInvalidDob": "Nhập ngày sinh hợp lệ theo định dạng YYYY-MM-DD.",
+    "personalInfoEmailNotUpdatedTitle": "Email chưa được thay đổi",
+    "personalInfoEmailNotUpdatedBody": "Hồ sơ của bạn đã được lưu, nhưng việc thay đổi email đăng nhập có thể yêu cầu đăng nhập lại. Hãy thử đăng xuất và đăng nhập lại, hoặc liên hệ bộ phận hỗ trợ.",
+    "settings": "Cài đặt",
+    "support": "Hỗ trợ",
+    "supportFirstName": "Tên",
+    "supportLastName": "Họ",
+    "supportEmail": "Email",
+    "supportMessage": "Tin nhắn",
+    "supportMessagePlaceholder": "Chúng tôi có thể giúp gì cho bạn?",
+    "supportSend": "Gửi tin nhắn",
+    "supportSending": "Đang gửi…",
+    "supportMissingTitle": "Thiếu thông tin",
+    "supportMissingBody": "Hoàn thành mọi trường trước khi gửi.",
+    "supportInvalidEmailTitle": "Kiểm tra email của bạn",
+    "supportInvalidEmailBody": "Nhập địa chỉ email hợp lệ.",
+    "supportUnavailableTitle": "Hỗ trợ chưa được cấu hình",
+    "supportUnavailableBody": "Liên hệ quản trị viên ứng dụng để kích hoạt tin nhắn hỗ trợ.",
+    "supportSentTitle": "Tin nhắn đã gửi",
+    "supportSentBody": "Chúng tôi đã nhận được tin nhắn của bạn và sẽ phản hồi qua email.",
+    "supportErrorTitle": "Tin nhắn chưa được gửi",
+    "supportErrorBody": "Kiểm tra kết nối của bạn và thử lại.",
+    "accountEyebrow": "TÀI KHOẢN",
+    "signedInAccount": "Tài khoản đã đăng nhập",
+    "privateToAccount": "Riêng tư với tài khoản của bạn",
+    "accountDataScope": "Dữ liệu của bạn được liên kết với tài khoản đã đăng nhập. Các tài khoản khác không thể đọc được.",
+    "accountSection": "Tài khoản của bạn",
+    "privacySection": "Quyền riêng tư",
+    "personalInfoDetail": "Tên, ngày sinh, email và ngôn ngữ",
+    "supportDetail": "Nhận trợ giúp hoặc gửi phản hồi",
+    "signOutDetail": "Xóa phiên tài khoản đang hoạt động trên thiết bị này",
+    "signOutTitle": "Đăng xuất?",
+    "signOutBody": "Tài khoản của bạn vẫn an toàn. Thiết bị này sẽ quên cuộc trò chuyện hiện tại.",
+    "cancel": "Hủy",
+    "signOutConfirm": "Đăng xuất",
+    "privacyPolicy": "Chính sách quyền riêng tư",
+    "privacyPolicyDetail": "Đọc cách thông tin của bạn được xử lý",
+    "accountDeletionInfo": "Thông tin xóa tài khoản",
+    "deleteAccountEyebrow": "HÀNH ĐỘNG VĨNH VIỄN",
+    "deleteAccountTitle": "Xóa tài khoản",
+    "deleteAccountDetail": "Xóa vĩnh viễn tài khoản và hoạt động của bạn",
+    "deleteAccountIntro": "Chúng tôi sẽ gửi một liên kết xác nhận bảo mật đến email trong tài khoản của bạn. Không có gì bị xóa cho đến khi bạn xác nhận từ email đó.",
+    "deleteAccountRemoves": "Hành động này sẽ xóa vĩnh viễn",
+    "deleteAccountProfileData": "Hồ sơ và thông tin cá nhân của bạn",
+    "deleteAccountActivityData": "Lịch sử phiên, chuỗi ngày và thống kê hoạt động",
+    "deleteAccountMoodData": "Các lần kiểm tra tâm trạng đã lưu trên thiết bị này",
+    "deleteAccountEmailDestination": "Xác nhận sẽ được gửi đến",
+    "deleteAccountSendEmail": "Gửi email xác nhận xóa",
+    "deleteAccountLinkExpiry": "Vì bảo mật của bạn, liên kết xác nhận sẽ hết hạn sau 30 phút.",
+    "deleteAccountEmailSentEyebrow": "KIỂM TRA EMAIL CỦA BẠN",
+    "deleteAccountEmailSentTitle": "Đã gửi xác nhận",
+    "deleteAccountEmailSentBody": "Chúng tôi đã gửi một liên kết xóa bảo mật đến {email}. Hãy mở nó và xác nhận để xóa vĩnh viễn tài khoản của bạn.",
+    "deleteAccountNextSteps": "Điều gì sẽ xảy ra tiếp theo",
+    "deleteAccountNextStepsBody": "Việc mở email không xóa bất cứ thứ gì. Hãy xem lại chi tiết trên trang bảo mật, sau đó chọn nút xóa cuối cùng.",
+    "deleteAccountResend": "Gửi email khác",
+    "deleteAccountNeedHelp": "Cần trợ giúp? Liên hệ hỗ trợ",
+    "deleteAccountTooManyAttempts": "Quá nhiều lần thử. Hãy đợi vài phút rồi thử lại.",
+    "deleteAccountNetworkError": "Kiểm tra kết nối của bạn và thử lại.",
+    "deleteAccountRecentLogin": "Vì lý do bảo mật, hãy đăng xuất, đăng nhập lại và thử lại.",
+    "deleteAccountEmailUnavailable": "Dịch vụ email xác nhận hiện không khả dụng. Hãy thử lại sau.",
+    "deleteAccountGenericError": "Email xác nhận không thể gửi được. Hãy thử lại hoặc liên hệ hỗ trợ.",
+    "statsEyebrow": "THỰC HÀNH CỦA BẠN",
+    "statsTitle": "Một kiểu tiến bộ tĩnh lặng hơn",
+    "statsLoading": "Đang tải hoạt động của bạn…",
+    "statsSignedOut": "Đăng nhập để xem hoạt động của bạn.",
+    "statsSubtitle": "Hoạt động chánh niệm của bạn qua tất cả các phiên.",
+    "currentRhythm": "Nhịp điệu hiện tại",
+    "dayCountOne": "{count} ngày",
+    "dayCountMany": "{count} ngày",
+    "keepReturning": "Hãy tiếp tục quay lại khi bạn cần.",
+    "startPractice": "Bắt đầu với một bài tập ngắn hôm nay.",
+    "statsNumbers": "Các con số của bạn",
+    "dayStreak": "Chuỗi ngày",
+    "longestStreak": "Dài nhất: {count} ngày {suffix}",
+    "daysActive": "Ngày hoạt động",
+    "totalUniqueDays": "Tổng số ngày duy nhất",
+    "timeInSessions": "Thời gian trong các phiên",
+    "sessionsCompleted": "Các phiên đã hoàn thành",
+    "recentPractice": "Bài tập gần đây",
+    "noRecentPractice": "Các bài tập đã hoàn thành của bạn sẽ xuất hiện ở đây.",
+    "activityCalendar": "Lịch hoạt động",
+    "activityCalendarSummary": "{days} ngày hoạt động trong {weeks} tuần",
+    "weekdaySun": "CN",
+    "weekdayMon": "T2",
+    "weekdayTue": "T3",
+    "weekdayWed": "T4",
+    "weekdayThu": "T5",
+    "weekdayFri": "T6",
+    "weekdaySat": "T7",
+    "calendarWeek": "Tuần {week}",
+    "lessActivity": "Ít hơn",
+    "moreActivity": "Nhiều hơn",
+    "calendarPrevious": "Xem {month}",
+    "calendarNext": "Xem {month}",
+    "activityTooltip": "{date} · {count} phiên {suffix}",
+    "syncErrorTitle": "Hoạt động không khả dụng",
+    "syncErrorBody": "Kiểm tra kết nối của bạn và thử lại.",
+    "retry": "Thử lại",
+    "welcomeBackNamed": "Chào mừng trở lại, {name}.",
+    "welcomeBack": "Chào mừng trở lại.",
+    "homeWelcomeBody": "Hãy ổn định và chọn một bài tập. Trợ lý của bạn đã sẵn sàng hỗ trợ.",
+    "homeWelcomeQuestion": "Hôm nay bạn cảm thấy thế nào?",
+    "beginPractice": "Bắt đầu {title}",
+    "askGuide": "Hỏi trợ lý",
+    "dayStreakValue": "Chuỗi {count} ngày",
+    "activeDaysValue": "{count} ngày hoạt động",
+    "quickCheckIn": "Kiểm tra nhanh",
+    "sevenDayAverage": "Trung bình 7 ngày",
+    "fortuneMachine": "Máy dự báo",
+    "fortuneDescription": "Quay để nhận một suy nghĩ nhỏ mang theo trong ngày.",
+    "spinFortune": "Quay dự báo",
+    "yourMessageToday": "Thông điệp của bạn hôm nay",
+    "yourActivity": "Hoạt động của bạn",
+    "recommendedStartingPoint": "Điểm bắt đầu được đề xuất",
+    "exploreAllPractices": "Khám phá tất cả các bài tập",
+    "availableCount": "{count} khả dụng",
+    "start": "Bắt đầu",
+    "endSession": "Kết thúc phiên",
+    "statusNotStarted": "Chưa bắt đầu",
+    "sessionActive": "Phiên đang hoạt động",
+    "next": "Tiếp theo",
+    "finish": "Hoàn thành",
+    "passageProgress": "Đoạn {current} trên {total}",
+    "welcomeGuideNamed": "Chào mừng trở lại, {name}. Hãy ổn định và chọn một bài tập. Trợ lý của bạn đã sẵn sàng hỗ trợ. Hôm nay bạn cảm thấy thế nào?",
+    "welcomeGuide": "Chào mừng trở lại. Hãy ổn định và chọn một bài tập. Trợ lý của bạn đã sẵn sàng hỗ trợ. Hôm nay bạn cảm thấy thế nào?",
+    "assistantWelcome": "Xin chào, tôi là trợ lý chánh niệm của bạn. Tôi ở đây để hỗ trợ bạn. Hôm nay bạn thế nào?",
+    "assistantReady": "Trợ lý chánh niệm của bạn đã sẵn sàng.",
+    "moodLow": "Thấp",
+    "moodTender": "Nhạy cảm",
+    "moodSteady": "Ổn định",
+    "moodGood": "Tốt",
+    "moodBright": "Tươi sáng",
+    "moodSaved": "Đã lưu cho hôm nay.",
+    "loadingTranslations": "Đang tải ngôn ngữ của bạn…",
+    "translationFallback": "Nội dung này chưa có trong ngôn ngữ của bạn. Đang hiển thị tiếng Anh.",
+    "guideButton": "Trợ lý",
+    "mindfulnessAssistant": "Trợ lý chánh niệm",
+    "hideGuide": "Ẩn trợ lý",
+    "sessionCompleteTitle": "Bạn đã dành không gian cho chính mình",
+    "sessionLength": "Thời lượng phiên: {duration}",
+    "sessionReflection": "Hãy chú ý những gì cảm thấy khác biệt trước khi bạn tiếp tục.",
+    "returnHome": "Quay lại trang chủ",
+    "mindfulnessChat": "Trò chuyện chánh niệm",
+    "assistantStatus": "Trợ lý: {status}",
+    "typeMessage": "Nhập tin nhắn…",
+    "send": "Gửi",
+    "completed": "Đã hoàn thành",
+    "continuePractice": "Tiếp tục bài tập của bạn",
+    "practiceStillActive": "{title} vẫn đang hoạt động.",
+    "guideFollowUpReady": "Trợ lý của bạn đã sẵn sàng với phần tiếp theo.",
+    "tapFeeling": "Chạm vào một cảm xúc để kiểm tra với trợ lý.",
+    "guidePreparingFollowUp": "Trợ lý của bạn đang chuẩn bị phần tiếp theo.",
+    "chooseClosestFeeling": "Chọn cảm xúc gần nhất với trạng thái của bạn lúc này.",
+    "spinning": "Đang quay…",
+    "voicePlayback": "Phát lại giọng nói",
+    "enterSendHint": "Enter để gửi · Shift+Enter để xuống dòng",
+    "listening": "Đang nghe…",
+    "generatingVoice": "Đang tạo giọng nói…",
+    "speaking": "Đang nói…",
+    "voiceUnavailable": "Giọng nói không khả dụng. Hãy thử lại.",
+    "preparingVoice": "Đang chuẩn bị giọng nói…",
+    "typing": "Đang nhập…",
+    "preparingWelcome": "Đang chuẩn bị lời chào…",
+    "tapToTalk": "Chạm để nói",
+    "loadingTexture": "Đang tải kết cấu avatar {current} trên {total}…",
+    "cachingGeometry": "Đang lưu hình học avatar…",
+    "loadError": "Không thể tải avatar.",
+    "compactGuideSubtitle": "Một trợ lý avatar nhỏ gọn với giọng nói và trò chuyện nhanh.",
+    "viewActivity": "Xem hoạt động của bạn",
+    "backToSessions": "Quay lại các phiên",
+    "sessions": "Các phiên",
+    "templateReserved": "Mẫu đã được đặt trước",
+    "closeLanguageSelector": "Đóng bộ chọn ngôn ngữ",
+    "dailyMindfulnessTools": "Công cụ chánh niệm hàng ngày",
+    "chooseFeeling": "Chọn cảm xúc của bạn hôm nay",
+    "feelingLabel": "Cảm xúc {feeling}",
+    "previousMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "calendarLabel": "Lịch hoạt động tháng {month}",
+    "toggleTheme": "Chuyển đổi chủ đề",
+    "toggleNotifications": "Chuyển đổi thông báo",
+    "stopRecording": "Dừng ghi âm",
+    "startVoiceInput": "Bắt đầu nhập liệu bằng giọng nói",
+    "openMindfulnessChat": "Mở trò chuyện chánh niệm",
+    "chat": "Trò chuyện",
+    "loadingAvatar": "Đang tải avatar…",
+    "collapse": "Thu gọn",
+    "expand": "Mở rộng",
+    "ready": "Sẵn sàng",
+    "thinking": "Đang suy nghĩ…",
+    "offlineFallback": "Dự phòng ngoại tuyến",
+    "contextSession": "Ngữ cảnh: {title}",
+    "contextGeneral": "Ngữ cảnh: trợ giúp ứng dụng chung",
+    "guidedSession": "Phiên có hướng dẫn",
+    "assistantLedSession": "Phiên do trợ lý dẫn dắt",
+    "finishSession": "Kết thúc phiên",
+    "nextPassage": "Đoạn tiếp theo",
+    "startNamed": "Bắt đầu {title}",
+    "personMeditating": "Người đang thiền",
+    "brandLogo": "Chăm sóc sức khỏe đa ngôn ngữ",
+    "useLanguageOption": "Sử dụng {language}",
+    "languageCurrent": "Ngôn ngữ: {language}",
+    "opensLanguageSelector": "Mở bộ chọn ngôn ngữ",
+    "moodPromptLow": "Điều gì đang đè nặng lên bạn hôm nay? Bạn không cần phải giải quyết tất cả cùng một lúc.",
+    "moodPromptTender": "Điều gì cảm thấy khó khăn hơn bình thường vào hôm nay?",
+    "moodPromptSteady": "Ổn định là đủ rồi. Điều gì sẽ giúp bạn giữ vững tinh thần hôm nay?",
+    "moodPromptGood": "Một điều gì đã giúp bạn cảm thấy tốt hôm nay?",
+    "moodPromptBright": "Điều gì đã xảy ra mà bạn muốn ghi nhớ từ hôm nay?"
+  },
+  "catalog": {
+    "caregiver-fatigue": {
+      "title": "Mệt mỏi khi chăm sóc",
+      "description": "Một bài thiền về lòng trắc ẩn để nạp lại năng lượng khi chăm sóc người khác.",
+      "previewDescription": "Hãy đặt xuống trách nhiệm mà bạn đã gánh vác trong vài phút. Bài tập nhẹ nhàng này giúp bạn bớt khắt khe với bản thân, khôi phục sự ổn định và tạo không gian cho chính nhu cầu của bạn.",
+      "zodiac": "Aries",
+      "kind": "scripted",
+      "duration": "~4 min · 6 segments"
+    },
+    "body-scan": {
+      "title": "Quét cơ thể",
+      "description": "Một bài tập kiểm tra cơ thể từ đầu đến chân.",
+      "previewDescription": "Hãy hướng sự chú ý của bạn từ từ qua cơ thể, nhận biết áp lực, hơi ấm, sự căng thẳng và thư giãn mà không cần phải thay đổi bất cứ điều gì. Một lựa chọn giúp bạn vững vàng khi tâm trí cảm thấy bận rộn hoặc mất kết nối.",
+      "zodiac": "Taurus",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "five-senses": {
+      "title": "Kết nối qua năm giác quan",
+      "description": "Một bài tập giúp bạn kết nối lại với khoảnh khắc hiện tại.",
+      "previewDescription": "Sử dụng thị giác, thính giác, xúc giác, khứu giác và vị giác để quay trở lại với những gì đang diễn ra ngay lúc này. Bài tập cảm giác ngắn này có thể giúp ngăn chặn những suy nghĩ lan man và làm dịu hệ thần kinh đang quá tải.",
+      "zodiac": "Gemini",
+      "kind": "scripted",
+      "duration": "~6 min · 24 steps"
+    },
+    "mindful-breathing": {
+      "title": "Hơi thở chánh niệm",
+      "description": "Một bài tập nhận biết hơi thở cơ bản mà bạn có thể thực hiện ở bất cứ đâu.",
+      "previewDescription": "Hãy theo dõi nhịp điệu tự nhiên của hơi thở vào và thở ra mà không cần ép buộc theo khuôn mẫu nào. Một bài tập đơn giản để tạo ra một chút không gian trước một cuộc họp, cuộc trò chuyện hoặc một thời điểm khó khăn.",
+      "zodiac": "Cancer",
+      "kind": "scripted",
+      "duration": "~5 min · 5 segments"
+    },
+    "loving-kindness": {
+      "title": "Lòng từ bi",
+      "description": "Một bài tập chánh niệm tập trung vào lòng trắc ẩn.",
+      "previewDescription": "Lặp lại những lời chúc thầm lặng về sự an toàn, bình yên và quan tâm cho bản thân và những người trong cuộc sống của bạn. Hãy sử dụng khi bạn cảm thấy chai sạn, cô đơn hoặc cần một tiếng nói nội tâm tử tế hơn.",
+      "zodiac": "Leo",
+      "kind": "scripted",
+      "duration": "~7 min · 25 steps"
+    },
+    "mindful-walking": {
+      "title": "Đi bộ chánh niệm",
+      "description": "Một bài tập vận động nhẹ nhàng với sự chú ý trọn vẹn vào từng bước chân.",
+      "previewDescription": "Hãy để nhịp độ bước chân trở thành điểm tựa khi bạn chú ý đến sự thăng bằng, chuyển động và không gian xung quanh. Một cách khởi động lại tốt khi việc ngồi yên cảm thấy khó khăn hoặc khi năng lượng bồn chồn cần một nơi để giải tỏa.",
+      "zodiac": "Virgo",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "seated-stretch": {
+      "title": "Giãn cơ tại chỗ",
+      "description": "Các bài tập giãn cơ nhẹ nhàng khi ngồi để giải tỏa căng thẳng.",
+      "previewDescription": "Làm dịu sự căng thẳng thường gặp ở vai, cổ, lưng và hông với các chuyển động có thể thực hiện ngay trên ghế. Được thiết kế cho một khoảng nghỉ yên tĩnh tại bàn làm việc hoặc để nạp lại năng lượng vào buổi chiều.",
+      "zodiac": "Libra",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "mindful-listening": {
+      "title": "Lắng nghe chánh niệm",
+      "description": "Một bài tập tập trung sự chú ý thông qua âm thanh.",
+      "previewDescription": "Hãy nhận biết những âm thanh gần và xa mà không phán xét hay chạy theo chúng. Bài tập lắng nghe này có thể giúp mở rộng sự chú ý khi suy nghĩ trở nên ồn ào và đưa bạn trở lại với môi trường xung quanh.",
+      "zodiac": "Scorpio",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "affirmation-breath": {
+      "title": "Hơi thở khẳng định",
+      "description": "Kết hợp một câu khẳng định bình tâm với hơi thở của bạn.",
+      "previewDescription": "Kết hợp hơi thở đều đặn với một câu nói mang lại sự hỗ trợ cho bạn, chẳng hạn như 'Mình có thể vượt qua từng khoảnh khắc một.' Một nghi thức nhỏ để xây dựng sự an tâm trước khi ngày mới bắt đầu hối hả.",
+      "zodiac": "Sagittarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "stress-release": {
+      "title": "Giải tỏa căng thẳng",
+      "description": "Nhận biết, gọi tên và làm dịu những gì bạn đang gánh vác.",
+      "previewDescription": "Hãy dừng lại đủ lâu để xác định điều gì đang đòi hỏi sự chú ý của bạn thay vì giữ nó như một khối nặng nề không rõ ràng. Bài tập phản tư này giúp bạn gọi tên áp lực và chọn một bước đi nhẹ nhàng hơn tiếp theo.",
+      "zodiac": "Capricorn",
+      "kind": "scripted",
+      "duration": "~6 min · 22 steps"
+    },
+    "morning-intention": {
+      "title": "Ý định buổi sáng",
+      "description": "Một bài tập thiết lập ý định đơn giản cho ngày mới.",
+      "previewDescription": "Hãy bắt đầu với một phẩm chất mà bạn muốn mang vào vài giờ tới—sự kiên nhẫn, tập trung, cởi mở hoặc sự quan tâm. Đây là một cách ngắn gọn để chọn cách bạn muốn đối mặt với ngày mới thay vì vội vã lao vào nó.",
+      "zodiac": "Aquarius",
+      "kind": "scripted",
+      "duration": "~5 min · 20 steps"
+    },
+    "sleep-wind-down": {
+      "title": "Thư giãn trước khi ngủ",
+      "description": "Một bài tập yên tĩnh để chuẩn bị cơ thể cho giấc ngủ.",
+      "previewDescription": "Làm chậm quá trình chuyển đổi từ một ngày bận rộn sang trạng thái nhẹ nhàng, tĩnh lặng hơn. Việc nhận biết cơ thể nhẹ nhàng và hơi thở thong thả giúp bạn buông bỏ nhu cầu phải giải quyết mọi việc trước khi ngủ.",
+      "zodiac": "Pisces",
+      "kind": "scripted",
+      "duration": "~7 min · 24 steps"
+    }
+  },
+  "sessions": {
+    "caregiver-fatigue": [
+      {
+        "key": "cf1",
+        "text": "Cảm ơn bạn đã tham gia cùng tôi trong bài thiền ngắn này."
+      },
+      {
+        "key": "cf2",
+        "text": "Trong bài tập ngắn này, chúng ta sẽ khám phá một vài bước đơn giản để nạp lại năng lượng khi cảm thấy kiệt sức hoặc quá tải vì những nỗ lực giúp đỡ người khác."
+      },
+      {
+        "key": "cf3",
+        "text": "Hãy bắt đầu bằng việc tìm một tư thế thoải mái. Bạn có thể nhắm mắt lại nếu muốn, hoặc giữ mắt mở nhẹ nhàng với ánh nhìn thư thái, dịu dàng."
+      },
+      {
+        "key": "cf4",
+        "text": "Khi bạn đã ổn định, hãy hít thở chậm rãi, nhẹ nhàng vài hơi. Và hãy chú ý cảm giác khi hít thở."
+      },
+      {
+        "key": "cf5",
+        "text": "Bây giờ, hãy để hơi thở trở lại nhịp độ bình thường. Hãy dành cho bản thân vài khoảnh khắc để nghỉ ngơi và nạp lại năng lượng khi bạn đưa mình hoàn toàn vào đây và ngay lúc này."
+      },
+      {
+        "key": "cf6",
+        "text": "Tuyệt vời. Bây giờ chúng ta sẽ thay đổi trạng thái và khai thác khả năng đón nhận nỗi đau của người khác một cách lành mạnh."
+      },
+      {
+        "key": "cf7",
+        "text": "Sự đồng cảm có thể là cầu nối dẫn đến sự quan tâm và lòng trắc ẩn, nhưng nó cũng có thể khiến chúng ta rơi vào trạng thái quá tải — điều mà các nhà khoa học gọi là sự kiệt sức vì đồng cảm."
+      },
+      {
+        "key": "cf8",
+        "text": "Một cách đơn giản để tránh tình trạng quá tải này là giữ cho bản thân vững vàng trong động lực quan tâm. Hãy cùng thử xem sao."
+      },
+      {
+        "key": "cf9",
+        "text": "Bắt đầu bằng việc nghĩ về một người mà bạn quan tâm. Đó có thể là người bạn đang chăm sóc hoặc bất kỳ ai mà bạn yêu quý."
+      },
+      {
+        "key": "cf10",
+        "text": "Hãy dành một chút thời gian để tưởng tượng rằng họ thực sự đang ở đây cùng bạn, và xem liệu bạn có thể cảm nhận được sự kết nối sâu sắc mà bạn chia sẻ với họ hay không."
+      },
+      {
+        "key": "cf11",
+        "text": "Khi bạn chạm vào cảm giác kết nối này, hãy xem liệu bạn có thể nhận ra thôi thúc muốn chăm sóc cá nhân này, hoặc có lẽ là mong muốn tự nhiên của bạn để họ được hạnh phúc và thoát khỏi đau khổ."
+      },
+      {
+        "key": "cf12",
+        "text": "Nếu thấy hữu ích, bạn có thể thầm nói điều này trong tâm trí. Bạn có thể tự nhủ: Mong bạn được thoát khỏi đau khổ và gian nan. Mong bạn có được mọi hạnh phúc trên thế giới này."
+      },
+      {
+        "key": "cf13",
+        "text": "Hãy thoải mái tạo ra những câu từ đầy lòng trắc ẩn của riêng bạn và tưởng tượng việc chia sẻ chúng với người mà bạn quan tâm."
+      },
+      {
+        "key": "cf14",
+        "text": "Bây giờ hãy nghĩ đến những người khác — hoặc có lẽ là các nhóm người, hay thậm chí là chính Trái Đất này."
+      },
+      {
+        "key": "cf15",
+        "text": "Hãy ghi nhận nỗi đau và sự khổ sở của họ, cũng như khả năng phục hồi to lớn mà tất cả chúng ta đều có."
+      },
+      {
+        "key": "cf16",
+        "text": "Hãy tưởng tượng một thế giới nơi họ được thoát khỏi đau khổ và nghịch cảnh. Hãy xem liệu bạn có thể hình dung họ đang hạnh phúc, thư thái, khỏe mạnh và cân bằng hay không."
+      },
+      {
+        "key": "cf17",
+        "text": "Hãy để tâm trí bạn tự do ở đây và tiếp tục gửi những suy nghĩ và lời chúc tốt đẹp, quan tâm ra thế giới."
+      },
+      {
+        "key": "cf18",
+        "text": "Tiếp theo, hãy đưa chính bản thân bạn vào vòng tròn của lòng trắc ẩn này."
+      },
+      {
+        "key": "cf19",
+        "text": "Hãy tưởng tượng những người trong cuộc sống của bạn đang quan tâm đến bạn, hoặc thậm chí là những người lạ đang gửi tình yêu và lòng trắc ẩn ra thế giới, giống như bạn đang làm vậy."
+      },
+      {
+        "key": "cf20",
+        "text": "Hãy tưởng tượng rằng tất cả năng lượng quan tâm này đang chảy vào bạn, và xem liệu bạn có thể mở lòng để đón nhận nó hay không."
+      },
+      {
+        "key": "cf21",
+        "text": "Trong vài khoảnh khắc cuối cùng này, hãy chú ý cảm giác của bạn ngay lúc này mà không cần phán xét."
+      },
+      {
+        "key": "cf22",
+        "text": "Hãy mang đến sự cởi mở, tò mò và quan tâm cho chính những suy nghĩ và cảm xúc của bạn, dù chúng là gì đi nữa."
+      },
+      {
+        "key": "cf23",
+        "text": "Khi chúng ta cảm nhận nỗi đau của người khác và nỗi đau của thế giới một cách trực tiếp, những cảm xúc và phản ứng của chính chúng ta có thể dễ dàng khiến chúng ta choáng ngợp."
+      },
+      {
+        "key": "cf24",
+        "text": "Ở đây, chúng ta thực hành kỹ năng giữ vững bản thân trong động lực quan tâm. Với động lực này, chúng ta có thêm một chút không gian để ở bên cạnh những cảm xúc và phản ứng của mình mà không bị chúng cuốn đi."
+      },
+      {
+        "key": "cf25",
+        "text": "Hy vọng bạn thấy bài tập này hữu ích. Nếu có, hãy thử tiếp tục thực hành trong những khoảnh khắc ngắn trong ngày hoặc hai ngày tới. Hãy giữ gìn sức khỏe và chúc bạn thực hành tốt."
+      }
+    ],
+    "mindful-breathing": [
+      {
+        "key": "mb1",
+        "text": "Xin chào và chào mừng bạn quay trở lại. Hôm nay chúng ta sẽ tập trung vào một bài tập cơ bản: thở chánh niệm."
+      },
+      {
+        "key": "mb2",
+        "text": "Đây là công cụ bạn có thể sử dụng ở bất cứ đâu, bất cứ lúc nào, để giữ vững bản thân và tìm kiếm một khoảnh khắc bình yên."
+      },
+      {
+        "key": "mb3",
+        "text": "Bắt đầu bằng việc tìm một chỗ ngồi thoải mái. Hãy để lưng thẳng nhưng không cứng nhắc."
+      },
+      {
+        "key": "mb4",
+        "text": "Để tay nhẹ nhàng trên đùi hoặc đầu gối. Nếu cảm thấy ổn, hãy nhắm mắt lại, hoặc đơn giản là hạ thấp ánh nhìn và để nó dịu lại."
+      },
+      {
+        "key": "mb5",
+        "text": "Bây giờ, hãy hít một hơi thật sâu qua mũi, cảm nhận phổi của bạn mở rộng. Và thở ra chậm rãi qua miệng."
+      },
+      {
+        "key": "mb6",
+        "text": "Làm lại lần nữa — hít vào thật sâu... và thở ra thật dài."
+      },
+      {
+        "key": "mb7",
+        "text": "Bây giờ, hãy để hơi thở trở về nhịp điệu tự nhiên. Bạn không cần phải thay đổi hay kiểm soát nó. Chỉ cần quan sát nó."
+      },
+      {
+        "key": "mb8",
+        "text": "Chú ý nơi bạn cảm nhận hơi thở rõ ràng nhất. Đó có thể là không khí mát lạnh ở đầu mũi, sự phồng lên và xẹp xuống của lồng ngực, hoặc sự giãn nở và co lại của bụng."
+      },
+      {
+        "key": "mb9",
+        "text": "Khi ngồi đây, bạn có thể nhận thấy tâm trí bắt đầu lang thang. Điều này hoàn toàn bình thường. Đó chỉ là bản chất của tâm trí."
+      },
+      {
+        "key": "mb10",
+        "text": "Khi bạn nhận ra suy nghĩ của mình đã trôi về quá khứ, tương lai, hoặc danh sách việc cần làm, hãy chỉ cần ghi nhận suy nghĩ đó mà không phán xét."
+      },
+      {
+        "key": "mb11",
+        "text": "Hãy nghĩ về nó như một đám mây trôi qua bầu trời. Sau đó, nhẹ nhàng và tử tế, đưa sự chú ý của bạn trở lại cảm giác vật lý của hơi thở."
+      },
+      {
+        "key": "mb12",
+        "text": "Trở lại với hơi hít vào... và hơi thở ra."
+      },
+      {
+        "key": "mb13",
+        "text": "Hãy giữ trạng thái này trong vài khoảnh khắc trong im lặng. Theo dõi từng hơi thở từ lúc bắt đầu hít vào, qua khoảng dừng ngắn, đến khi kết thúc hơi thở ra."
+      },
+      {
+        "key": "mb14",
+        "text": "Nếu bạn bị xao nhãng mười lần, hãy cứ đưa bản thân trở lại mười lần. Mỗi lần bạn quay lại với hơi thở, bạn đang củng cố cơ bắp chánh niệm của mình."
+      },
+      {
+        "key": "mb15",
+        "text": "Khi chúng ta kết thúc bài tập này, hãy dành một chút thời gian để nhận thấy cảm giác của bạn. Có một cảm giác tĩnh lặng không? Một chút không gian hơn trong tâm trí bạn?"
+      },
+      {
+        "key": "mb16",
+        "text": "Hãy biết rằng hơi thở này luôn sẵn sàng cho bạn như một điểm tựa."
+      },
+      {
+        "key": "mb17",
+        "text": "Khi bạn đã sẵn sàng, hãy nhẹ nhàng cử động các ngón tay, ngón chân và từ từ mở mắt ra."
+      },
+      {
+        "key": "mb18",
+        "text": "Cảm ơn bạn đã thực hành cùng tôi hôm nay. Hãy mang cảm giác hiện diện này theo bạn khi bạn tiếp tục phần còn lại của ngày."
+      }
+    ],
+    "body-scan": [
+      {
+        "key": "bs1",
+        "text": "Chào mừng bạn. Hãy tìm một tư thế thoải mái — nằm xuống nếu có thể, hoặc ngồi với lưng được hỗ trợ nhẹ nhàng."
+      },
+      {
+        "key": "bs2",
+        "text": "Hãy để mắt nhắm lại, hoặc để ánh nhìn hướng xuống một cách nhẹ nhàng. Hãy cho phép bản thân được hiện diện ở đây."
+      },
+      {
+        "key": "bs3",
+        "text": "Hít một hơi thật sâu qua mũi... và thở ra chậm rãi qua miệng. Bắt đầu buông bỏ."
+      },
+      {
+        "key": "bs4",
+        "text": "Hãy để hơi thở trở lại nhịp điệu tự nhiên. Trong bài tập này, chúng ta sẽ di chuyển sự chú ý chậm rãi qua cơ thể — chỉ đơn giản là quan sát, không cố gắng sửa chữa hay thay đổi bất cứ điều gì."
+      },
+      {
+        "key": "bs5",
+        "text": "Đưa nhận thức của bạn xuống tận bàn chân. Chú ý lòng bàn chân — bất kỳ cảm giác ấm áp, mát mẻ, tê rần hay áp lực nào. Chỉ cần quan sát."
+      },
+      {
+        "key": "bs6",
+        "text": "Di chuyển sự chú ý lên mắt cá chân và bắp chân. Chúng có đang giữ căng thẳng không? Bạn không cần phải thay đổi nó — chỉ cần nhận biết nó."
+      },
+      {
+        "key": "bs7",
+        "text": "Bây giờ hãy đưa nhận thức đến đầu gối và đùi. Cảm nhận sức nặng của đôi chân. Chú ý nơi chúng tiếp xúc với bề mặt bên dưới bạn."
+      },
+      {
+        "key": "bs8",
+        "text": "Để sự chú ý di chuyển đến hông và lưng dưới. Khu vực này chứa đựng rất nhiều điều đối với nhiều người trong chúng ta. Hãy hít thở ở đây một lát."
+      },
+      {
+        "key": "bs9",
+        "text": "Chú ý bụng của bạn. Với mỗi hơi hít vào, hãy cảm nhận nó phồng lên. Với mỗi hơi thở ra, hãy cảm nhận nó xẹp xuống. Hãy để nó thật mềm mại và dễ dàng."
+      },
+      {
+        "key": "bs10",
+        "text": "Đưa nhận thức đến ngực và vùng quanh tim. Chú ý sự phồng lên và xẹp xuống nhẹ nhàng của hơi thở. Cảm nhận nhịp tim nếu bạn có thể."
+      },
+      {
+        "key": "bs11",
+        "text": "Chuyển sự chú ý đến lưng trên và vai. Hãy tưởng tượng bất kỳ sự căng thẳng nào đang được giữ lại bắt đầu dịu đi và tan biến theo mỗi hơi thở ra."
+      },
+      {
+        "key": "bs12",
+        "text": "Để nhận thức chảy xuống qua cánh tay — khuỷu tay, cẳng tay, cổ tay — đến tận bàn tay và đầu ngón tay. Chú ý bất kỳ cảm giác ấm áp hay mạch đập nào ở đây."
+      },
+      {
+        "key": "bs13",
+        "text": "Bây giờ hãy đưa sự chú ý đến cổ và họng. Chú ý xem có bất kỳ sự thắt chặt nào không. Hãy hít thở vào đó một cách nhẹ nhàng và để nó dịu lại."
+      },
+      {
+        "key": "bs14",
+        "text": "Chuyển nhận thức đến hàm. Hãy để nó thả lỏng. Để lưỡi nằm nhẹ nhàng trong miệng, môi hơi hé mở."
+      },
+      {
+        "key": "bs15",
+        "text": "Chú ý các cơ quanh mắt và trên trán. Hãy để chúng mịn màng và thư giãn, như thể có một bàn tay dịu dàng đang đặt ở đó."
+      },
+      {
+        "key": "bs16",
+        "text": "Bây giờ hãy mở rộng nhận thức để bao quát toàn bộ cơ thể cùng một lúc — từ đỉnh đầu đến đầu ngón chân."
+      },
+      {
+        "key": "bs17",
+        "text": "Toàn bộ cơ thể bạn, đang thở. Đang nghỉ ngơi. Đang sống động."
+      },
+      {
+        "key": "bs18",
+        "text": "Nếu bạn nhận thấy bất kỳ vùng nào bị căng thẳng hoặc khó chịu, điều đó hoàn toàn tự nhiên. Bài tập là quan sát với lòng tử tế — không phải để phán xét."
+      },
+      {
+        "key": "bs19",
+        "text": "Hãy ở lại đây với nhận thức toàn thân trong một lát. Hãy để hơi thở thật dễ dàng. Hãy để cơ thể bạn được nâng đỡ bởi bất kỳ bề mặt nào bạn đang nằm."
+      },
+      {
+        "key": "bs20",
+        "text": "Bạn đang ở đúng nơi bạn cần, ngay lúc này."
+      },
+      {
+        "key": "bs21",
+        "text": "Hít một hơi thật sâu, chậm rãi... và để tất cả trôi đi."
+      },
+      {
+        "key": "bs22",
+        "text": "Bắt đầu làm sâu hơi thở một cách nhẹ nhàng. Cử động các ngón tay và ngón chân để bắt đầu đánh thức cơ thể."
+      },
+      {
+        "key": "bs23",
+        "text": "Từ từ xoay cổ từ bên này sang bên kia nếu cảm thấy thoải mái. Hãy cứ từ từ."
+      },
+      {
+        "key": "bs24",
+        "text": "Khi bạn đã sẵn sàng, hãy nhẹ nhàng mở mắt. Không cần phải vội vàng."
+      },
+      {
+        "key": "bs25",
+        "text": "Cảm ơn bạn đã dành thời gian này để lắng nghe cơ thể mình. Hãy mang cảm giác thư thái này theo bạn trong phần còn lại của ngày."
+      }
+    ],
+    "five-senses": [
+      {
+        "key": "fs1",
+        "text": "Chào mừng bạn đến với bài tập định tâm này. Bất cứ khi nào tâm trí bạn cảm thấy xao nhãng hoặc lo âu, bài tập này có thể đưa bạn trở về với khoảnh khắc hiện tại."
+      },
+      {
+        "key": "fs2",
+        "text": "Hãy tìm một tư thế thoải mái — ngồi, đứng hoặc nằm. Cảm nhận bàn chân bạn đang tiếp xúc với sàn nhà."
+      },
+      {
+        "key": "fs3",
+        "text": "Hít vào thật chậm qua mũi... và thở ra thật dài. Tốt lắm. Chúng ta hãy bắt đầu."
+      },
+      {
+        "key": "fs4",
+        "text": "Chúng ta sẽ thực hiện qua năm giác quan, từng cái một. Mỗi giác quan là một điểm tựa để quay về khoảnh khắc hiện tại — ngay tại đây, ngay lúc này."
+      },
+      {
+        "key": "fs5",
+        "text": "Bắt đầu với thị giác. Hãy nhìn xung quanh môi trường của bạn và nhận biết năm thứ bạn có thể nhìn thấy. Hãy thong thả — thực sự quan sát từng thứ một."
+      },
+      {
+        "key": "fs6",
+        "text": "Chú ý đến màu sắc, kết cấu, bóng đổ, hình dáng. Hãy để mắt bạn dừng lại ở mỗi vật trong giây lát. Một... Hai... Ba... Bốn... Năm."
+      },
+      {
+        "key": "fs7",
+        "text": "Bây giờ hãy hướng sự chú ý đến xúc giác. Nhận biết bốn cảm giác mà bạn có thể cảm nhận được về mặt vật lý — trên cơ thể hoặc qua làn da của bạn."
+      },
+      {
+        "key": "fs8",
+        "text": "Có thể là sức nặng của đôi bàn tay đặt trên đùi. Nhiệt độ của không khí. Áp lực của chiếc ghế bên dưới bạn. Kết cấu của vải chạm vào da bạn. Hãy nhận biết bốn cảm giác."
+      },
+      {
+        "key": "fs9",
+        "text": "Bây giờ hãy hướng sự chú ý đến thính giác. Nhận biết ba âm thanh trong môi trường của bạn ngay lúc này."
+      },
+      {
+        "key": "fs10",
+        "text": "Hãy để thính giác của bạn mở rộng — những âm thanh gần và xa, to và nhỏ. Chỉ cần nhận biết ba trong số đó mà không phán xét."
+      },
+      {
+        "key": "fs11",
+        "text": "Bây giờ chuyển sang khứu giác. Hướng nhận thức của bạn vào những gì bạn có thể ngửi thấy — hoặc đơn giản là cảm nhận chất lượng không khí khi bạn hít vào."
+      },
+      {
+        "key": "fs12",
+        "text": "Hít vào thật chậm. Có lẽ bạn nhận thấy một mùi hương thoang thoảng — mùi hương trong phòng, sự tươi mát của không khí, hoặc đơn giản là hơi ấm từ hơi thở của bạn. Hãy nhận biết hai thứ."
+      },
+      {
+        "key": "fs13",
+        "text": "Và cuối cùng, hãy nhận biết một thứ bạn có thể nếm được. Có thể là một dư vị còn đọng lại, hoặc đơn giản là cảm giác trung tính trong miệng và trên lưỡi của bạn."
+      },
+      {
+        "key": "fs14",
+        "text": "Bây giờ hãy dành một chút thời gian để kết nối cả năm giác quan lại với nhau. Bạn đang nhìn, cảm nhận, lắng nghe, ngửi và nếm — tất cả cùng một lúc."
+      },
+      {
+        "key": "fs15",
+        "text": "Bạn đang hoàn toàn, trọn vẹn ở đây. Ngay trong khoảnh khắc này."
+      },
+      {
+        "key": "fs16",
+        "text": "Hãy nhận thấy cảm giác này khác biệt thế nào so với lúc chúng ta bắt đầu. Cảm giác vững chãi, được kết nối với hiện tại — đó là điều có thật."
+      },
+      {
+        "key": "fs17",
+        "text": "Kỹ thuật này hoạt động bằng cách chuyển hướng hệ thần kinh của bạn từ phản ứng căng thẳng sang trạng thái nhận thức khoảnh khắc hiện tại."
+      },
+      {
+        "key": "fs18",
+        "text": "Bạn có thể sử dụng bài tập này ở bất cứ đâu — trước một cuộc họp khó khăn, trong khoảnh khắc hoảng loạn, hoặc đơn giản là để tái thiết lập bản thân mỗi ngày."
+      },
+      {
+        "key": "fs19",
+        "text": "Hãy kết thúc bằng ba hơi thở chậm rãi, có chủ đích. Hít vào qua mũi... và thở ra qua miệng."
+      },
+      {
+        "key": "fs20",
+        "text": "Một lần nữa. Hít vào qua mũi... và từ từ thở ra."
+      },
+      {
+        "key": "fs21",
+        "text": "Thêm một lần nữa. Một hơi hít vào thật dài... và một hơi thở ra trọn vẹn."
+      },
+      {
+        "key": "fs22",
+        "text": "Khi bạn cảm thấy chông chênh, hãy quay về với các giác quan của mình. Năm thứ bạn nhìn thấy, bốn thứ bạn cảm nhận, ba thứ bạn nghe thấy, hai thứ bạn ngửi thấy, một thứ bạn nếm được."
+      },
+      {
+        "key": "fs23",
+        "text": "Khoảnh khắc hiện tại luôn ở đây, chờ đợi bạn."
+      },
+      {
+        "key": "fs24",
+        "text": "Làm tốt lắm. Cảm ơn bạn đã thực hành ngày hôm nay."
+      }
+    ],
+    "loving-kindness": [
+      {
+        "key": "lk1",
+        "text": "Chào mừng bạn đến với bài thiền tâm từ này, đôi khi được gọi là thực hành Metta."
+      },
+      {
+        "key": "lk2",
+        "text": "Trong bài tập này, chúng ta nhẹ nhàng nuôi dưỡng những cảm xúc ấm áp và thiện chí — trước hết là đối với chính mình, và sau đó lan tỏa ra những người xung quanh."
+      },
+      {
+        "key": "lk3",
+        "text": "Hãy tìm một tư thế ngồi thoải mái. Để đôi tay đặt trên đùi, và nhẹ nhàng khép mắt lại."
+      },
+      {
+        "key": "lk4",
+        "text": "Hít thở chậm rãi, tự nhiên vài hơi. Hãy để mỗi hơi thở ra giải tỏa bớt những gánh nặng mà bạn đang mang theo ngày hôm nay."
+      },
+      {
+        "key": "lk5",
+        "text": "Chúng ta bắt đầu với chính mình — không phải vì sự ích kỷ, mà bởi vì lòng trắc ẩn chân thành phải bao gồm cả bản thân để trở nên trọn vẹn."
+      },
+      {
+        "key": "lk6",
+        "text": "Hãy hình dung về bản thân bạn ngay lúc này. Bạn có thể thấy điều này dễ dàng, hoặc cảm thấy hơi ngượng ngùng. Dù thế nào cũng đều ổn cả."
+      },
+      {
+        "key": "lk7",
+        "text": "Thầm lặp lại những câu này cho chính mình: Cầu mong tôi được an toàn. Cầu mong tôi được khỏe mạnh. Cầu mong tôi được hạnh phúc. Cầu mong tôi sống một đời an nhiên."
+      },
+      {
+        "key": "lk8",
+        "text": "Hãy để những từ ngữ lắng đọng mà không cần ép buộc bất kỳ cảm xúc cụ thể nào. Chỉ cần gieo ý niệm là đã đủ rồi."
+      },
+      {
+        "key": "lk9",
+        "text": "Một lần nữa: Cầu mong tôi được an toàn. Cầu mong tôi được khỏe mạnh. Cầu mong tôi được hạnh phúc. Cầu mong tôi sống một đời an nhiên."
+      },
+      {
+        "key": "lk10",
+        "text": "Bây giờ hãy nghĩ về một người mà bạn yêu thương một cách tự nhiên — một người bạn thân, một thành viên trong gia đình, một đứa trẻ, hoặc một thú cưng mà sự hiện diện của chúng mang lại cho bạn sự ấm áp."
+      },
+      {
+        "key": "lk11",
+        "text": "Hãy hình dung rõ nét về họ. Hãy để bản thân cảm nhận tình cảm tự nhiên mà bạn dành cho họ."
+      },
+      {
+        "key": "lk12",
+        "text": "Gửi đến họ những lời chúc tương tự: Cầu mong bạn được an toàn. Cầu mong bạn được khỏe mạnh. Cầu mong bạn được hạnh phúc. Cầu mong bạn sống một đời an nhiên."
+      },
+      {
+        "key": "lk13",
+        "text": "Cảm nhận sự ấm áp lan tỏa từ trái tim bạn đến họ, như một luồng ánh sáng dịu nhẹ vươn qua khoảng cách giữa hai người."
+      },
+      {
+        "key": "lk14",
+        "text": "Bây giờ hãy nghĩ về một người trung tính — một người bạn gặp trong cuộc sống hàng ngày nhưng không thân thiết. Một người hàng xóm, một nhân viên thu ngân, một người lạ trên phố."
+      },
+      {
+        "key": "lk15",
+        "text": "Người này, cũng giống như bạn, có một đời sống nội tâm phong phú — những niềm vui và nỗi buồn, những hy vọng và nỗi sợ hãi. Hãy dành cho họ lòng tốt tương tự: Cầu mong bạn được an toàn. Cầu mong bạn được khỏe mạnh. Cầu mong bạn được hạnh phúc. Cầu mong bạn sống một đời an nhiên."
+      },
+      {
+        "key": "lk16",
+        "text": "Bây giờ, nếu bạn cảm thấy sẵn sàng, hãy nghĩ về một người đã gây khó khăn cho bạn. Bạn không cần phải chấp nhận bất cứ điều gì họ đã làm."
+      },
+      {
+        "key": "lk17",
+        "text": "Chỉ cần nhận ra rằng họ cũng đang mang trong mình những nỗi khổ đau. Họ cũng mong muốn được thoát khỏi nỗi đau. Hãy cố gắng hết sức để gửi lời chúc: Cầu mong bạn được an toàn. Cầu mong bạn được khỏe mạnh. Cầu mong bạn được hạnh phúc. Cầu mong bạn sống một đời an nhiên."
+      },
+      {
+        "key": "lk18",
+        "text": "Nếu hôm nay cảm thấy quá khó khăn, hãy quay trở lại với chính mình. Lòng trắc ẩn là một sự thực hành, không phải là một bài kiểm tra."
+      },
+      {
+        "key": "lk19",
+        "text": "Cuối cùng, hãy để nhận thức của bạn mở rộng ra bao trùm tất cả chúng sinh ở khắp mọi nơi — mọi con người, mọi sinh vật trên Trái Đất này."
+      },
+      {
+        "key": "lk20",
+        "text": "Cầu mong tất cả chúng sinh được an toàn. Cầu mong tất cả chúng sinh được khỏe mạnh. Cầu mong tất cả chúng sinh được hạnh phúc. Cầu mong tất cả chúng sinh sống một đời an nhiên."
+      },
+      {
+        "key": "lk21",
+        "text": "Cảm nhận vòng tròn trọn vẹn của lòng trắc ẩn này — bắt đầu từ trái tim của chính bạn, lan tỏa ra tất cả sự sống."
+      },
+      {
+        "key": "lk22",
+        "text": "Hãy nghỉ ngơi trong cảm giác này một lát. Hít thở. Cởi mở. Tử tế."
+      },
+      {
+        "key": "lk23",
+        "text": "Nhận thấy cảm giác của bạn lúc này. Có lẽ là một sự ấm áp dịu dàng, hoặc cảm giác cởi mở, hoặc đơn giản là sự tĩnh lặng."
+      },
+      {
+        "key": "lk24",
+        "text": "Hít vào một hơi thật chậm, trọn vẹn... và nhẹ nhàng thở ra."
+      },
+      {
+        "key": "lk25",
+        "text": "Lòng tốt mà bạn đã trao đi hôm nay là có thật. Hãy mang nó theo bên mình. Cảm ơn bạn đã thực hành."
+      }
+    ],
+    "mindful-walking": [
+      {
+        "key": "mw1",
+        "text": "Chào mừng bạn đến với bài tập đi bộ chánh niệm này. Bạn sẽ cần một không gian yên tĩnh để đi bộ chậm rãi — chỉ cần vài bước tới lui là đủ."
+      },
+      {
+        "key": "mw2",
+        "text": "Trước khi bắt đầu di chuyển, hãy đứng yên trong giây lát. Cảm nhận bàn chân bạn vững chãi trên mặt đất."
+      },
+      {
+        "key": "mw3",
+        "text": "Hít vào thật chậm... và thở ra. Hãy để cơ thể bạn thực sự hiện diện tại đây."
+      },
+      {
+        "key": "mw4",
+        "text": "Nhận biết tư thế của bạn. Đứng thẳng một cách nhẹ nhàng, vai thả lỏng và ánh nhìn dịu dàng — hướng về phía trước và hơi cúi xuống."
+      },
+      {
+        "key": "mw5",
+        "text": "Bây giờ hãy hướng toàn bộ sự chú ý vào đôi bàn chân. Nhận biết sức nặng cơ thể bạn đang đổ xuống qua đôi chân và tiếp xúc với mặt đất bên dưới."
+      },
+      {
+        "key": "mw6",
+        "text": "Bắt đầu đi bộ thật chậm. Chậm hơn nhiều so với tốc độ bình thường của bạn. Với mỗi bước chân, hãy chú ý đến những chuyển động tinh tế diễn ra."
+      },
+      {
+        "key": "mw7",
+        "text": "Khi bạn nhấc chân lên — cảm nhận gót chân rời khỏi mặt đất, rồi đến lòng bàn chân, và cuối cùng là các ngón chân."
+      },
+      {
+        "key": "mw8",
+        "text": "Khi bạn đặt chân xuống — cảm nhận gót chân tiếp xúc trước, rồi đến vòm bàn chân, và các ngón chân ổn định trên mặt đất."
+      },
+      {
+        "key": "mw9",
+        "text": "Nhấc. Di chuyển. Đặt xuống. Chỉ vậy thôi. Nhấc. Di chuyển. Đặt xuống."
+      },
+      {
+        "key": "mw10",
+        "text": "Nếu tâm trí bạn lang thang — đến những công việc, những lo âu, hay cảm giác ngượng ngùng — hãy chỉ cần nhận biết, và nhẹ nhàng đưa sự chú ý trở lại đôi bàn chân."
+      },
+      {
+        "key": "mw11",
+        "text": "Bây giờ hãy bắt đầu phối hợp hơi thở với từng bước chân. Hít vào trong hai hoặc ba bước... và thở ra trong hai hoặc ba bước."
+      },
+      {
+        "key": "mw12",
+        "text": "Để đôi tay buông thõng tự nhiên bên hông. Bạn không cần phải làm gì với chúng cả. Chỉ cần đi bộ."
+      },
+      {
+        "key": "mw13",
+        "text": "Nhận biết mặt đất bên dưới bạn. Cứng hay mềm. Ấm hay mát. Vững chãi."
+      },
+      {
+        "key": "mw14",
+        "text": "Nhận biết môi trường xung quanh mà không bị cuốn vào đó. Hãy để chúng chỉ là phông nền cho chuyển động của bạn."
+      },
+      {
+        "key": "mw15",
+        "text": "Tiếp tục đi bộ chậm rãi. Mỗi bước chân đều trọn vẹn. Mỗi bước chân đều là một sự đến nơi."
+      },
+      {
+        "key": "mw16",
+        "text": "Nếu bạn cảm thấy bồn chồn hoặc thấy mình thật ngớ ngẩn, điều đó hoàn toàn tự nhiên. Chỉ cần nhận biết cảm giác đó, và tiếp tục đi bộ."
+      },
+      {
+        "key": "mw17",
+        "text": "Bài tập này là để nhận ra những gì luôn diễn ra nhưng thường bị bỏ qua — phép màu của sự chuyển động, món quà của một cơ thể đưa bạn đi khắp thế gian."
+      },
+      {
+        "key": "mw18",
+        "text": "Bắt đầu giảm tốc độ chậm hơn nữa. Thực hiện bước đi chậm cuối cùng qua không gian của bạn, với sự chú ý trọn vẹn."
+      },
+      {
+        "key": "mw19",
+        "text": "Bây giờ hãy dừng lại một cách nhẹ nhàng. Đứng yên một lần nữa. Cảm nhận bàn chân bạn trên mặt đất."
+      },
+      {
+        "key": "mw20",
+        "text": "Hít vào thật chậm... và thở ra thật dài."
+      },
+      {
+        "key": "mw21",
+        "text": "Nhận thấy cảm giác của bạn lúc này so với khi bắt đầu. Ngay cả một khoảng thời gian ngắn di chuyển trong chánh niệm cũng có thể tạo ra sự thay đổi."
+      },
+      {
+        "key": "mw22",
+        "text": "Cảm ơn bạn đã di chuyển với sự chú tâm ngày hôm nay. Bạn có thể mang phẩm chất chú tâm này vào bất kỳ bước đi nào của mình."
+      }
+    ],
+    "seated-stretch": [
+      {
+        "key": "ss1",
+        "text": "Chào mừng bạn đến với bài tập giãn cơ tại chỗ này. Bài tập này giúp giải tỏa căng thẳng tích tụ trong cơ thể — không cần dụng cụ, chỉ cần chiếc ghế của bạn."
+      },
+      {
+        "key": "ss2",
+        "text": "Hãy ngồi về phía mép trước của ghế sao cho hai bàn chân đặt phẳng trên sàn, rộng bằng hông."
+      },
+      {
+        "key": "ss3",
+        "text": "Hít vào thật chậm... rồi thở ra. Hãy để đôi vai của bạn thả lỏng, rời xa khỏi tai."
+      },
+      {
+        "key": "ss4",
+        "text": "Hãy bắt đầu với đôi vai của bạn. Hít vào và nâng vai lên hướng về phía tai... sau đó xoay vai ra sau và hạ xuống khi thở ra. Lặp lại vài lần theo nhịp độ của riêng bạn."
+      },
+      {
+        "key": "ss5",
+        "text": "Bây giờ hãy xoay vai về phía trước — lên, tới trước và xuống. Hãy để mọi sự căng cứng bắt đầu dịu đi."
+      },
+      {
+        "key": "ss6",
+        "text": "Nhẹ nhàng xoay đầu sang phải, như thể đang nhìn qua vai. Giữ nguyên trong một hoặc hai nhịp thở. Sau đó từ từ trở về vị trí trung tâm."
+      },
+      {
+        "key": "ss7",
+        "text": "Bây giờ hãy xoay đầu sang trái. Giữ nguyên. Trở về vị trí trung tâm."
+      },
+      {
+        "key": "ss8",
+        "text": "Nhẹ nhàng hạ tai phải về phía vai phải, kéo giãn phần cổ bên trái. Giữ cho vai trái của bạn thả lỏng. Hít thở sâu vào vùng đang được kéo giãn."
+      },
+      {
+        "key": "ss9",
+        "text": "Từ từ trở về trung tâm, sau đó hạ tai trái về phía vai trái. Hít thở sâu vào vùng cổ bên phải."
+      },
+      {
+        "key": "ss10",
+        "text": "Trở về vị trí trung tâm. Hãy hít một hơi."
+      },
+      {
+        "key": "ss11",
+        "text": "Đan các ngón tay lại và duỗi thẳng cánh tay ra phía trước, lòng bàn tay hướng ra ngoài. Cảm nhận sự kéo giãn ở phần lưng trên và vai."
+      },
+      {
+        "key": "ss12",
+        "text": "Sau đó đưa hai tay lên trên đầu, lòng bàn tay hướng lên. Hít một hơi thật đầy khi bạn vươn người lên... và hạ tay xuống khi thở ra."
+      },
+      {
+        "key": "ss13",
+        "text": "Vặn mình nhẹ nhàng sang phải, đặt tay trái lên đầu gối phải và tay phải lên lưng ghế. Hít thở sâu trong tư thế vặn mình."
+      },
+      {
+        "key": "ss14",
+        "text": "Từ từ xoay người trở lại và lặp lại ở phía bên kia — vặn mình sang trái, tay phải đặt lên đầu gối trái, tay trái đặt ra sau. Hít thở."
+      },
+      {
+        "key": "ss15",
+        "text": "Trở về vị trí trung tâm."
+      },
+      {
+        "key": "ss16",
+        "text": "Duỗi thẳng chân phải ra phía trước, gập và duỗi bàn chân vài lần để đánh thức cổ chân và bắp chân. Sau đó đặt chân trở lại vị trí cũ."
+      },
+      {
+        "key": "ss17",
+        "text": "Bây giờ đến chân trái — duỗi, gập, duỗi. Sau đó trở về."
+      },
+      {
+        "key": "ss18",
+        "text": "Đan các ngón tay sau lưng nếu thấy thoải mái, nhẹ nhàng mở rộng lồng ngực, ép hai xương bả vai lại gần nhau. Hãy hít thở tại đây."
+      },
+      {
+        "key": "ss19",
+        "text": "Thả lỏng. Để hai tay đặt trên đùi. Cuộn cột sống nhẹ nhàng, thu cằm lại — như thể bạn đang tự ôm lấy chính mình từ bên trong. Hãy hít thở."
+      },
+      {
+        "key": "ss20",
+        "text": "Từ từ trở về tư thế ngồi thẳng, trung tính."
+      },
+      {
+        "key": "ss21",
+        "text": "Hít một hơi cuối cùng thật sâu qua mũi — để bụng phình lên, rồi đến ngực — và thở ra thật dài, thật chậm."
+      },
+      {
+        "key": "ss22",
+        "text": "Làm tốt lắm. Bạn đã giúp cơ thể mình được tái tạo. Hãy mang cảm giác thư thái này vào bất cứ việc gì bạn làm tiếp theo."
+      }
+    ],
+    "mindful-listening": [
+      {
+        "key": "ml1",
+        "text": "Chào mừng bạn đến với bài tập lắng nghe chánh niệm. Âm thanh luôn hiện hữu, nhưng chúng ta hiếm khi dành trọn sự chú ý cho nó."
+      },
+      {
+        "key": "ml2",
+        "text": "Tìm một tư thế ngồi thoải mái. Bạn có thể nhắm mắt lại cho bài tập này, điều đó sẽ giúp bạn tập trung sâu hơn vào những gì mình nghe thấy."
+      },
+      {
+        "key": "ml3",
+        "text": "Hít vào thật chậm... và thở ra. Hãy để cơ thể bạn lắng xuống."
+      },
+      {
+        "key": "ml4",
+        "text": "Trong một khoảnh khắc, chỉ cần nhận biết rằng có âm thanh trong môi trường xung quanh bạn. Bạn không cần phải xác định hay phân tích nó — chỉ cần nhận biết rằng âm thanh đang tồn tại."
+      },
+      {
+        "key": "ml5",
+        "text": "Bây giờ hãy mở rộng nhận thức ra toàn bộ không gian âm thanh xung quanh bạn. Giống như mở một khung cửa sổ, hãy để mọi âm thanh tràn vào — gần và xa, to và nhỏ."
+      },
+      {
+        "key": "ml6",
+        "text": "Chú ý đến âm thanh gần bạn nhất. Đặc điểm của nó là gì? Nó sắc nhọn hay êm dịu? Liên tục hay ngắt quãng? Chỉ cần quan sát."
+      },
+      {
+        "key": "ml7",
+        "text": "Bây giờ hãy để nhận thức của bạn di chuyển đến âm thanh xa nhất mà bạn có thể phát hiện. Có lẽ là tiếng xe cộ từ xa, tiếng gió, hoặc tiếng nói từ phòng khác. Hãy nhận biết nó mà không cần đuổi theo."
+      },
+      {
+        "key": "ml8",
+        "text": "Hãy để thính giác của bạn di chuyển linh hoạt giữa gần và xa — giống như một ống kính góc rộng, thu nhận toàn bộ trường âm thanh."
+      },
+      {
+        "key": "ml9",
+        "text": "Thay vì tập trung vào việc âm thanh ĐÓ LÀ gì, hãy cố gắng nhận biết những đặc tính thuần túy của âm thanh. Cao hay thấp. Mượt mà hay thô ráp. To hay nhỏ."
+      },
+      {
+        "key": "ml10",
+        "text": "Nhận biết rằng âm thanh khởi sinh... và tan biến. Mỗi âm thanh đều có điểm bắt đầu, thời lượng và điểm kết thúc."
+      },
+      {
+        "key": "ml11",
+        "text": "Nếu bạn thấy mình đang dán nhãn cho âm thanh — 'đó là tiếng xe, đó là tiếng chim' — chỉ cần nhận biết nhãn dán đó và quay trở lại trải nghiệm thuần túy của việc lắng nghe."
+      },
+      {
+        "key": "ml12",
+        "text": "Bạn có thể nhận thấy sự im lặng giữa các âm thanh. Hãy nghỉ ngơi trong sự im lặng đó. Bản thân nó cũng là một loại âm thanh."
+      },
+      {
+        "key": "ml13",
+        "text": "Bây giờ hãy hướng sự chú ý của bạn vào âm thanh hơi thở của chính mình. Tiếng luồng khí tinh tế khi hít vào. Tiếng thở ra nhẹ nhàng hơn."
+      },
+      {
+        "key": "ml14",
+        "text": "Nhận biết nhịp điệu hơi thở của bạn như một âm thanh. Đều đặn. Sống động."
+      },
+      {
+        "key": "ml15",
+        "text": "Mở rộng trở lại toàn bộ không gian âm thanh — hơi thở của bạn và môi trường xung quanh hòa quyện cùng nhau."
+      },
+      {
+        "key": "ml16",
+        "text": "Nhận biết rằng tất cả những âm thanh này đang diễn ra cùng một lúc, và nhận thức của bạn có thể bao trùm tất cả mà không cần nỗ lực."
+      },
+      {
+        "key": "ml17",
+        "text": "Trong một khoảnh khắc, hãy buông bỏ mọi nỗ lực. Chỉ cần ngồi, và để âm thanh bao trùm lấy bạn mà không nắm bắt hay xua đuổi bất cứ điều gì."
+      },
+      {
+        "key": "ml18",
+        "text": "Đây chính là bản chất của lắng nghe chánh niệm — cởi mở, đón nhận, không gắng gượng."
+      },
+      {
+        "key": "ml19",
+        "text": "Từ từ đưa sự chú ý của bạn trở lại căn phòng. Hãy hít một hơi."
+      },
+      {
+        "key": "ml20",
+        "text": "Nhận thấy âm thanh cảm giác khác biệt như thế nào khi bạn lắng nghe với sự chú ý trọn vẹn thay vì chỉ nghe hời hợt."
+      },
+      {
+        "key": "ml21",
+        "text": "Phẩm chất lắng nghe này — rộng mở, cởi mở, không phán xét — cũng có thể được dành tặng cho những người trong cuộc sống của bạn."
+      },
+      {
+        "key": "ml22",
+        "text": "Khi bạn đã sẵn sàng, hãy nhẹ nhàng mở mắt ra. Cảm ơn bạn đã lắng nghe ngày hôm nay."
+      }
+    ],
+    "affirmation-breath": [
+      {
+        "key": "ab1",
+        "text": "Chào mừng bạn đến với bài tập hơi thở khẳng định. Chúng ta sẽ kết hợp một câu nói bình an với nhịp điệu tự nhiên của hơi thở."
+      },
+      {
+        "key": "ab2",
+        "text": "Tìm một tư thế ngồi thoải mái, thẳng lưng. Để hai tay đặt nhẹ nhàng trên đùi."
+      },
+      {
+        "key": "ab3",
+        "text": "Nhắm mắt lại và hít thở tự nhiên vài nhịp. Chỉ cần hiện diện tại đây."
+      },
+      {
+        "key": "ab4",
+        "text": "Trong bài tập này, chúng ta sử dụng một câu ngắn — một lời khẳng định — làm tiêu điểm cho mỗi lần hít vào và thở ra. Những từ ngữ sẽ nương theo hơi thở."
+      },
+      {
+        "key": "ab5",
+        "text": "Hãy bắt đầu. Khi hít vào, hãy thầm nói: 'Tôi đang hít vào sự bình an.' Khi thở ra: 'Tôi đang giải tỏa căng thẳng.'"
+      },
+      {
+        "key": "ab6",
+        "text": "Hít vào sự bình an... và thở ra sự căng thẳng. Hãy để những từ ngữ nương nhẹ theo hơi thở."
+      },
+      {
+        "key": "ab7",
+        "text": "Lặp lại. Hít vào sự bình an... thở ra sự căng thẳng."
+      },
+      {
+        "key": "ab8",
+        "text": "Bây giờ hãy thay đổi câu nói. Hít vào và thầm nói: 'Tôi đang hiện diện.' Thở ra: 'Tôi buông bỏ.'"
+      },
+      {
+        "key": "ab9",
+        "text": "Tôi đang hiện diện... Tôi buông bỏ."
+      },
+      {
+        "key": "ab10",
+        "text": "Tôi đang hiện diện... Tôi buông bỏ."
+      },
+      {
+        "key": "ab11",
+        "text": "Bây giờ hãy thử: 'Tôi là đủ.' Hít những từ đó vào. Và khi thở ra: 'Mọi thứ đều ổn.'"
+      },
+      {
+        "key": "ab12",
+        "text": "Tôi là đủ... Mọi thứ đều ổn."
+      },
+      {
+        "key": "ab13",
+        "text": "Tôi là đủ... Mọi thứ đều ổn."
+      },
+      {
+        "key": "ab14",
+        "text": "Thêm một cặp câu nữa. Hít vào: 'Tôi chọn sự bình yên.' Thở ra: 'Tôi buông bỏ những gì mình không thể kiểm soát.'"
+      },
+      {
+        "key": "ab15",
+        "text": "Tôi chọn sự bình yên... Tôi buông bỏ những gì mình không thể kiểm soát."
+      },
+      {
+        "key": "ab16",
+        "text": "Tôi chọn sự bình yên... Tôi buông bỏ những gì mình không thể kiểm soát."
+      },
+      {
+        "key": "ab17",
+        "text": "Bây giờ hãy buông bỏ mọi câu nói cụ thể. Chỉ cần hít thở — một cách tự nhiên, dễ dàng — và để cơ thể bạn cảm nhận sự thật của những lời đó."
+      },
+      {
+        "key": "ab18",
+        "text": "Bạn bình an. Bạn hiện diện. Bạn là đủ. Bạn đang an yên."
+      },
+      {
+        "key": "ab19",
+        "text": "Hít một hơi cuối cùng thật sâu — hít vào mọi thứ bạn cần... và thở ra mọi thứ bạn không cần nữa."
+      },
+      {
+        "key": "ab20",
+        "text": "Làm tốt lắm. Những lời khẳng định này là của bạn để mang theo. Hãy quay lại với chúng bất cứ khi nào bạn cần một khoảnh khắc vững vàng."
+      }
+    ],
+    "stress-release": [
+      {
+        "key": "sr1",
+        "text": "Chào mừng bạn đến với buổi kiểm tra giải tỏa căng thẳng này. Chúng ta sẽ dành vài phút để nhận biết, gọi tên và làm dịu những gì bạn đang mang trong lòng ngay lúc này."
+      },
+      {
+        "key": "sr2",
+        "text": "Hãy tìm một tư thế thoải mái. Bạn không cần phải chuẩn bị hay sửa sang bất cứ điều gì — chỉ cần hiện diện như chính bạn lúc này."
+      },
+      {
+        "key": "sr3",
+        "text": "Hít vào thật chậm qua mũi... và thở ra hoàn toàn qua miệng. Hãy để điều đó như một tín hiệu cho bản thân rằng việc tạm dừng lại là hoàn toàn ổn."
+      },
+      {
+        "key": "sr4",
+        "text": "Hãy bắt đầu bằng việc kiểm tra cơ thể bạn. Quét từ vai xuống đến bụng. Bạn đang giữ sự căng thẳng ở đâu ngay lúc này?"
+      },
+      {
+        "key": "sr5",
+        "text": "Có thể hàm của bạn đang siết chặt, hoặc vai bạn đang nhô cao. Có thể có một nút thắt trong lồng ngực hoặc cảm giác nặng nề ở bụng. Chỉ cần nhận biết thôi."
+      },
+      {
+        "key": "sr6",
+        "text": "Dù bạn tìm thấy gì, hãy cho phép nó ở đó. Bạn không cần phải làm cho nó biến mất. Chỉ cần thừa nhận: 'Tôi nhận thấy sự căng thẳng ở đây.'"
+      },
+      {
+        "key": "sr7",
+        "text": "Bây giờ hãy kiểm tra suy nghĩ của bạn. Điều gì đã chiếm lấy tâm trí bạn hôm nay? Không cần phân tích, chỉ cần nhận biết tông màu chung — bận rộn, lo lắng, phân tán, hay tê liệt?"
+      },
+      {
+        "key": "sr8",
+        "text": "Hãy gọi tên nó. 'Tâm trí tôi cảm thấy __.' Việc gọi tên một trải nghiệm sẽ làm giảm bớt sự kiểm soát của nó đối với chúng ta."
+      },
+      {
+        "key": "sr9",
+        "text": "Bây giờ hãy kiểm tra cảm xúc của bạn. Không phải những gì bạn nghĩ mình nên cảm thấy, mà là những gì thực sự đang ở đó. Sự thất vọng? Nỗi buồn? Sự lo âu? Sự kiệt sức?"
+      },
+      {
+        "key": "sr10",
+        "text": "Hãy gọi tên cả điều đó nữa. 'Ngay lúc này, tôi cảm thấy __.' Không có câu trả lời nào là sai cả."
+      },
+      {
+        "key": "sr11",
+        "text": "Hãy hít một hơi. Bạn vừa làm một việc quan trọng — bạn đã nhìn thẳng thắn vào trải nghiệm nội tâm của chính mình."
+      },
+      {
+        "key": "sr12",
+        "text": "Bây giờ hãy bắt đầu làm dịu lại. Trong lần thở ra tiếp theo, hãy tưởng tượng việc giải phóng một chút căng thẳng trong cơ thể bạn. Không cần tất cả — chỉ một chút thôi."
+      },
+      {
+        "key": "sr13",
+        "text": "Và một lần thở ra nữa — hãy để thêm một chút nữa trôi đi."
+      },
+      {
+        "key": "sr14",
+        "text": "Hít vào sự vững vàng... và thở ra những gì bạn không còn cần nữa."
+      },
+      {
+        "key": "sr15",
+        "text": "Đặt một bàn tay lên ngực và một bàn tay lên bụng. Cảm nhận cả hai cùng nhô lên và hạ xuống khi bạn hít thở."
+      },
+      {
+        "key": "sr16",
+        "text": "Sự tiếp xúc này — bàn tay của chính bạn trên cơ thể bạn — là một hành động tự trắc ẩn. Hãy nhận biết cảm giác đó."
+      },
+      {
+        "key": "sr17",
+        "text": "Hãy hít thở chậm ba lần ở đây, theo nhịp độ của riêng bạn. Không cần phải vội vàng."
+      },
+      {
+        "key": "sr18",
+        "text": "Sự căng thẳng bạn đang mang là có thật. Những thách thức là có thật. Và bạn, ngay lúc này, đang xử lý chúng."
+      },
+      {
+        "key": "sr19",
+        "text": "Bạn có khả năng hơn bạn tưởng. Bạn đã từng vượt qua những ngày khó khăn trước đây. Bạn cũng sẽ vượt qua điều này."
+      },
+      {
+        "key": "sr20",
+        "text": "Hãy hít thêm một hơi nữa — đầy và chậm — và để đôi tay bạn trở về đặt trên đùi."
+      },
+      {
+        "key": "sr21",
+        "text": "Bất cứ khi nào bạn cảm thấy choáng ngợp hôm nay, hãy quay lại với điều này: ba hơi thở chậm, một bàn tay đặt trên tim, và sự hiểu biết rằng khoảnh khắc này rồi sẽ qua."
+      },
+      {
+        "key": "sr22",
+        "text": "Cảm ơn bạn đã dành thời gian kiểm tra lại chính mình. Hành động nhận thức đó là nền tảng của mọi thứ."
+      }
+    ],
+    "morning-intention": [
+      {
+        "key": "mi1",
+        "text": "Chào buổi sáng. Chào mừng bạn đến với bài tập thiết lập ý định này. Vài phút chánh niệm vào đầu ngày có thể tạo ra một tông màu hoàn toàn khác cho mọi việc theo sau."
+      },
+      {
+        "key": "mi2",
+        "text": "Hãy tìm một tư thế ngồi thoải mái. Nếu có thể, hãy thực hiện điều này trước khi nhìn vào điện thoại hoặc bắt đầu bất kỳ công việc nào."
+      },
+      {
+        "key": "mi3",
+        "text": "Hít vào thật chậm qua mũi... và thở ra đầy đủ. Hãy để cơ thể bạn thức dậy một cách nhẹ nhàng."
+      },
+      {
+        "key": "mi4",
+        "text": "Trong một khoảnh khắc, chỉ cần nhận biết rằng một ngày mới đã bắt đầu. Bất cứ điều gì xảy ra ngày hôm qua đều đã thuộc về quá khứ. Khoảnh khắc này thật tươi mới."
+      },
+      {
+        "key": "mi5",
+        "text": "Kiểm tra nhanh cơ thể bạn. Bạn cảm thấy thế nào sáng nay — về mặt thể chất? Nghỉ ngơi tốt, mệt mỏi, hay ở giữa hai trạng thái đó? Chỉ cần nhận biết mà không phán xét."
+      },
+      {
+        "key": "mi6",
+        "text": "Bây giờ hãy kiểm tra tâm trạng của bạn. Tông màu cảm xúc của buổi sáng nay là gì? Một lần nữa, chỉ cần nhận biết — không cần phải thay đổi bất cứ điều gì."
+      },
+      {
+        "key": "mi7",
+        "text": "Bây giờ hãy chuyển sang ý định. Một ý định khác với một mục tiêu. Mục tiêu là thứ bạn đạt được. Ý định là phẩm chất bạn muốn mang vào ngày của mình."
+      },
+      {
+        "key": "mi8",
+        "text": "Hãy tự hỏi: Tôi muốn thể hiện bản thân như thế nào hôm nay? Phẩm chất nào tôi muốn mang vào các hành động và tương tác của mình nhất?"
+      },
+      {
+        "key": "mi9",
+        "text": "Có lẽ đó là sự kiên nhẫn. Hoặc sự hiện diện. Hoặc lòng can đảm. Hoặc sự tử tế. Hay đơn giản là sự nhẹ nhàng."
+      },
+      {
+        "key": "mi10",
+        "text": "Hãy để một từ hoặc cụm từ xuất hiện với bạn. Đừng suy nghĩ quá nhiều. Hãy tin tưởng vào những gì nảy sinh."
+      },
+      {
+        "key": "mi11",
+        "text": "Hãy giữ ý định đó một cách nhẹ nhàng trong tâm trí. Hãy tự nói với chính mình một lần: 'Hôm nay, tôi dự định sẽ __.' Hãy biến nó thành của riêng bạn."
+      },
+      {
+        "key": "mi12",
+        "text": "Hãy hít một hơi và để ý định đó lắng đọng vào cơ thể bạn. Bạn cảm thấy nó ở đâu? Trong lồng ngực? Đôi vai? Hơi thở của bạn?"
+      },
+      {
+        "key": "mi13",
+        "text": "Bây giờ hãy nghĩ về một hành động nhỏ, cụ thể mà bạn có thể thực hiện sáng nay phù hợp với ý định đó. Chỉ một việc nhỏ thôi."
+      },
+      {
+        "key": "mi14",
+        "text": "Bạn không cần phải thay đổi cả ngày. Bạn chỉ cần thực hiện bước tiếp theo."
+      },
+      {
+        "key": "mi15",
+        "text": "Hãy hít thêm một hơi nữa. Cảm nhận sự sẵn sàng tĩnh lặng trong cơ thể bạn — sự tỉnh táo tự nhiên của một buổi sáng mới."
+      },
+      {
+        "key": "mi16",
+        "text": "Dù ngày hôm nay mang đến điều gì, bạn đã bắt đầu nó với sự nhận thức và ý định. Điều đó thay đổi mọi thứ."
+      },
+      {
+        "key": "mi17",
+        "text": "Hãy hít một hơi thật sâu cuối cùng, lấp đầy phổi hoàn toàn... và một hơi thở ra dài, giải phóng."
+      },
+      {
+        "key": "mi18",
+        "text": "Nhẹ nhàng mở mắt ra. Ngày mới đang chờ đợi."
+      },
+      {
+        "key": "mi19",
+        "text": "Hãy quay lại với ý định của bạn bất cứ khi nào bạn cần — viết nó ra, nói thành lời, hoặc đơn giản là giữ nó trong tim."
+      },
+      {
+        "key": "mi20",
+        "text": "Chào buổi sáng. Chúc ngày hôm nay đúng như những gì bạn cần."
+      }
+    ],
+    "sleep-wind-down": [
+      {
+        "key": "sw1",
+        "text": "Chào mừng bạn đến với bài tập thư giãn trước khi ngủ này. Bạn đã vượt qua một ngày nữa. Đã đến lúc buông bỏ ngày hôm nay và chuẩn bị cho cơ thể và tâm trí nghỉ ngơi."
+      },
+      {
+        "key": "sw2",
+        "text": "Hãy tìm một tư thế thoải mái trên giường, nằm ngửa nếu có thể. Hãy để chân duỗi tự nhiên, và để tay thả lỏng dọc theo cơ thể."
+      },
+      {
+        "key": "sw3",
+        "text": "Hãy để đôi mắt khép lại. Không có gì bạn cần phải làm ngay lúc này. Không có gì cần kiểm tra. Không cần phải đi đâu cả."
+      },
+      {
+        "key": "sw4",
+        "text": "Hít vào thật chậm qua mũi, để bụng nhô lên... và thở ra thật dài, chậm rãi qua đôi môi hé mở. Hãy để ngày hôm nay bắt đầu phai nhạt dần."
+      },
+      {
+        "key": "sw5",
+        "text": "Một lần nữa. Hít vào... và thở ra hoàn toàn."
+      },
+      {
+        "key": "sw6",
+        "text": "Hãy giải phóng bất kỳ sự căng thẳng nào khỏi cơ thể. Bắt đầu với khuôn mặt — hãy để hàm thả lỏng, trán giãn ra, đôi mắt dịu lại."
+      },
+      {
+        "key": "sw7",
+        "text": "Cảm nhận đầu bạn chìm nặng xuống gối. Hãy để cổ được thả lỏng."
+      },
+      {
+        "key": "sw8",
+        "text": "Thư giãn đôi vai. Cảm nhận chúng chìm xuống nệm. Hãy để đôi tay trở nên nặng nề."
+      },
+      {
+        "key": "sw9",
+        "text": "Ngực và bụng của bạn — mềm mại. Nhô lên và hạ xuống theo từng hơi thở, không cần gắng sức."
+      },
+      {
+        "key": "sw10",
+        "text": "Phần lưng dưới — hãy để nó giải phóng mọi sự căng cứng và chìm vào giường."
+      },
+      {
+        "key": "sw11",
+        "text": "Đôi chân — nặng nề, ấm áp, hoàn toàn thư giãn. Đôi bàn chân — tĩnh lặng."
+      },
+      {
+        "key": "sw12",
+        "text": "Toàn bộ cơ thể bạn, nặng nề và đang nghỉ ngơi."
+      },
+      {
+        "key": "sw13",
+        "text": "Bây giờ hãy làm tĩnh tâm trí. Nếu những suy nghĩ xuất hiện — những lo lắng, danh sách việc cần làm, những điều đã xảy ra trong ngày — chỉ cần nhận biết chúng, và nhẹ nhàng để chúng trôi đi. Bạn có thể quay lại với chúng vào ngày mai."
+      },
+      {
+        "key": "sw14",
+        "text": "Hãy tưởng tượng mỗi suy nghĩ như một đám mây trôi chậm rãi trên bầu trời đêm. Bạn nhìn nó trôi qua, và bầu trời lại trở nên quang đãng."
+      },
+      {
+        "key": "sw15",
+        "text": "Hãy để hơi thở của bạn trở nên chậm hơn và nhẹ nhàng hơn nữa. Bạn được an toàn. Bạn được ấm áp. Bạn đang được chăm sóc."
+      },
+      {
+        "key": "sw16",
+        "text": "Với mỗi lần thở ra, hãy cảm nhận bản thân chìm sâu hơn một chút vào sự thư giãn."
+      },
+      {
+        "key": "sw17",
+        "text": "Không có nơi nào để đi. Không có gì cần giải quyết. Bạn đã làm đủ tốt ngày hôm nay rồi."
+      },
+      {
+        "key": "sw18",
+        "text": "Hãy để nhận thức của bạn trở nên nhẹ nhàng và lan tỏa — giống như khoảnh khắc ngay trước khi ngủ, khi những suy nghĩ bắt đầu mờ dần."
+      },
+      {
+        "key": "sw19",
+        "text": "Chỉ cần hít thở. Vào... và ra. Vào... và ra."
+      },
+      {
+        "key": "sw20",
+        "text": "Bạn đang trôi đi. Ngày hôm nay đã ở phía sau bạn. Sự nghỉ ngơi đang ở đây."
+      },
+      {
+        "key": "sw21",
+        "text": "Hãy buông bỏ mọi nỗ lực để cố ngủ. Chỉ cần ở đây, thoải mái và tĩnh lặng."
+      },
+      {
+        "key": "sw22",
+        "text": "Vào... và ra."
+      },
+      {
+        "key": "sw23",
+        "text": "Hãy để giấc ngủ đến với bạn một cách tự nhiên, vào thời điểm của riêng nó. Bạn đã đang nghỉ ngơi rồi."
+      },
+      {
+        "key": "sw24",
+        "text": "Chúc ngủ ngon. Bạn đã làm rất tốt ngày hôm nay."
+      }
+    ]
+  },
+  "fortunes": [
+    "Một khoảng dừng nhỏ sẽ tiết lộ bước đi đúng đắn tiếp theo.",
+    "Sự chú ý của bạn là một hình thức chăm sóc—hãy đặt nó vào một nơi nhẹ nhàng hôm nay.",
+    "Một điều bình thường sẽ trở nên ý nghĩa một cách lặng lẽ khi bạn chậm lại vì nó.",
+    "Bạn không cần một ngày hoàn hảo để dành chỗ cho một khoảnh khắc tốt đẹp.",
+    "Hãy để sự thoải mái trở nên hữu ích. Bạn được phép di chuyển với tốc độ nhẹ nhàng hơn.",
+    "Cảm xúc mà bạn dành không gian cho hôm nay sẽ có ít quyền lực hơn đối với bạn vào ngày mai.",
+    "Một cuộc trò chuyện hôm nay có thể tử tế hơn bạn mong đợi.",
+    "Câu trả lời có thể đến sau khi bạn ngừng ép buộc nó.",
+    "Bảo vệ năng lượng của bạn cũng là một hình thức tiến bộ.",
+    "Một hơi thở chân thành có thể thay đổi tông điệu của giờ tiếp theo.",
+    "Hãy để lại một chút không gian trong kế hoạch của bạn cho điều gì đó thú vị.",
+    "Một nhiệm vụ bạn đã tránh né có thể nhẹ nhàng hơn khi bạn bắt đầu.",
+    "Ai đó sẽ đánh giá cao sự quan tâm bạn mang đến cho một khoảnh khắc nhỏ.",
+    "Nỗ lực thầm lặng của bạn đang xây dựng một thứ gì đó bạn chưa thể nhìn thấy.",
+    "Hãy chọn bước đi tử tế tiếp theo, không phải toàn bộ cầu thang.",
+    "Một ranh giới rõ ràng sẽ tạo không gian cho điều gì đó tốt đẹp hơn.",
+    "Hôm nay ưu tiên sự tò mò hơn là sự chắc chắn.",
+    "Con đường bình thường có thể chứa đựng sự bất ngờ bạn cần.",
+    "Nghỉ ngơi sẽ mang lại cho bạn nhiều hơn là vội vã.",
+    "Một lựa chọn đơn giản được thực hiện một cách bình tĩnh sẽ đưa bạn tiến về phía trước.",
+    "Hãy chú ý những gì trở nên dễ dàng hơn khi bạn ngừng phán xét khoảnh khắc đó.",
+    "Bạn có thể đã biết điều gì xứng đáng với sự chú ý của bạn trước tiên.",
+    "Một nơi quen thuộc sẽ mang lại một góc nhìn mới hôm nay.",
+    "Hãy để một việc chưa hoàn thành vẫn chưa hoàn thành mà không cảm thấy tội lỗi.",
+    "Một câu hỏi chân thành có thể mở ra một cánh cửa mà nỗ lực không thể.",
+    "Hãy dành cho hôm nay một kỷ niệm nhỏ đáng giữ lại.",
+    "Tốc độ của bạn không cần phải khớp với bất kỳ ai khác.",
+    "Điều gì đó bạn buông bỏ sẽ làm cho phần còn lại cảm thấy nhẹ nhàng hơn.",
+    "Hãy tin tưởng vào sự tiến bộ trông có vẻ lặng lẽ từ bên ngoài.",
+    "Một khoảnh khắc vui chơi có thể phục hồi nhiều hơn một giờ làm việc khác."
+  ]
+}

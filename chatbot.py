@@ -25,10 +25,26 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 
 SYSTEM_PROMPT = (
-    "You are a mindfulness virtual assistant for a multilingual mindfulness session. "
-    "Respond with calm, supportive, and practical guidance while keeping continuity "
-    "with the conversation so far."
+    "You are a mindfulness guide in a spoken conversation. Be calm, warm and "
+    "practical, and keep continuity with what was said before.\n"
+    "Talk like a person, not a meditation recording. Use contractions. Answer "
+    "what they actually said before offering anything else \u2014 do not open with "
+    "an instruction unless they asked for one.\n"
+    "Match their length. A greeting or a one-word message gets one short, casual "
+    "line and no technique. A real disclosure gets two or three sentences. Never "
+    "exceed 70 words unless they ask for detail or a guided exercise.\n"
+    "Do not end every turn with a question. Ask one when you actually need to "
+    "know something to help, or when you are offering a choice.\n"
+    "When you do not ask, still leave them a way back in: name what you noticed "
+    "and let them react, offer something you could do together, or invite them "
+    "to say more without demanding it. Do not leave the turn on a closed "
+    "statement that needs no reply.\n"
+    "Vary how you open. Never begin consecutive replies the same way, and avoid "
+    "stock openers like 'I hear you', 'It sounds like', 'I'm sorry to hear', "
+    "'That must be' and 'Take a slow breath'.\n"
+    "This is read aloud: plain sentences, no markdown, lists or emoji."
 )
+MAX_GEMINI_OUTPUT_TOKENS = max(64, min(1024, int(os.getenv("GEMINI_MAX_OUTPUT_TOKENS", "256"))))
 ACTIVITIES_PATH = os.path.join(os.path.dirname(__file__), "mindfulness_activities.json")
 GEMINI_TTS_MODEL = os.getenv("GEMINI_TTS_MODEL", "gemini-3.1-flash-tts-preview")
 GEMINI_TTS_VOICE = os.getenv("GEMINI_TTS_VOICE", "Iapetus")
@@ -394,7 +410,7 @@ def build_activity_step_message(activity, step_index):
     )
 
 
-def build_chat_prompt(user_message, history=None, summary="", activity_context=None, language="en"):
+def build_chat_prompt(user_message, history=None, summary="", activity_context=None, language="en", profile=""):
     history = history or []
     lang_map = {
         "en": "English",
@@ -405,6 +421,16 @@ def build_chat_prompt(user_message, history=None, summary="", activity_context=N
     sections = [SYSTEM_PROMPT]
     if language and language in lang_map:
         sections.append(f"Always respond in {lang_map[language]}. Do not switch languages.")
+
+    if profile:
+        # Carried across every session so the guide picks up where the person
+        # left off instead of meeting a stranger each time.
+        sections.append(
+            "What you already know about this person from previous sessions:\n"
+            f"{profile}\n"
+            "Use it to sound like you remember them. Refer back naturally and only "
+            "when it is relevant \u2014 do not recite it or open by listing what you recall."
+        )
 
     if summary:
         sections.append(f"Conversation summary so far:\n{summary}")
@@ -429,6 +455,52 @@ def build_chat_prompt(user_message, history=None, summary="", activity_context=N
     sections.append(f"User: {user_message}")
     sections.append("Assistant:")
     return "\n\n".join(sections)
+
+
+PROFILE_PROMPT = (
+    "You maintain a short private profile of someone using a mindfulness app, so "
+    "their guide can remember them between sessions.\n"
+    "Merge the new conversation into the existing profile. Keep what still matters, "
+    "drop what has been resolved or superseded.\n"
+    "Record only durable things: what they are dealing with, recurring themes, what "
+    "has helped or not helped, practices they like, how they prefer to be spoken to, "
+    "and anything they asked you to remember.\n"
+    "Never drop a hard constraint they stated \u2014 allergies, injuries, health "
+    "conditions, things that trigger them, or anything they asked you not to do. "
+    "These carry over indefinitely.\n"
+    "Prioritise the events and changes in their life \u2014 losses, relationships, "
+    "family, work changes, health, therapy or other support, moves, milestones \u2014 "
+    "and keep names of people and pets exactly as given.\n"
+    "Use their own words for when something happened ('last year', 'three years "
+    "ago', 'in February'). Never convert that into a year or a date, and never "
+    "compute one: guessing precision they did not give produces false facts.\n"
+    "Let dated one-off appointments and deadlines expire once they have passed.\n"
+    "Do not record one-off small talk, and do not invent anything they did not say.\n"
+    "Write up to 8 terse bullet points, under 160 words total. Output only the bullets."
+)
+
+
+def build_profile_update(transcript, prior_profile="", model="gemini-3.1-flash-lite"):
+    """Fold a finished conversation into the durable per-user profile."""
+    lines = [
+        f"{item.get('role', 'user').capitalize()}: {item.get('text') or item.get('content') or ''}"
+        for item in (transcript or [])
+        if (item.get("text") or item.get("content"))
+    ]
+    if not lines:
+        return prior_profile
+    prompt = "\n\n".join([
+        PROFILE_PROMPT,
+        f"Existing profile:\n{prior_profile or '(none yet)'}",
+        "New conversation:\n" + "\n".join(lines[-60:]),
+        "Updated profile:",
+    ])
+    try:
+        result = call_gemini(prompt, model=model, temperature=0.2)
+        text = result["choices"][0]["message"]["content"].strip()
+        return text or prior_profile
+    except Exception:
+        return prior_profile
 
 
 def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite"):
@@ -478,7 +550,7 @@ def call_gemini_stream(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
         temperature=temperature,
         top_p=0.95,
         top_k=40,
-        max_output_tokens=8192,
+        max_output_tokens=MAX_GEMINI_OUTPUT_TOKENS,
     )
     response = model_obj.generate_content(
         prompt,
@@ -499,7 +571,7 @@ def call_gemini(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
         temperature=temperature,
         top_p=0.95,
         top_k=40,
-        max_output_tokens=8192,
+        max_output_tokens=MAX_GEMINI_OUTPUT_TOKENS,
     )
 
     response = model_obj.generate_content(

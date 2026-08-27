@@ -151,12 +151,19 @@ The Python backend (`server.py`) serves the static web files from `Web_mindfulne
 | `GEMINI_TTS_MODEL` | `gemini-3.1-flash-tts-preview` (optional override) |
 | `GEMINI_TTS_VOICE` | `Iapetus` (optional override) |
 | `EDGE_TTS_VOICE` | `en-US-AndrewMultilingualNeural` (optional override) |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Full Firebase service-account JSON used only by the server for confirmed account deletion |
+| `ACCOUNT_DELETION_SECRET` | Random signing secret of at least 32 characters |
+| `ACCOUNT_DELETION_BASE_URL` | Public backend origin, for example `https://mindfulness-avatar.onrender.com` |
+| `RESEND_API_KEY` | Resend API key for deletion confirmation and completion emails |
+| `ACCOUNT_DELETION_FROM_EMAIL` | Verified sender, for example `Mindfulness Connected <privacy@yourdomain.com>` |
 | `PORT` | Set automatically by Render |
 
 4. The `/health` endpoint is used by Render's health check. Once it returns `{"status":"ok"}` the service is live.
 5. Point your custom domain (if any) at the Render service URL in the Render dashboard.
 
 **Firebase config** is fetched at runtime from the `/firebase-config` endpoint, which reads `EXPO_PUBLIC_FIREBASE_*` environment variables set in Render. No secrets are baked into the static files.
+
+**Account deletion email flow:** the signed-in mobile app requests a short-lived link from `/account-deletion/request`. The server sends it to the email in Firebase Authentication. The link expires in 30 minutes and opens a review page; deletion only occurs after the user presses the final confirmation button. The backend writes a non-profile `_account_deletions/{uid}` security marker before deleting account data so a still-valid client token cannot recreate the profile. Deploy the updated `firestore.rules` with the backend change. Configure a verified Resend sending domain before production. Never place the Resend key, deletion secret, or Firebase service-account JSON in an `EXPO_PUBLIC_*` variable.
 
 ---
 

@@ -1,0 +1,26 @@
+{
+  "description": "Multi-turn threads. Single-turn cases cannot catch the failures that make a conversation feel wrong: repeating an opener, losing the thread, re-asking something already answered, or forgetting a stated constraint.",
+  "threads": [
+    {
+      "id": "work-stress",
+      "profile": "",
+      "turns": [
+        "I've been really overwhelmed with work lately",
+        "mostly it's that I can't switch off once I get home",
+        "yeah I tried that already, didn't really help",
+        "ok I'll give it a go tonight"
+      ],
+      "expect": "Should build on each turn, not restart. Turn 3 pushes back on its own advice — it must not repeat the same suggestion."
+    },
+    {
+      "id": "constraint-memory",
+      "profile": "* Cannot sit cross-legged (lower back injury).\n* Dislikes counting-based exercises.\n* Daughter Mia, age 4.",
+      "turns": [
+        "can we do something short before bed",
+        "my back is playing up again today",
+        "what about something I can do lying down"
+      ],
+      "expect": "Must respect the stated constraints without reciting the profile. Should never suggest sitting cross-legged or counting."
+    }
+  ]
+}
