@@ -1580,7 +1580,7 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
     controlled: "1",
     host,
     locale: state.locale,
-    v: "33"
+    v: "36"
   });
 
   if (autostart) {
@@ -1817,8 +1817,11 @@ function handleAvatarDockResizeMove(event) {
   const deltaY = event.clientY - startY;
   const resizeFromWest = corner.includes("w");
   const resizeFromNorth = corner.includes("n");
-  const minW = 1;
-  const minH = 1;
+  // Was 1x1, which let the dock be dragged down to a single pixel — no layout
+  // can serve that range, which is why the chrome appeared to stop scaling.
+  // This is the smallest size the guide is still usable at.
+  const minW = 220;
+  const minH = 260;
   const availableWidth = resizeFromWest
     ? startLeft + startWidth - 12
     : window.innerWidth - startLeft - 12;

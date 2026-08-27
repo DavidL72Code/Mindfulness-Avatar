@@ -1132,9 +1132,17 @@ button { border: none; background: none; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  background: #172861;
+  /* Slim: this bar only exists to drag by and to hold Hide, so it should not
+     eat the guide's space. Was 12px/16px of #172861, a colour from the old
+     palette. */
+  padding: 5px 8px 5px 12px;
+  background: var(--atlas-ink);
+  cursor: grab;
 }
+body.avatar-dragging .avatar-dock-header { cursor: grabbing; }
+/* No decorative grip here: a small bar in this position reads as a
+   minus/collapse control but does nothing when clicked. The grab cursor
+   already signals that the bar is draggable. */
 .avatar-dock-copy { display: none; }
 .avatar-dock-kicker {
   color: rgba(255,255,255,0.5);
@@ -1144,7 +1152,19 @@ button { border: none; background: none; }
   letter-spacing: 0.8px;
 }
 .avatar-dock-title { color: #fff; font-size: 14px; font-weight: 700; }
-.avatar-dock-close { color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 600; }
+.avatar-dock-close {
+  color: rgba(255,255,255,.65); font-size: 11px; font-weight: 700;
+  letter-spacing: .04em; padding: 3px 9px; border-radius: 999px;
+  transition: background .16s ease, color .16s ease;
+}
+.avatar-dock-close:hover { background: rgba(255,255,255,.12); color: #fff; }
+/* The global 44px touch minimum was making this one link set the whole header's
+   height. The dock is a pointer-driven surface, so relax it there — and put the
+   full target back on touch devices, where 44px actually matters. */
+.avatar-dock-close { min-height: 26px; }
+@media (pointer: coarse) {
+  .avatar-dock-close { min-height: 40px; padding-inline: 12px; }
+}
 
 .avatar-dock-header { flex-shrink: 0; }
 .avatar-dock-frame-wrap,
@@ -1160,22 +1180,12 @@ button { border: none; background: none; }
   touch-action: none;
   user-select: none;
 }
-.avatar-dock-resize-handle::after {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-color: rgba(255,255,255,.52);
-  border-style: solid;
-}
+/* No bracket graphic. The handles are invisible hit areas; the resize cursor
+   is the only affordance. */
 .avatar-dock-resize-nw { top: 0; left: 0; cursor: nwse-resize; }
 .avatar-dock-resize-ne { top: 0; right: 0; cursor: nesw-resize; }
 .avatar-dock-resize-sw { bottom: 0; left: 0; cursor: nesw-resize; }
 .avatar-dock-resize-se { right: 0; bottom: 0; cursor: nwse-resize; }
-.avatar-dock-resize-nw::after { top: 4px; left: 4px; border-width: 1.5px 0 0 1.5px; }
-.avatar-dock-resize-ne::after { top: 4px; right: 4px; border-width: 1.5px 1.5px 0 0; }
-.avatar-dock-resize-sw::after { bottom: 4px; left: 4px; border-width: 0 0 1.5px 1.5px; }
-.avatar-dock-resize-se::after { right: 4px; bottom: 4px; border-width: 0 1.5px 1.5px 0; }
 body.avatar-resizing,
 body.avatar-resizing * { user-select: none !important; }
 body.avatar-resizing .avatar-dock-frame,
@@ -2480,10 +2490,13 @@ html[data-theme="dark"] .activity-detail { background: var(--input-bg); }
 .home-header button,
 .home-text-action,
 .fortune-button,
-.home-activity-link,
-.avatar-dock-close {
+.home-activity-link {
   min-height: 44px;
 }
+/* .avatar-dock-close is deliberately excluded: it is the only control in the
+   dock's drag bar, and forcing 44px there made that bar 54px tall — over a
+   tenth of the dock, for one link. It keeps a full touch target on touch
+   devices via the pointer:coarse rule above. */
 
 .home-header button,
 .home-text-action,

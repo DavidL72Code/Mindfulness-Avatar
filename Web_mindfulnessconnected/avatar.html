@@ -2259,6 +2259,97 @@ body.handsfree .cmp textarea{opacity:.85}
   .nametag{padding:6px}
   .callbar{padding:10px 12px}
 }
+
+/* The dock is resizable, but this heading was a fixed 17px with fixed padding,
+   so shrinking the dock spent ~45px of its height on one line of text. Inside
+   the iframe, 1vw is 1% of the dock's width, so these scale with it and clamp
+   at the old size on a large dock. */
+body.compact .ch{
+  padding: clamp(4px,1.6vw,12px) clamp(6px,3vw,14px) clamp(3px,1.2vw,9px);
+}
+body.compact .ch h2{
+  font-size: clamp(11px,4vw,17px);
+  line-height: 1.2;
+  margin-bottom: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.compact .ch p{ font-size: clamp(9px,2.6vw,11px); }
+/* On a short dock the heading is the first thing to go — the guide's nametag
+   and the dock's own title bar already say who this is. */
+@media (max-height: 420px){
+  body.compact .ch h2{ font-size: clamp(10px,3.4vw,13px); }
+}
+@media (max-height: 330px){
+  body.compact .ch h2, body.compact .ch p{ display: none; }
+  body.compact .ch{ padding: 0; border-bottom: 0; }
+}
+
+/* The call chrome (LIVE pill, timer, nametag, status chip, turn pill and the
+   hands-free switch) was all fixed-pixel, so on a small dock it crowded the
+   guide out. Same approach as the heading: 1vw is 1% of the dock's width, so
+   these track the dock and clamp to their original sizes on a large one. */
+body.compact .callbar{ padding: clamp(6px,2.6vw,14px) clamp(7px,3vw,16px); gap: clamp(4px,1.6vw,8px); }
+body.compact .call-live{
+  padding: clamp(3px,1.2vw,5px) clamp(6px,2.6vw,11px);
+  font-size: clamp(7px,2.7vw,10px);
+  gap: clamp(4px,1.6vw,7px);
+  border-radius: 999px;
+}
+body.compact .call-live i{ width: clamp(4px,1.6vw,6px); height: clamp(4px,1.6vw,6px); }
+
+body.compact .nametag{
+  left: clamp(8px,3vw,16px); bottom: clamp(8px,3vw,16px);
+  padding: clamp(3px,1.4vw,6px) clamp(7px,3vw,13px) clamp(3px,1.4vw,6px) clamp(3px,1.4vw,6px);
+  gap: clamp(5px,2vw,9px);
+  font-size: clamp(8px,3.2vw,12px);
+}
+body.compact .nametag-chip{
+  width: clamp(15px,6vw,24px); height: clamp(15px,6vw,24px);
+  font-size: clamp(6px,2.4vw,9px);
+}
+body.compact .nametag-wave{ height: clamp(7px,3vw,12px); }
+
+body.compact .ast{
+  bottom: clamp(8px,3vw,14px); right: clamp(8px,3vw,16px);
+  padding: clamp(4px,1.6vw,7px) clamp(7px,3vw,14px);
+  font-size: clamp(8px,2.9vw,11px);
+}
+body.compact .turn{
+  bottom: clamp(8px,3vw,16px);
+  padding: clamp(4px,1.8vw,8px) clamp(8px,3.4vw,16px);
+  font-size: clamp(8px,3.2vw,12px);
+  gap: clamp(5px,2vw,9px);
+}
+body.compact .turn-dot{ width: clamp(5px,2.2vw,8px); height: clamp(5px,2.2vw,8px); }
+body.compact .turn-level, body.compact .turn-bar{ width: clamp(16px,7vw,34px); }
+
+body.compact .mode-btn{
+  padding: clamp(3px,1.4vw,6px) clamp(7px,3vw,13px);
+  font-size: clamp(8px,2.8vw,11px);
+  gap: clamp(4px,1.8vw,7px);
+}
+body.compact .modes{ padding: 0 clamp(6px,3vw,14px) clamp(4px,1.6vw,8px); }
+
+/* Below a certain size, shrinking type further just makes it unreadable. Past
+   that point the right move is to drop what matters least, in order: the call
+   timer, then the LIVE wordmark (the red dot still says it), then the level
+   meter. The dock's own minimum is 220x260, so this covers the whole range. */
+@media (max-width: 300px){
+  body.compact .call-timer-chip{ display: none; }
+}
+@media (max-width: 268px){
+  body.compact .call-live-text{ display: none; }
+  body.compact .call-live{ padding: 4px 6px; }
+  body.compact .nametag-wave{ display: none; }
+}
+@media (max-width: 240px){
+  body.compact .ast{ display: none; }          /* the turn pill carries state */
+  body.compact .nametag{ padding: 4px; gap: 0; }
+}
+@media (max-height: 300px){
+  body.compact .callbar{ padding: 6px 8px; }
+  body.compact .nametag{ bottom: 6px; left: 6px; }
+}
 </style>
 </head>
 <body>
