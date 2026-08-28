@@ -37,3 +37,8 @@ yarn-error.*
 
 # TypeScript
 *.tsbuildinfo
+
+# Eval run outputs. These are regenerable, and a saved transcript of the guide
+# replying to a test persona reads like real user data even though it is not.
+evals/*run*.json
+evals/last_*.json

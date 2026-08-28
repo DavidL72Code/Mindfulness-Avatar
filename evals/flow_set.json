@@ -1,4 +1,5 @@
 {
+  "_notice": "FICTIONAL TEST FIXTURE. Every person, detail and quote below was invented for automated testing. No real user data appears in this repository.",
   "description": "Multi-turn threads. Single-turn cases cannot catch the failures that make a conversation feel wrong: repeating an opener, losing the thread, re-asking something already answered, or forgetting a stated constraint.",
   "threads": [
     {

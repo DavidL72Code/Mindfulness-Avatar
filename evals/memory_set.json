@@ -1,11 +1,27 @@
 {
+  "_notice": "FICTIONAL TEST FIXTURE. Every person, detail and quote below was invented for automated testing. No real user data appears in this repository.",
   "description": "Does the profile make the guide feel like it knows you, or just make it name-drop facts? Each turn is generated twice, with and without the profile, and judged as a pair.",
   "profile": "* Started a new job in March; still feels like an outsider on the team.\n* Presentation this Thursday is the current source of dread.\n* Sleep is worst on Sunday nights.\n* Dislikes counting-based exercises; finds them stressful.\n* Prefers sound-based grounding.\n* Running helps, but has not run since the new job started.\n* Daughter Mia (4) is the reason he is trying.",
   "turns": [
-    { "turn": "i couldn't sleep again last night", "why": "Sunday-night pattern and the new job are both plausibly relevant" },
-    { "turn": "i feel like everyone else has it together and i dont", "why": "connects to feeling like an outsider since March" },
-    { "turn": "i dont have the energy to do anything after work", "why": "running has lapsed; a good guide might notice without lecturing" },
-    { "turn": "give me something to settle down", "why": "should silently honour sound-over-counting" },
-    { "turn": "whats the point of any of this", "why": "low mood; Mia matters here but must not be used as a guilt lever" }
+    {
+      "turn": "i couldn't sleep again last night",
+      "why": "Sunday-night pattern and the new job are both plausibly relevant"
+    },
+    {
+      "turn": "i feel like everyone else has it together and i dont",
+      "why": "connects to feeling like an outsider since March"
+    },
+    {
+      "turn": "i dont have the energy to do anything after work",
+      "why": "running has lapsed; a good guide might notice without lecturing"
+    },
+    {
+      "turn": "give me something to settle down",
+      "why": "should silently honour sound-over-counting"
+    },
+    {
+      "turn": "whats the point of any of this",
+      "why": "low mood; Mia matters here but must not be used as a guilt lever"
+    }
   ]
 }
