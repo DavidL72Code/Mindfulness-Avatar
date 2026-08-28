@@ -1586,7 +1586,7 @@ function buildAvatarFrameSrc({ host, sessionId = "", autostart = false, conversa
     controlled: "1",
     host,
     locale: state.locale,
-    v: "36"
+    v: "37"
   });
 
   if (autostart) {

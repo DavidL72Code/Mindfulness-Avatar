@@ -411,7 +411,7 @@ def main():
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY or GOOGLE_API_KEY is required")
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(os.getenv("GEMINI_TRANSLATION_MODEL", "gemini-3.1-flash-lite"))
+        model = genai.GenerativeModel(os.getenv("GEMINI_TRANSLATION_MODEL", "gemini-3.5-flash-lite"))
         for locale in args.locales:
             if locale == "en":
                 continue

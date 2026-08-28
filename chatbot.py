@@ -428,8 +428,13 @@ def build_chat_prompt(user_message, history=None, summary="", activity_context=N
         sections.append(
             "What you already know about this person from previous sessions:\n"
             f"{profile}\n"
-            "Use it to sound like you remember them. Refer back naturally and only "
-            "when it is relevant \u2014 do not recite it or open by listing what you recall."
+            "This is background, not material to work into the conversation. Most "
+            "replies should not mention it at all. Raise something only when it "
+            "genuinely bears on what they just said, and never more than one item "
+            "in a reply.\n"
+            "Never attribute a new problem to an old one, and never assert a "
+            "connection they have not drawn themselves \u2014 saying their sore neck is "
+            "from a worry they mentioned last week is putting words in their mouth."
         )
 
     if summary:
@@ -480,7 +485,7 @@ PROFILE_PROMPT = (
 )
 
 
-def build_profile_update(transcript, prior_profile="", model="gemini-3.1-flash-lite"):
+def build_profile_update(transcript, prior_profile="", model="gemini-3.5-flash-lite"):
     """Fold a finished conversation into the durable per-user profile."""
     lines = [
         f"{item.get('role', 'user').capitalize()}: {item.get('text') or item.get('content') or ''}"
@@ -503,7 +508,7 @@ def build_profile_update(transcript, prior_profile="", model="gemini-3.1-flash-l
         return prior_profile
 
 
-def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite"):
+def summarize_history(history, prior_summary="", model="gemini-3.5-flash-lite"):
     if not history:
         return prior_summary
 
@@ -522,7 +527,7 @@ def summarize_history(history, prior_summary="", model="gemini-3.1-flash-lite"):
     return result["choices"][0]["message"]["content"]
 
 
-def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite"):
+def build_session_recap(summary="", history=None, model="gemini-3.5-flash-lite"):
     history = history or []
     transcript = "\n".join(
         f"{item['role'].capitalize()}: {item['content']}" for item in history
@@ -541,7 +546,7 @@ def build_session_recap(summary="", history=None, model="gemini-3.1-flash-lite")
 _MODEL_CACHE = {}
 
 
-def call_gemini_stream(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
+def call_gemini_stream(prompt, model="gemini-3.5-flash-lite", temperature=0.7):
     """Yield text fragments as Gemini streams its response."""
     if model not in _MODEL_CACHE:
         _MODEL_CACHE[model] = genai.GenerativeModel(model)
@@ -562,7 +567,7 @@ def call_gemini_stream(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
             yield chunk.text
 
 
-def call_gemini(prompt, model="gemini-3.1-flash-lite", temperature=0.7):
+def call_gemini(prompt, model="gemini-3.5-flash-lite", temperature=0.7):
     if model not in _MODEL_CACHE:
         _MODEL_CACHE[model] = genai.GenerativeModel(model)
     model_obj = _MODEL_CACHE[model]

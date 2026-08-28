@@ -3466,7 +3466,17 @@ async function fetchFromCandidates(path, options={}, preferredBases=SERVER_CANDI
 let sid=AVATAR_SESSION_ID||null;
 let messageLog=[];
 let guideProfile='';   // what the guide remembers about this person across sessions
-function getTranscriptStorageKey(){return sid?`mindfulness-avatar-transcript:${sid}`:'';}
+/* The dock and the session panel are handed the same chat_id, so keying the
+   stored transcript on that alone made them share one bucket: opening a
+   practice restored whatever had just been said in the mini guide. Scope the
+   key to the surface, and to the practice, so each conversation is its own.
+   This has to be order-independent — restoreTranscript() runs when the model
+   finishes loading, which is seconds after a session start clears the log. */
+function getTranscriptStorageKey(){
+  if(!sid)return '';
+  const scope=HOST_KEY==='session-panel'?`session:${SESSION_KEY||'unknown'}`:HOST_KEY;
+  return `mindfulness-avatar-transcript:${sid}:${scope}`;
+}
 function shouldKeepStoredMessage(entry){
   const text=(entry&&entry.text)||'';
   if(!text)return true;
